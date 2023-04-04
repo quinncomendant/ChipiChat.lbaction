@@ -43,6 +43,8 @@ Manage history and settings with special commands:
 ⚡️ config: Show all configuration settings.
 ⚡️ configset KEY VALUE: Set the configuration KEY to VALUE.
 ⚡️ help: Display this help message.
+⚡️ history: Display chat history.
+
 
 ⎯
 ChipiChat was created by by Quinn Comendant – https://twitter.com/com

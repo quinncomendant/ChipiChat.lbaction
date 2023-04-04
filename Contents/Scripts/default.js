@@ -73,6 +73,9 @@ function runWithString(argument) {
     case 'help':
         help.general();
         return;
+
+    case 'history':
+        return history.show();
     }
 
     // Update config

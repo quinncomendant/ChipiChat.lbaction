@@ -66,6 +66,16 @@ class History {
         }).reverse();
     }
 
+    show() {
+        if (!Action.preferences.conversation_history.length) {
+            LaunchBar.alert('ChipiChat history is empty.');
+            return;
+        }
+        return Action.preferences.conversation_history.map(exchange => {
+            return {subtitle: exchange.user, title: exchange.assistant, alwaysShowsSubtitle: true}
+        });
+    }
+
     // Reduce conversation history to curtail the size of ~/Library/Application Support/LaunchBar/Action Support/com.strangecode.LaunchBar.action.ChipiChat/Preferences.plist
     truncate(history_lifetime_seconds) {
         Action.preferences.conversation_history = Action.preferences.conversation_history.filter(exchange => (new Date() - new Date(exchange.date)) <= history_lifetime_seconds * 1000);

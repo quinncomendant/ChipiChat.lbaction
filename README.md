@@ -4,11 +4,11 @@ Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses dire
 
 ![Demo](docs/demo.gif)
 
-(Just remember, ChatGPT makes mistakes – “LaunchBar for iOS”? WTF)
+(Just remember, ChatGPT makes mistakes – “LaunchBar for iOS”‽ 🙃)
 
 ## Usage
 
-Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
+### Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
 -  `⌘C` Copy the response to the clipboard.
 -  `⌘Y` QuickLook the response.
@@ -16,7 +16,7 @@ Send a message, question, or instruction to Chat GPT and quickly obtain and mani
 -  `→ (right-arrow)` Browse the response as a list (ideal for copying only needed lines).
 -  `⇥ (tab)` Send the text to other LaunchBar targets.
 
-Prefix your message with one-or-more modifiers for enhanced functionality:
+### Prefix your message with one-or-more modifiers for enhanced functionality:
 
 -  `N.N`: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
 -  `copy`: Automatically copy the response to the clipboard.
@@ -27,13 +27,13 @@ Prefix your message with one-or-more modifiers for enhanced functionality:
 
 You can combine modifiers, e.g., “`code copy 4 js function to get a uuid`” sends “`js function to get a uuid`” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
 
-Manage history and settings with special commands:
+### Manage history and settings with special commands:
 
 - `clear`: Remove chat history without sending a message.
 - `config`: Show all configuration settings.
 - `configset KEY VALUE`: Set the configuration KEY to VALUE.
 - `help`: Display this help message.
-- `history`: Display all chat history.
+- `history`: Display recent chat history.
 
 ## Installation
 
