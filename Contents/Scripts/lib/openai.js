@@ -73,6 +73,13 @@ class OpenAI {
                 input_text = util.unprefix(input_text);
                 break;
 
+            case 'list':
+                // Always create a bulleted list.
+                user_prompt_addendum = `Respond with a bulleted list. ${user_prompt_addendum}`;
+                input_text = util.unprefix(input_text);
+                reprefix.push(modifier);
+                break;
+
             case 'new':
                 // Erase conversation history and start a new chat.
                 history.clear();
@@ -112,7 +119,7 @@ class OpenAI {
             messages.push({role: 'user', content: exchange.user});
             messages.push({role: 'assistant', content: exchange.assistant});
         });
-        messages.push({role: 'user', content: `${input_text}${user_prompt_addendum}`});
+        messages.push({role: 'user', content: `${input_text} ${user_prompt_addendum}`});
 
         LaunchBar.debugLog(`Request: ${JSON.stringify(messages)}`);
 
