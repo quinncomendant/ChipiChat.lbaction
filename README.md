@@ -12,7 +12,7 @@ Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses dire
 
 -  `⌘C` Copy the response to the clipboard.
 -  `⌘Y` QuickLook the response.
--  `↵ (return)` Open the response in your text editor (saved as .md files in /tmp/chipichat/).
+-  `↵ (return)` Open the response as a `.md` file in your text editor.
 -  `→ (right-arrow)` Browse the response as a list (ideal for copying only needed lines).
 -  `⇥ (tab)` Send the text to other LaunchBar targets.
 

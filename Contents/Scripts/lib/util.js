@@ -19,14 +19,30 @@ class Util {
         return str.slice(str.indexOf(' ') + 1);
     }
 
+    fnv1aHash(str) {
+        const FNV_PRIME = 0x01000193;
+        const FNV_OFFSET = 0x811c9dc5;
+        let hash = FNV_OFFSET;
+        for (let i = 0; i < str.length; i++) {
+            hash ^= str.charCodeAt(i);
+            hash *= FNV_PRIME;
+        }
+        return hash >>> 0;
+    }
+
     slug(str) {
-      return str
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 250);
+        return str
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    safeFilename(str) {
+        const hash = this.fnv1aHash(str).toString();
+        const slug = this.slug(str).substring(0, 250 - hash.length);
+        return `${slug}-${hash}`;
     }
 
     dirname(path) {
@@ -41,6 +57,7 @@ class Util {
 
         try {
             File.writeText(content, output_filename);
+            LaunchBar.debugLog(`Created file: ${output_filename}`);
         } catch (e) {
             LaunchBar.alert(`Failed to write to file: ${output_filename} (${e})`);
         }

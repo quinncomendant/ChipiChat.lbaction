@@ -23,11 +23,11 @@
 		<key>LBEmail</key>
 		<string>quinn@strangecode.com</string>
 		<key>LBRequirements</key>
-		<string>Internet, an OpenAI API key</string>
+		<string>You need an OpenAI API key, and access to the internet.</string>
 		<key>LBResult</key>
-		<string>A response message from ChatGPT</string>
+		<string>Response message from ChatGPT as a LaunchBar item</string>
 		<key>LBSummary</key>
-		<string>Interact with ChatGPT and receive responses as LaunchBar items.</string>
+		<string>Interact with ChatGPT</string>
 		<key>LBTwitter</key>
 		<string>@com</string>
 		<key>LBWebsiteURL</key>
@@ -36,9 +36,9 @@
 	<key>LBMinimumLaunchBarVersion</key>
 	<integer>6</integer>
 	<key>LBRequirements</key>
-	<string>Internet, an OpenAI API key</string>
+	<string>You need an OpenAI API key, and access to the internet.</string>
 	<key>LBResult</key>
-	<string>A response message from ChatGPT</string>
+	<string>Response message from ChatGPT as a LaunchBar item</string>
 	<key>LBScripts</key>
 	<dict>
 		<key>LBDefaultScript</key>

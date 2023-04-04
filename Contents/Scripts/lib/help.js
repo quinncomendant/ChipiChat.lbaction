@@ -22,7 +22,7 @@ Send a message, question, or instruction to Chat GPT and quickly obtain and mani
 
 ✨  ⌘C  Copy the response to the clipboard.
 ✨  ⌘Y  QuickLook the response.
-✨  ↵ (return)  Open the response in your text editor (saved as .md files in /tmp/chipichat/).
+✨  ↵ (return)  Open the response as a .md file in your text editor.
 ✨  → (right-arrow)  Browse the response as a list (ideal for copying only needed lines).
 ✨  ⇥ (tab)  Send the text to other LaunchBar targets.
 

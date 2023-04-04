@@ -86,7 +86,7 @@ function runWithString(argument) {
         return;
     }
 
-    const output_filename = `/tmp/chipichat/${util.slug(argument)}.md`;
+    const output_filename = `${Action.cachePath}/${util.safeFilename(argument)}.md`;
     const response_text = openai.chat(argument, output_filename);
     if (typeof response_text === 'string') {
         // Save to a temporary file to open via QuickLook or text editor.
