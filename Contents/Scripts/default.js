@@ -91,15 +91,25 @@ function runWithString(argument) {
     if (typeof response_text === 'string') {
         // Save to a temporary file to open via QuickLook or text editor.
         util.saveFile(output_filename, response_text);
-        // Return the full text as the title, with children for each line, hitting ↵ will open the saved text file.
-        return {
-            title: response_text,
-            children: response_text.split('\n').filter(line => !line.includes('```')).map(line => ({ title: line})),
-            action: 'openFile',
-            actionArgument: output_filename,
-            quickLookURL: File.fileURLForPath(output_filename),
-            icon: 'ChipiChat-bw.png'
-        };
+
+        if (LaunchBar.options.commandKey) {
+            // Open the response document immediately.
+            openFile(output_filename)
+        } else if (LaunchBar.options.shiftKey) {
+            // Insert response where the cursor is immediately.
+            LaunchBar.paste(response_text);
+            LaunchBar.hide();
+        } else {
+            // Return the full text as the title, with children for each line, hitting ↵ will open the saved text file.
+            return {
+                title: response_text,
+                children: response_text.split('\n').filter(line => !line.includes('```')).map(line => ({ title: line})),
+                action: 'openFile',
+                actionArgument: output_filename,
+                quickLookURL: File.fileURLForPath(output_filename),
+                icon: 'ChipiChat-bw.png'
+            };
+        }
     }
 }
 

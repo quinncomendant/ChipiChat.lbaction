@@ -20,6 +20,9 @@ class Help {
 
 Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
+✨  ⌘ (held when running the action)  Immediately open the response as a .md file in your text editor.
+✨  ⇧ (held when running the action)  Immediately paste the response at the current cursor position.
+✨  ⌘Y  QuickLook the response.
 ✨  ⌘C  Copy the response to the clipboard.
 ✨  ⌘Y  QuickLook the response.
 ✨  ↵ (return)  Open the response as a .md file in your text editor.
