@@ -21,9 +21,9 @@ Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses dire
 ### Prefix your message with one-or-more modifiers for enhanced functionality:
 
 -  `N.N`: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
--  `copy`: Automatically copy the response to the clipboard.
--  `code`: Use the coder persona for code-only responses.
 -  `4`: Use the GPT-4 model (requires GPT-4 API access).
+-  `code`: Use the coder persona for code-only responses.
+-  `copy`: Automatically copy the response to the clipboard.
 -  `new`: Start a new conversation with no history.
 -  `write`: Use the copywriter persona, adhering to Orwell’s six rules for writers.
 

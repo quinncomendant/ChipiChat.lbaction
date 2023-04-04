@@ -54,9 +54,9 @@ class OpenAI {
                 input_text = util.unprefix(input_text);
                 break;
 
-            case 'copy':
-                // Copy the response to the clipboard.
-                postprocessing.push('copy-to-clipboard');
+            case 'amnesia':
+                // Exclude conversation history for this message.
+                max_history_minutes = 0;
                 input_text = util.unprefix(input_text);
                 break;
 
@@ -67,9 +67,9 @@ class OpenAI {
                 reprefix.push(modifier);
                 break;
 
-            case 'amnesia':
-                // Exclude conversation history for this message.
-                max_history_minutes = 0;
+            case 'copy':
+                // Copy the response to the clipboard.
+                postprocessing.push('copy-to-clipboard');
                 input_text = util.unprefix(input_text);
                 break;
 

@@ -32,9 +32,9 @@ Send a message, question, or instruction to Chat GPT and quickly obtain and mani
 Prefix your message with one-or-more modifiers for enhanced functionality:
 
 ✏️  N.N: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
-✏️  copy: Automatically copy the response to the clipboard.
+✏️  4: Use the GPT-4 model (requires GPT-4 API access).
 ✏️  code: Use the coder persona for code-only responses.
-✏️  gpt4: Use the GPT-4 model (requires GPT-4 API access).
+✏️  copy: Automatically copy the response to the clipboard.
 ✏️  new: Start a new conversation with no history.
 ✏️  write: Use the copywriter persona, adhering to Orwell’s six rules for writers.
 
