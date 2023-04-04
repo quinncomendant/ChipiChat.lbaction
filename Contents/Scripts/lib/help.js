@@ -18,7 +18,7 @@ class Help {
     general() {
         const response = LaunchBar.alert('ChipiChat: LaunchBar 🥂 ChatGPT', `Interact with ChatGPT and receive responses as LaunchBar items. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk.
 
-Quickly obtain and manipulate responses, LaunchBar-style:
+Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
 ✨  ⌘C  Copy the response to the clipboard.
 ✨  ⌘Y  QuickLook the response.
@@ -26,7 +26,7 @@ Quickly obtain and manipulate responses, LaunchBar-style:
 ✨  → (right-arrow)  Browse the response as a list (ideal for copying only needed lines).
 ✨  ⇥ (tab)  Send the text to other LaunchBar targets.
 
-Use one or more modifiers for enhanced functionality:
+Prefix your message with one-or-more modifiers for enhanced functionality:
 
 ✏️  N.N: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
 ✏️  copy: Automatically copy the response to the clipboard.
@@ -59,7 +59,7 @@ ChipiChat was created by by Quinn Comendant – https://twitter.com/com
         const response = LaunchBar.alert('ChatGPT requires an OpenAI API key', `1. Create an OpenAI account at https://platform.openai.com/signup.
 2. Add a credit card in Account → Billing → Payment methods.
 3. Get an API key at https://platform.openai.com/account/api-keys.
-4. Invoke ChipiChat and enter this command to set your API key in LaunchPad OpenAI:
+4. Invoke ChipiChat and enter this command to save your API key in LaunchBar:
 
 👉    configset api_key sk-×××××××××××××××××××…
 `, 'Close', 'Open URL for API key', 'Open URL to create account');

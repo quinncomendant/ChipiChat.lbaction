@@ -95,15 +95,9 @@ function runWithString(argument) {
             action: 'openFile',
             actionArgument: output_filename,
             quickLookURL: File.fileURLForPath(output_filename),
-            icon: 'ChucklesBorg-bw.png'
+            icon: 'ChipiChat-bw.png'
         };
     }
-}
-
-// This function is called by LaunchBar when the user uses Send To to pass an item that was the result of a previous run of an action.
-function runWithItem(item) {
-    LaunchBar.alert(JSON.stringify(item));
-    return;
 }
 
 // This function is called by LaunchBar when the user passes one or more files or folders to the action, either by using the “Open File” dialog or by using Send To.
@@ -126,4 +120,12 @@ function runWithPaths(paths) {
         return runWithString(contents.join('\n----\n'));
     }
     return;
+}
+
+// This is the default function called by LaunchBar. If the user just runs the action without any argument, or there is an argument but none of the more specific function are implemented, this function will be called.
+function run(argument) {
+    if (typeof argument === 'string') {
+        return runWithString(argument);
+    }
+    LaunchBar.alert(`ChipiChat doesn’t know how to handle this type of input: ${JSON.stringify(argument)}`);
 }
