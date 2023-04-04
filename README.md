@@ -1,1 +1,1 @@
-# launchbar-chatgpt
+# ChipiChat.lbaction
