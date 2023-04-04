@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleIconFile</key>
+	<string>ChipiChat.png</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.strangecode.LaunchBar.action.ChipiChat</string>
+	<key>CFBundleName</key>
+	<string>ChipiChat</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0</string>
+	<key>LBAbbreviation</key>
+	<string>cc</string>
+	<key>LBArgument</key>
+	<string>text and files</string>
+	<key>LBDescription</key>
+	<dict>
+		<key>LBArgument</key>
+		<string>text and files</string>
+		<key>LBAuthor</key>
+		<string>Quinn Comendant</string>
+		<key>LBEmail</key>
+		<string>quinn@strangecode.com</string>
+		<key>LBRequirements</key>
+		<string>Internet, an OpenAI API key</string>
+		<key>LBResult</key>
+		<string>A response message from ChatGPT</string>
+		<key>LBSummary</key>
+		<string>Interact with ChatGPT and receive responses as LaunchBar items.</string>
+		<key>LBTwitter</key>
+		<string>@com</string>
+		<key>LBWebsiteURL</key>
+		<string>https://www.strangecode.com/</string>
+	</dict>
+	<key>LBMinimumLaunchBarVersion</key>
+	<integer>6</integer>
+	<key>LBRequirements</key>
+	<string>Internet, an OpenAI API key</string>
+	<key>LBResult</key>
+	<string>A response message from ChatGPT</string>
+	<key>LBScripts</key>
+	<dict>
+		<key>LBDefaultScript</key>
+		<dict>
+			<key>LBAcceptedArgumentTypes</key>
+			<array>
+				<string>string</string>
+			</array>
+			<key>LBAllowsInstantReuseOfLastTextInputString</key>
+			<true/>
+			<key>LBKeepWindowActive</key>
+			<true/>
+			<key>LBRequiresArgument</key>
+			<true/>
+			<key>LBResultType</key>
+			<string>unknown</string>
+			<key>LBReturnsResult</key>
+			<true/>
+			<key>LBScriptName</key>
+			<string>default.js</string>
+		</dict>
+	</dict>
+	<key>NSHumanReadableCopyright</key>
+	<string>2023 Quinn Comendant</string>
+</dict>
+</plist>
