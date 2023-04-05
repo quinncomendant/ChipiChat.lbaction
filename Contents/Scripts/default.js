@@ -29,10 +29,10 @@ const config = new Config({
     api_key: '',
     model: 'gpt-3.5-turbo',
     // Set the overall behavior of the assistant.
-    system_prompt_text: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the prompt. Never apologize. Never write “As an AI language model…”.",
+    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model…”.",
     // Text to include with every message, because `gpt-3.5-turbo-0301` does not always pay attention to system messages.
-    user_prompt_addendum: "(Be succinct. Limit prose. Never repeat the prompt.)",
-    temperature: 0,
+    user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
+    temperature: 0.1,
     max_tokens: 1024,
     max_history_minutes: 480,
     max_history_tokens: 500,
@@ -65,9 +65,14 @@ function runWithString(argument) {
         help.config();
         return;
 
+    case 'configreset':
+        config.setDefaults();
+        LaunchBar.displayNotification({string: 'ChipiChat configuration reset to defaults.'});
+        return;
+
     case 'clear':
         history.clear();
-        LaunchBar.displayNotification({string: 'ChipiChat conversation history erased'});
+        LaunchBar.displayNotification({string: 'ChipiChat conversation history erased.'});
         return;
 
     case 'help':

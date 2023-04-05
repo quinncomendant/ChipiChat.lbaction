@@ -2,9 +2,8 @@
 
 Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/index.html "LaunchBar 6"). Conversation history is preserved for context. Responses are cached on disk.
 
-![Demo](docs/demo.gif)
+![Demo](https://send.strangecode.com/f/chipichat-demo-20230404.gif)
 
-(Just remember, ChatGPT makes mistakes – “LaunchBar for iOS”‽ 🙃)
 
 ## Usage
 
@@ -24,6 +23,7 @@ Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses dire
 -  `4`: Use the GPT-4 model (requires GPT-4 API access).
 -  `code`: Use the coder persona for code-only responses.
 -  `copy`: Automatically copy the response to the clipboard.
+-  `list`: Request response formatted as a bulleted list.
 -  `new`: Start a new conversation with no history.
 -  `write`: Use the copywriter persona, adhering to Orwell’s six rules for writers.
 
@@ -32,7 +32,8 @@ You can combine modifiers, e.g., “`code copy 4 js function to get a uuid`” s
 ### Manage history and settings with special commands:
 
 - `clear`: Remove chat history without sending a message.
-- `config`: Show all configuration settings.
+- `config`: Show current configuration settings.
+- `configreset`: Reset all configuration options to defaults.
 - `configset KEY VALUE`: Set the configuration KEY to VALUE.
 - `help`: Display this help message.
 - `history`: Display recent chat history.
@@ -74,6 +75,31 @@ That’s a bit hard to read, but if you hit the right-arrow key, you can view it
 Or, you can view it in QuickLook (press the left-arrow key to go back, then hit `⌘Y`):
 
 ![Response As Quicklook](docs/5-response-as-quicklook.png)
+
+## Configuration
+
+The following options can be changed using the `configset KEY VALUE` command. For example, to change the `system_message`:
+
+```
+configset system_message You are a helpful but sarcastic assistent.
+````
+
+To view currently-set values, send the `config` command.
+
+To reset all configuration options to defaults, send the `configreset` command.
+
+### Options
+
+- `api_key`: Your OpenAI API key (default: empty).
+- `max_history_minutes`: Include up to *max_history_minutes* of conversation history in requests (default: `480`).
+- `max_history_tokens`: Include up to *max_tokens* of conversation history in requests (default: `500`).
+- `max_tokens`: The maximum number of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to generate (default: `1024`).
+- `model`: Which OpenAI [model](https://platform.openai.com/docs/models/overview) to use (default: `gpt-3.5-turbo`).
+- `system_message`: The [system message](https://platform.openai.com/docs/guides/chat/introduction) to send in requests (default: `You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model…”.`).
+- `temperature`: What sampling [temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature) to use, between `0.0` and `2.0` (default: `0.1`).
+- `timeout`: How many seconds to wait for a response from the API (default: `15`; note: when using the much slower GPT-4, there is a hard-coded 120 second timeout).
+- `user_message_addendum`: Supplemental instructions that are included with every user message (default: `Be succinct. Limit prose. Never repeat the user message.`).
+
 
 ## Support
 

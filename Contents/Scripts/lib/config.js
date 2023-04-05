@@ -86,8 +86,8 @@ class Config {
             Action.preferences.config[key] = val;
             break;
 
-        case 'system_prompt_text':
-        case 'user_prompt_addendum':
+        case 'system_message':
+        case 'user_message_addendum':
             Action.preferences.config[key] = val;
             break;
 

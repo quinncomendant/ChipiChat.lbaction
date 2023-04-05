@@ -26,13 +26,14 @@ class OpenAI {
         let api_key = config.get('api_key');
         let max_tokens = config.get('max_tokens');
         let model = config.get('model');
-        let system_prompt_text = config.get('system_prompt_text');
-        let user_prompt_addendum = config.get('user_prompt_addendum');
+        let system_message = config.get('system_message');
+        let user_message_addendum = config.get('user_message_addendum');
         let temperature = config.get('temperature');
         let max_history_minutes = config.get('max_history_minutes');
         let max_history_tokens = config.get('max_history_tokens');
         let timeout = config.get('timeout');
 
+        input_text = input_text.trim();
         const input_text_with_modifiers = input_text;
         let postprocessing = [];
         let reprefix = []
@@ -62,7 +63,7 @@ class OpenAI {
 
             case 'code':
                 // Output only code. Markdown code blocks will be removed later.
-                system_prompt_text = 'You are an assistent to a senior software engineer. Write code only, no description or explanation besides code comments. If the code is more than 3 lines long, add comments to the code. Be succinct. Limit prose.';
+                system_message = 'You are an assistent to a senior software engineer. Write code only, no description or explanation besides code comments. If the code is more than 3 lines long, add comments to the code. Be succinct. Limit prose.';
                 input_text = util.unprefix(input_text);
                 reprefix.push(modifier);
                 break;
@@ -75,7 +76,7 @@ class OpenAI {
 
             case 'list':
                 // Always create a bulleted list.
-                user_prompt_addendum = `Respond with a bulleted list. ${user_prompt_addendum}`;
+                user_message_addendum = `Respond with a bulleted list. ${user_message_addendum}`;
                 input_text = util.unprefix(input_text);
                 reprefix.push(modifier);
                 break;
@@ -89,8 +90,8 @@ class OpenAI {
             case 'write':
                 // Writing persona
                 postprocessing.push('remove-markdown');
-                system_prompt_text = `You are a professional copywriter. Write using the following rules: avoid clichés and figures of speech, use short words, cut unnecessary words, prefer the active voice.`;
-                user_prompt_addendum = '';
+                system_message = `You are a professional copywriter. Write using the following rules: avoid clichés and figures of speech, use short words, cut unnecessary words, prefer the active voice.`;
+                user_message_addendum = '';
                 input_text = util.unprefix(input_text);
                 reprefix.push(modifier);
                 break;
@@ -112,14 +113,14 @@ class OpenAI {
             return cached_response_text;
         }
 
-        // Load prompt messages.
-        let messages = [{role: 'system', content: system_prompt_text}];
+        // Build chat completion messages.
+        let messages = [{role: 'system', content: system_message}];
+        // Include previous non-stale exchanges.
         history.get(max_history_minutes, max_history_tokens).forEach(exchange => {
-            // Include previous non-stale exchanges with the prompt.
             messages.push({role: 'user', content: exchange.user});
             messages.push({role: 'assistant', content: exchange.assistant});
         });
-        messages.push({role: 'user', content: `${input_text} ${user_prompt_addendum}`});
+        messages.push({role: 'user', content: `${/[.,;:!?]$/.test(input_text) ? input_text : input_text + '.'} ${user_message_addendum}`});
 
         LaunchBar.debugLog(`Request: ${JSON.stringify(messages)}`);
 

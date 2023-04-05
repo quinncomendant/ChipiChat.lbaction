@@ -16,7 +16,7 @@
 
 class Help {
     general() {
-        const response = LaunchBar.alert('ChipiChat: LaunchBar 🥂 ChatGPT', `Interact with ChatGPT and receive responses as LaunchBar items. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk.
+        const response = LaunchBar.alert('ChipiChat: LaunchBar🥂ChatGPT', `Interact with ChatGPT and receive responses as LaunchBar items. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk.
 
 Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
@@ -31,26 +31,29 @@ Send a message, question, or instruction to Chat GPT and quickly obtain and mani
 
 Prefix your message with one-or-more modifiers for enhanced functionality:
 
-✏️  N.N: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
-✏️  4: Use the GPT-4 model (requires GPT-4 API access).
-✏️  code: Use the coder persona for code-only responses.
-✏️  copy: Automatically copy the response to the clipboard.
-✏️  new: Start a new conversation with no history.
-✏️  write: Use the copywriter persona, adhering to Orwell’s six rules for writers.
+🏷️  N.N: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
+🏷️  4: Use the GPT-4 model (requires GPT-4 API access).
+🏷️  code: Use the coder persona for code-only responses.
+🏷️  copy: Automatically copy the response to the clipboard.
+🏷️  list: Request response formatted as a bulleted list.
+🏷️  new: Start a new conversation with no history.
+🏷️  write: Use the copywriter persona, adhering to Orwell’s six rules for writers.
 
 You can combine modifiers, e.g., “code copy 4 js function to get a uuid” sends “js function to get a uuid” to GPT-4 API with the code persona and copies the response. All modifiers must go before your message.
 
 Manage history and settings with special commands:
 
 ⚡️ clear: Remove chat history without sending a message.
-⚡️ config: Show all configuration settings.
+⚡️ config: Show current configuration settings.
+⚡️ configreset: Reset all configuration options to defaults.
 ⚡️ configset KEY VALUE: Set the configuration KEY to VALUE.
 ⚡️ help: Display this help message.
 ⚡️ history: Display chat history.
 
-
 ⎯
-ChipiChat was created by by Quinn Comendant – https://twitter.com/com
+ChipiChat was created by by Quinn Comendant
+https://github.com/quinncomendant/ChipiChat.lbaction
+https://twitter.com/com
 
 `, 'Close', '☕️ Support me on Ko-fi');
         switch (response) {
@@ -66,7 +69,7 @@ ChipiChat was created by by Quinn Comendant – https://twitter.com/com
 3. Get an API key at https://platform.openai.com/account/api-keys.
 4. Invoke ChipiChat and enter this command to save your API key in LaunchBar:
 
-👉    configset api_key sk-×××××××××××××××××××…
+👉    configset api_key sk-×××××××××××××××××××
 `, 'Close', 'Open URL for API key', 'Open URL to create account');
 
         switch (response) {
@@ -80,6 +83,6 @@ ChipiChat was created by by Quinn Comendant – https://twitter.com/com
     }
 
     config() {
-        const response = LaunchBar.alert('ChipiChat configuration', `To change any of the following values, use the “configset” command, e.g., “configset system_prompt_text You are a helpful but sarcastic assistent”.\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n${config.show()}`, 'Close');
+        const response = LaunchBar.alert('ChipiChat configuration', `To change any of the following values, use the “configset” command, e.g., “configset system_message You are a helpful but sarcastic assistent”.\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n${config.show()}`, 'Close');
     }
 }
