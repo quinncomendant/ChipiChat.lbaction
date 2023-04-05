@@ -68,6 +68,11 @@ class OpenAI {
                 reprefix.push(modifier);
                 break;
 
+            case 'config':
+                // The user is lost.
+                LaunchBar.alert(`Are you looking for the “configset” and “configreset” commands? If you need help send the “help” command.`);
+                return true;
+
             case 'copy':
                 // Copy the response to the clipboard.
                 postprocessing.push('copy-to-clipboard');
@@ -152,6 +157,9 @@ class OpenAI {
 
             let response_text = result.data.choices[0].message.content.trim();
 
+            // Save the conversation history to include in future instructions.
+            history.add(input_text_with_modifiers, input_text, response_text);
+
             // Post-processes lines.
             postprocessing.forEach(action => {
                 switch (action) {
@@ -161,9 +169,6 @@ class OpenAI {
                     break;
                 }
             });
-
-            // Save the conversation history to include in future instructions.
-            history.add(input_text_with_modifiers, input_text, response_text);
 
             return response_text;
         } else if (typeof result.error !== 'undefined') {

@@ -34,11 +34,15 @@ class Config {
         }
     }
 
-    setDefaults() {
-        Action.preferences.config = {};
+    setDefaults(keys_to_skip=[]) {
+        if (!keys_to_skip.length) {
+            Action.preferences.config = {};
+        }
         Object.entries(this.defaults).forEach(([key, val]) => {
-            LaunchBar.debugLog(`Setting default config: ${key} = ${val}`);
-            Action.preferences.config[key] = val;
+            if (!keys_to_skip.includes(key)) {
+                LaunchBar.debugLog(`Setting default config: ${key} = ${val}`);
+                Action.preferences.config[key] = val;
+            }
         });
     }
 

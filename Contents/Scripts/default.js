@@ -53,8 +53,8 @@ const openai = new OpenAI();
 
 // This is the returned item's `action` function (enter key).
 function openFile(filename) {
-    LaunchBar.hide();
     LaunchBar.openURL(File.fileURLForPath(filename));
+    LaunchBar.hide();
 }
 
 // This function is called by LaunchBar when the user passes text to the action.
@@ -66,7 +66,7 @@ function runWithString(argument) {
         return;
 
     case 'configreset':
-        config.setDefaults();
+        config.setDefaults(['api_key']); // Don't reset API key.
         LaunchBar.displayNotification({string: 'ChipiChat configuration reset to defaults.'});
         return;
 
