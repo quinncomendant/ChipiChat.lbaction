@@ -37,6 +37,7 @@ You can combine modifiers, e.g., “`code copy 4 js function to get a uuid`” s
 - `configset KEY VALUE`: Set the configuration KEY to VALUE.
 - `help`: Display this help message.
 - `history`: Display recent chat history.
+- `version`: Display ChipiChat version.
 
 ## Installation
 

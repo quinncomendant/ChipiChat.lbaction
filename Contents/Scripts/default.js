@@ -81,6 +81,10 @@ function runWithString(argument) {
 
     case 'history':
         return history.show();
+
+    case 'version':
+        LaunchBar.alert(`ChipiChat version 1.0.0\n\nCheck for new versions at https://github.com/quinncomendant/ChipiChat.lbaction/releases`);
+        return;
     }
 
     // Update config
