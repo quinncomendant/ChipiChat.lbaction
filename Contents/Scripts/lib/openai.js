@@ -171,7 +171,7 @@ class OpenAI {
             LaunchBar.alert('LaunchBar error', result.error);
         } else {
             LaunchBar.debugLog(`Unknown error: ${JSON.stringify(result)}`);
-            LaunchBar.alert('An unknown error occured');
+            LaunchBar.alert('An unknown error occurred');
         }
     }
 }

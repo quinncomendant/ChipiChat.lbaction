@@ -1,4 +1,4 @@
-# ChipiChat: LaunchBar 🥂 ChatGPT
+# ChipiChat: LaunchBar🥂ChatGPT
 
 Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/index.html "LaunchBar 6"). Conversation history is preserved for context. Responses are cached on disk.
 
@@ -50,9 +50,9 @@ Before you can use ChatGPT, you must get an OpenAI API key:
 
 ### Install ChipiChat
 
-1. Download a release and copy the `ChipiChat.lbaction` file into `~/Library/Application Support/LaunchBar/Actions/`.
+1. Download the [latest release](https://github.com/quinncomendant/ChipiChat.lbaction/releases) and copy the `ChipiChat.lbaction` file into `~/Library/Application Support/LaunchBar/Actions/`.
 2. Open LaunchBar and type `cc` to invoke ChipiChat. 
-3. Hit the spacebar, enter `configset api_key YOURAPIKEYHERE`, and hit enter to save your API key in LaunchBar:
+3. Hit the spacebar, type `configset api_key YOURAPIKEYHERE`, and hit enter to save your API key in LaunchBar:
 
 ![configset api_key yourkeyhere](docs/1-set-api-key.png)
 
@@ -68,11 +68,11 @@ After a couple seconds, you receive the response:
 
 ![Response](docs/3-response.png)
 
-That’s a bit hard to read, but if you hit the right-arrow key, you can view it as a list:
+That’s a bit hard to read, but if you press the right-arrow key, you can view it as a list:
 
 ![Response As List](docs/4-response-as-list.png)
 
-Or, you can view it in QuickLook (press the left-arrow key to go back, then hit `⌘Y`):
+Or, you can view it in QuickLook (press the left-arrow key to go back, then press `⌘Y`):
 
 ![Response As Quicklook](docs/5-response-as-quicklook.png)
 
