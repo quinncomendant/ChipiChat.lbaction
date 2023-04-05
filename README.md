@@ -51,7 +51,7 @@ Before you can use ChatGPT, you must get an OpenAI API key:
 
 ### Install ChipiChat
 
-1. Download the [latest release](https://github.com/quinncomendant/ChipiChat.lbaction/releases) and copy the `ChipiChat.lbaction` file into `~/Library/Application Support/LaunchBar/Actions/`.
+1. Download `ChipiChat.lbaction.zip` from [releases](https://github.com/quinncomendant/ChipiChat.lbaction/releases), unzip it, and copy the `ChipiChat.lbaction` file into `~/Library/Application Support/LaunchBar/Actions/`.
 2. Open LaunchBar and type `cc` to invoke ChipiChat. 
 3. Hit the spacebar, type `configset api_key YOURAPIKEYHERE`, and hit enter to save your API key in LaunchBar:
 
