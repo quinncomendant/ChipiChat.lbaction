@@ -112,8 +112,8 @@ class OpenAI {
         input_text = `${reprefix.join(' ')} ${input_text}`;
 
         // Respond with cached response.
-        const cached_response_text = history.getAssistantResponse(input_text_with_modifiers);
-        if (typeof cached_response_text !== 'undefined') {
+        const cached_response_text = history.getAssistantResponse(input_text_with_modifiers, 3600);
+        if (typeof cached_response_text !== 'undefined' && str.split(' ').length > 4) {
             LaunchBar.debugLog(`Using cached response: ${cached_response_text}`);
             return cached_response_text;
         }
