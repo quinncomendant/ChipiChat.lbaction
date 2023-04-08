@@ -48,8 +48,11 @@ class History {
         Action.preferences.conversation_history.unshift(exchange);
     }
 
-    getAssistantResponse(input_text_with_modifiers) {
-        const exchange = Action.preferences.conversation_history.find(exchange => exchange.input_text_with_modifiers === input_text_with_modifiers);
+    getAssistantResponse(input_text_with_modifiers, max_age_seconds) {
+        max_age_seconds = max_age_seconds || 9999999999;
+        const exchange = Action.preferences.conversation_history.find(exchange => {
+            exchange.input_text_with_modifiers === input_text_with_modifiers && (new Date() - new Date(exchange.date)) <= max_age_seconds * 1000;
+        });
         return typeof exchange !== 'undefined' && exchange.assistant.length ? exchange.assistant : undefined;
     }
 
@@ -72,7 +75,17 @@ class History {
             return;
         }
         return Action.preferences.conversation_history.map(exchange => {
-            return {subtitle: exchange.user, title: exchange.assistant, alwaysShowsSubtitle: true}
+            return {
+                title: exchange.assistant,
+                subtitle: exchange.user,
+                alwaysShowsSubtitle: true,
+                children: util.actionOutputChildren(exchange.assistant),
+                action: 'openFile',
+                actionArgument: util.filenameFromInputString(exchange.user),
+                quickLookURL: File.fileURLForPath(util.filenameFromInputString(exchange.user)),
+                icon: 'ChipiChat-bw.png'
+            };
+
         });
     }
 

@@ -101,9 +101,26 @@ To reset all configuration options to defaults, send the `configreset` command.
 - `timeout`: How many seconds to wait for a response from the API (default: `15`; note: when using the much slower GPT-4, there is a hard-coded 120 second timeout).
 - `user_message_addendum`: Supplemental instructions that are included with every user message (default: `Be succinct. Limit prose. Never repeat the user message.`).
 
+## To do
+
+- [ ] Persona management:
+    - `persona NAME SYSTEM-MESSAGE` to create or update a persona.
+    - `persona NAME` to set a persona as the default.
+    - `NAME USER-MESSAGE` to send USER-MESSAGE to the API using the system message persona assigned to NAME.
+    - `persona NAME SYSTEM-MESSAGE` to create or update a persona.
+    - For example, create a persona name `fix` that will be used to improve submitted text: `persona fix Rewrite the following text so that it is well reasoned and emotionally intelligent.` To use this persona, just send `fix Here is my text that needs to be fixed`.
+- [ ] Export conversation: `export` command saves all the user and assistent messages for the current session (since the last `clear`) to a `.md` file in ~/Downloads.
+- [ ] Hold option to auto-open QuickLook after receiving a response.
+- [ ] Allow configuring default action when hitting enter after receiving a response. The default will remain as-is: open the response in a text editor.
+- [ ] Command to check for updates.
+
 
 ## Support
 
 Contact me [on Twitter](https://twitter.com/com) or file an [issue](https://github.com/quinncomendant/ChipiChat.lbaction/issues).
 
 Do you find this free software useful? [Say thanks with a coffee!](https://ko-fi.com/strangecode)
+
+----
+
+[![ChipiChat icon](docs/ChipiChat.jpg)](docs/ChipiChat.jpg)

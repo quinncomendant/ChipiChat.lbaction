@@ -51,9 +51,10 @@ const util = new Util();
 include('lib/openai.js');
 const openai = new OpenAI();
 
-// This is the returned item's `action` function (enter key).
+// This function must remain global. It is the returned item's `action` function (enter key).
 function openFile(filename) {
-    LaunchBar.openURL(File.fileURLForPath(filename));
+    // LaunchBar does not hide after using LaunchBar.openURL(), so use the `open` command instead.
+    LaunchBar.execute('/usr/bin/open', '-t', filename);
     LaunchBar.hide();
 }
 
@@ -95,13 +96,17 @@ function runWithString(argument) {
         return;
     }
 
-    const output_filename = `${Action.cachePath}/${util.safeFilename(argument)}.md`;
+    const output_filename = util.filenameFromInputString(argument);
     const response_text = openai.chat(argument, output_filename);
     if (typeof response_text === 'string') {
         // Save to a temporary file to open via QuickLook or text editor.
         util.saveFile(output_filename, response_text);
 
-        if (LaunchBar.options.commandKey) {
+        if (LaunchBar.options.controlKey) {
+            // QuickLook the response document immediately.
+            LaunchBar.openQuickLook(output_filename);
+            return util.actionOutput(response_text, output_filename);
+        } else if (LaunchBar.options.commandKey) {
             // Open the response document immediately.
             openFile(output_filename)
         } else if (LaunchBar.options.shiftKey) {
@@ -110,14 +115,7 @@ function runWithString(argument) {
             LaunchBar.hide();
         } else {
             // Return the full text as the title, with children for each line, hitting ↵ will open the saved text file.
-            return {
-                title: response_text,
-                children: response_text.split('\n').filter(line => !line.includes('```')).map(line => ({ title: line})),
-                action: 'openFile',
-                actionArgument: output_filename,
-                quickLookURL: File.fileURLForPath(output_filename),
-                icon: 'ChipiChat-bw.png'
-            };
+            return util.actionOutput(response_text, output_filename);
         }
     }
 }
@@ -146,6 +144,10 @@ function runWithPaths(paths) {
 
 // This is the default function called by LaunchBar. If the user just runs the action without any argument, or there is an argument but none of the more specific function are implemented, this function will be called.
 function run(argument) {
+    if (typeof argument === 'undefined') {
+        help.general();
+        return;
+    }
     if (typeof argument === 'string') {
         return runWithString(argument);
     }

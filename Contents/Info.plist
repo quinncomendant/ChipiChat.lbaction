@@ -47,8 +47,6 @@
 			<array>
 				<string>string</string>
 			</array>
-			<key>LBAllowsInstantReuseOfLastTextInputString</key>
-			<true/>
 			<key>LBKeepWindowActive</key>
 			<true/>
 			<key>LBRequiresArgument</key>

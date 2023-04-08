@@ -39,14 +39,18 @@ class Util {
             .replace(/^-+|-+$/g, '');
     }
 
+    dirname(path) {
+        return path.substring(0, path.lastIndexOf('/') + 1);
+    }
+
     safeFilename(str) {
-        const hash = this.fnv1aHash(str).toString();
-        const slug = this.slug(str).substring(0, 250 - hash.length);
+        const hash = this.fnv1aHash(str.trim()).toString();
+        const slug = this.slug(str.trim()).substring(0, 250 - hash.length);
         return `${slug}-${hash}`;
     }
 
-    dirname(path) {
-        return path.substring(0, path.lastIndexOf('/') + 1);
+    filenameFromInputString(str) {
+        return `${Action.cachePath}/${this.safeFilename(str)}.md`;
     }
 
     saveFile(output_filename, content) {
@@ -61,5 +65,57 @@ class Util {
         } catch (e) {
             LaunchBar.alert(`Failed to write to file: ${output_filename} (${e})`);
         }
+    }
+
+    actionOutputChildren(response_text) {
+        let output = [];
+        let in_code_block = false;
+        response_text.split('\n').forEach(line => {
+            if (/^ *```/.test(line)) {
+                in_code_block = !in_code_block;
+                return;
+            }
+            if (in_code_block) {
+                output.push({ title: line, icon: 'character:􀡅'});
+                return;
+            }
+            if (/^ *- /.test(line)) {
+                output.push({ title: line.replace(/^- /, ''), icon: 'character:🞄'});
+                return;
+            }
+            if (/^ *\d{1,2}\. /.test(line)) {
+                // Or…? 􀃊􀃌􀃎􀃐􀃒􀃔􀃖􀃘􀃚􀃈
+                let match = line.match(/^ *(\d{1,2})\. /);
+                if (!match) {
+                    return;
+                }
+                switch (match[1]) {
+                    case '0': output.push({ title: line, icon: 'character:􀀸'}); return;
+                    case '1': output.push({ title: line, icon: 'character:􀀺'}); return;
+                    case '2': output.push({ title: line, icon: 'character:􀀼'}); return;
+                    case '3': output.push({ title: line, icon: 'character:􀀾'}); return;
+                    case '4': output.push({ title: line, icon: 'character:􀁀'}); return;
+                    case '5': output.push({ title: line, icon: 'character:􀁂'}); return;
+                    case '6': output.push({ title: line, icon: 'character:􀁄'}); return;
+                    case '7': output.push({ title: line, icon: 'character:􀁆'}); return;
+                    case '8': output.push({ title: line, icon: 'character:􀁈'}); return;
+                    case '9': output.push({ title: line, icon: 'character:􀁊'}); return;
+                    default: output.push({ title: line, icon: 'character:􀍡'});  return;
+                }
+            }
+            output.push({ title: line, icon: 'character:􀌪'});
+        });
+        return output;
+    }
+
+    actionOutput(response_text, output_filename) {
+        return {
+            title: response_text,
+            children: this.actionOutputChildren(response_text),
+            action: 'openFile',
+            actionArgument: output_filename,
+            quickLookURL: File.fileURLForPath(output_filename),
+            icon: 'ChipiChat-bw.png'
+        };
     }
 }
