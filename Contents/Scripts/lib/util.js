@@ -67,6 +67,12 @@ class Util {
         }
     }
 
+    openFile(filename) {
+        // LaunchBar does not hide after using LaunchBar.openURL(), so use the `open` command instead.
+        LaunchBar.execute('/usr/bin/open', '-t', filename);
+        LaunchBar.hide();
+    }
+
     versionCheck() {
         var result = HTTP.getJSON('https://api.github.com/repos/quinncomendant/ChipiChat.lbaction/releases/latest');
         if (typeof result.data !== 'undefined') {
@@ -92,7 +98,7 @@ class Util {
             }
         }
         LaunchBar.alert(`ChipiChat version ${version}`, `Failed to check if a new version is available. ${typeof result.error !== 'undefined' ? result.error : ''}`);
-    };
+    }
 
     actionOutputChildren(response_text) {
         let output = [];
@@ -139,7 +145,7 @@ class Util {
         return {
             title: response_text,
             children: this.actionOutputChildren(response_text),
-            action: 'openFile',
+            action: 'defaultAction',
             actionArgument: output_filename,
             quickLookURL: File.fileURLForPath(output_filename),
             icon: 'ChipiChat-bw.png'

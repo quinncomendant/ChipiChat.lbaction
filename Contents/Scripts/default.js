@@ -31,9 +31,10 @@ const config = new Config({
     api_key: '',
     model: 'gpt-3.5-turbo',
     // Set the overall behavior of the assistant.
-    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model…”.",
+    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.",
     // Text to include with every message, because `gpt-3.5-turbo-0301` does not always pay attention to system messages.
     user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
+    default_action: "open",
     temperature: 0.1,
     max_tokens: 1024,
     max_history_minutes: 480,
@@ -54,10 +55,41 @@ include('lib/openai.js');
 const openai = new OpenAI();
 
 // This function must remain global. It is the returned item's `action` function (enter key).
-function openFile(filename) {
-    // LaunchBar does not hide after using LaunchBar.openURL(), so use the `open` command instead.
-    LaunchBar.execute('/usr/bin/open', '-t', filename);
-    LaunchBar.hide();
+function defaultAction(filename) {
+    let action = config.get('default_action');
+
+    // Override default action if a key is held down.
+    if (LaunchBar.options.controlKey) {
+        action = 'quicklook';
+    } else if (LaunchBar.options.commandKey) {
+        action = 'open';
+    } else if (LaunchBar.options.shiftKey) {
+        action = 'insert';
+    }
+
+    switch (action) {
+    case 'open':
+        util.openFile(filename);
+        return;
+
+    case 'quicklook':
+        LaunchBar.openQuickLook(File.fileURLForPath(filename));
+        return;
+
+    case 'insert':
+        LaunchBar.paste(File.readText(filename));
+        LaunchBar.hide();
+        return;
+
+    case 'largetype':
+        LaunchBar.displayInLargeType({string: File.readText(filename)});
+        LaunchBar.hide();
+        return;
+
+    default:
+        LaunchBar.alert(`No default action configured`, `To set a default action, run:\n\nconfigset default_action NAME\n\nWhere NAME is one of: open, insert, quicklook, largetype.`);
+        return;
+    }
 }
 
 // This function is called by LaunchBar when the user passes text to the action.
@@ -106,11 +138,11 @@ function runWithString(argument) {
 
         if (LaunchBar.options.controlKey) {
             // QuickLook the response document immediately.
-            LaunchBar.openQuickLook(output_filename);
+            LaunchBar.openQuickLook(File.fileURLForPath(output_filename));
             return util.actionOutput(response_text, output_filename);
         } else if (LaunchBar.options.commandKey) {
             // Open the response document immediately.
-            openFile(output_filename)
+            util.openFile(output_filename);
         } else if (LaunchBar.options.shiftKey) {
             // Insert response where the cursor is immediately.
             LaunchBar.paste(response_text);

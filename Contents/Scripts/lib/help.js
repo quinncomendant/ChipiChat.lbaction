@@ -21,7 +21,7 @@ class Help {
 Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
 ✨  ⌘ (held when running the action)  Immediately open the response as a .md file in your text editor.
-✨  ⇧ (held when running the action)  Immediately paste the response at the current cursor position.
+✨  ⇧ (held when running the action)  Immediately insert the response at the current cursor position.
 ✨  ⌘Y  QuickLook the response.
 ✨  ⌘C  Copy the response to the clipboard.
 ✨  ⌘Y  QuickLook the response.
@@ -52,13 +52,18 @@ Manage history and settings with special commands:
 ⚡️ version: Display ChipiChat version and check if a new version is available.
 
 ⎯
-ChipiChat was created by by Quinn Comendant
-https://github.com/quinncomendant/ChipiChat.lbaction
-https://twitter.com/com
 
-`, 'Close', '☕️ Support me on Ko-fi');
+ChipiChat was created by by Quinn Comendant
+
+`, 'Close', 'View on GitHub', 'Follow me on Twitter', '☕️ Support me on Ko-fi');
         switch (response) {
         case 1:
+            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction')
+            break;
+        case 2:
+            LaunchBar.openURL('https://twitter.com/com')
+            break;
+        case 3:
             LaunchBar.openURL('https://ko-fi.com/strangecode')
             break;
         }
@@ -84,6 +89,16 @@ https://twitter.com/com
     }
 
     config() {
-        const response = LaunchBar.alert('ChipiChat configuration', `To change any of the following values, use the “configset” command, e.g., “configset system_message You are a helpful but sarcastic assistent”.\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n${config.show()}`, 'Close');
+        const response = LaunchBar.alert('ChipiChat configuration', `To change any of the following values, use the “configset” command, e.g., “configset system_message You are a helpful but sarcastic assistent”.
+
+⎯
+
+${config.show()}`, 'Close', 'View descriptions of these options');
+
+        switch (response) {
+        case 1:
+            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction#options')
+            break;
+        }
     }
 }

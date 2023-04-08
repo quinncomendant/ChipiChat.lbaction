@@ -80,7 +80,7 @@ class History {
                 subtitle: exchange.user,
                 alwaysShowsSubtitle: true,
                 children: util.actionOutputChildren(exchange.assistant),
-                action: 'openFile',
+                action: 'defaultAction',
                 actionArgument: util.filenameFromInputString(exchange.user),
                 quickLookURL: File.fileURLForPath(util.filenameFromInputString(exchange.user)),
                 icon: 'ChipiChat-bw.png'

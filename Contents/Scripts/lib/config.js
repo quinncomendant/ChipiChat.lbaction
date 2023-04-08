@@ -83,6 +83,13 @@ class Config {
             Action.preferences.config[key] = val;
             break;
 
+        case 'default_action':
+            if (!this.requireValidOption(key, val, ['open', 'insert', 'quicklook', 'largetype'])) {
+                return false;
+            }
+            Action.preferences.config[key] = val;
+            break;
+
         case 'model':
             if (!this.requireValidOption(key, val, ['gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-3.5-turbo', 'gpt-3.5-turbo-0301'])) {
                 return false;
