@@ -37,7 +37,7 @@ You can combine modifiers, e.g., “`code copy 4 js function to get a uuid`” s
 - `configset KEY VALUE`: Set the configuration KEY to VALUE.
 - `help`: Display this help message.
 - `history`: Display recent chat history.
-- `version`: Display ChipiChat version.
+- `version`: Display ChipiChat version and check if a new version is available.
 
 ## Installation
 
@@ -112,7 +112,6 @@ To reset all configuration options to defaults, send the `configreset` command.
 - [ ] Export conversation: `export` command saves all the user and assistent messages for the current session (since the last `clear`) to a `.md` file in ~/Downloads.
 - [ ] Hold option to auto-open QuickLook after receiving a response.
 - [ ] Allow configuring default action when hitting enter after receiving a response. The default will remain as-is: open the response in a text editor.
-- [ ] Command to check for updates.
 
 
 ## Support
