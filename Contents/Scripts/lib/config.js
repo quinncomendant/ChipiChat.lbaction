@@ -84,7 +84,14 @@ class Config {
             break;
 
         case 'default_action':
-            if (!this.requireValidOption(key, val, ['open', 'insert', 'quicklook', 'largetype'])) {
+            if (!this.requireValidOption(key, val, ['open', 'insert', 'quicklook', 'alert', 'copy', 'largetype'])) {
+                return false;
+            }
+            Action.preferences.config[key] = val;
+            break;
+
+        case 'default_action_opens_automatically':
+            if (!this.requireValidOption(key, val, ['true', 'false'])) {
                 return false;
             }
             Action.preferences.config[key] = val;
@@ -144,12 +151,12 @@ class Config {
             break;
 
         default:
-            LaunchBar.alert(`“${key}” is not a valid configuration key. To view all configuration options use the “config” command.`);
+            LaunchBar.alert(`“${key}” is not a valid configuration option. To view all configuration options use the “config” command.`);
             return false;
         }
 
         LaunchBar.displayNotification({
-            title: 'ChipiChat configuration saved:',
+            title: 'ChipiChat configuration saved',
             string: `“${key}” has been set to “${val}”`
         });
     }

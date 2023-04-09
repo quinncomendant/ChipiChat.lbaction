@@ -64,11 +64,6 @@ class OpenAI {
                 reprefix.push(modifier);
                 break;
 
-            case 'config':
-                // The user is lost.
-                LaunchBar.alert(`Are you looking for the “configset” and “configreset” commands?`, `If you need help send the “help” command.`);
-                return true;
-
             case 'copy':
                 // Copy the response to the clipboard.
                 postprocessing.push('copy-to-clipboard');
@@ -169,8 +164,8 @@ class OpenAI {
             postprocessing.forEach(action => {
                 switch (action) {
                 case 'copy-to-clipboard':
-                    LaunchBar.displayNotification({title: 'Copied to clipboard:', string: response_text});
                     LaunchBar.setClipboardString(response_text);
+                    LaunchBar.displayNotification({title: 'Copied to clipboard', string: response_text});
                     break;
                 }
             });

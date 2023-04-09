@@ -5,7 +5,7 @@
 // Requires an OpenAI API key from https://platform.openai.com/account/api-keys
 // Enter this command in ChipiChat to set your API key:
 //  ┌─────────────────────────────────────────────┐
-//  │ configset api_key sk-×××××××××××××××××××    │
+//  │ config set api_key sk-×××××××××××××××××××   │
 //  └─────────────────────────────────────────────┘
 //
 // Copyright 2023 Quinn Comendant
@@ -30,6 +30,7 @@ const config = new Config({
     cache_expiration_minutes: 5,
     cache_min_words: 3,
     default_action: 'open',
+    default_action_opens_automatically: 'false',
     filename_extension: 'txt', // Change this to 'md' if you use a Quick Look extension that supports markdown.
     max_history_minutes: 480,
     max_history_tokens: 1000,
@@ -65,6 +66,7 @@ const openai = new OpenAI();
 // This function must remain global. It is the returned item's `action` function (enter key).
 function defaultAction(filename) {
     let action = config.get('default_action');
+    const response_text = File.readText(filename);
 
     // Override default action if a key is held down.
     if (LaunchBar.options.controlKey) {
@@ -78,32 +80,46 @@ function defaultAction(filename) {
     switch (action) {
     case 'open':
         util.openFile(filename);
+        LaunchBar.hide();
+        return;
+
+    case 'insert':
+        LaunchBar.paste(response_text);
+        LaunchBar.hide();
         return;
 
     case 'quicklook':
         LaunchBar.openQuickLook(File.fileURLForPath(filename));
+        // For some reason Quick Look doesn't open if there is no action output.
+        return util.actionOutput(response_text, filename);
+
+    case 'alert':
+        LaunchBar.alert('ChipiChat', response_text);
+        LaunchBar.performAction('ChipiChat');
         return;
 
-    case 'insert':
-        LaunchBar.paste(File.readText(filename));
-        LaunchBar.hide();
+    case 'copy':
+        LaunchBar.setClipboardString(response_text);
+        LaunchBar.displayNotification({title: 'Copied to clipboard', string: response_text});
         return;
 
     case 'largetype':
-        LaunchBar.displayInLargeType({string: File.readText(filename)});
+        LaunchBar.displayInLargeType({string: response_text});
         LaunchBar.hide();
         return;
 
     default:
-        LaunchBar.alert(`No default action configured`, `To set a default action, run:\n\nconfigset default_action NAME\n\nWhere NAME is one of: open, insert, quicklook, largetype.`);
+        LaunchBar.alert('No default action configured', 'To set a default action, use the command:\n\n“config set default_action NAME”\n\nWhere NAME is one of: open, insert, quicklook, alert, copy, largetype.');
         return;
     }
 }
 
 // This function is called by LaunchBar when the user passes text to the action.
 function runWithString(argument) {
+    const input_text = argument.trim().replace(/\s+/g, ' ');
+
     // Commands
-    switch (argument.trim().toLowerCase()) {
+    switch (input_text.replace(/^(config) *(reset|set).*$/, '$1$2').toLowerCase()) {
     case 'config':
         help.config();
         return;
@@ -111,6 +127,12 @@ function runWithString(argument) {
     case 'configreset':
         config.setDefaults(['api_key']); // Don't reset API key.
         LaunchBar.displayNotification({title: 'ChipiChat', string: 'Configuration reset to defaults.'});
+        return;
+
+    case 'configset':
+        const [config_key, ...rest] = input_text.replace(/^config *set */, '').split(' ');
+        const config_val = rest.join(' ');
+        config.set(config_key, config_val);
         return;
 
     case 'clear':
@@ -134,35 +156,14 @@ function runWithString(argument) {
         return;
     }
 
-    // Update config
-    if (argument.trim().replace(/\s+/g, ' ').split(' ')[0].toLowerCase() === 'configset') {
-        const [_, config_key, ...rest] = argument.split(' ');
-        const config_val = rest.join(' ');
-        config.set(config_key, config_val);
-        return;
-    }
-
-    const response_text = openai.chat(argument);
-    const output_filename = util.filenameFromInputString(argument);
+    const response_text = openai.chat(input_text);
+    const output_filename = util.filenameFromInputString(input_text);
     if (typeof response_text === 'string') {
-        // Save to a temporary file to open via Quick Look or text editor.
         util.saveFile(output_filename, response_text);
-
-        if (LaunchBar.options.controlKey) {
-            // Quick Look the response document immediately.
-            LaunchBar.openQuickLook(File.fileURLForPath(output_filename));
-            return util.actionOutput(response_text, output_filename);
-        } else if (LaunchBar.options.commandKey) {
-            // Open the response document immediately.
-            util.openFile(output_filename);
-        } else if (LaunchBar.options.shiftKey) {
-            // Insert response where the cursor is immediately.
-            LaunchBar.paste(response_text);
-            LaunchBar.hide();
-        } else {
-            // Return the full text as the title, with children for each line, hitting ↵ will open the saved text file.
-            return util.actionOutput(response_text, output_filename);
+        if (config.get('default_action_opens_automatically') === 'true') {
+            return defaultAction(output_filename);
         }
+        return util.actionOutput(response_text, output_filename);
     }
 }
 

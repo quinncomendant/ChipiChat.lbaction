@@ -80,7 +80,6 @@ class Util {
     openFile(filename) {
         // LaunchBar does not hide after using LaunchBar.openURL(), so use the `open` command instead.
         LaunchBar.execute('/usr/bin/open', '-t', filename);
-        LaunchBar.hide();
     }
 
     versionCheck() {
