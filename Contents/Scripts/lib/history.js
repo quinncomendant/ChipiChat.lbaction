@@ -93,5 +93,25 @@ class History {
     truncate(history_lifetime_seconds) {
         Action.preferences.conversation_history = Action.preferences.conversation_history.filter(exchange => (new Date() - new Date(exchange.date)) <= history_lifetime_seconds * 1000);
     }
+
+    export(filename) {
+        if (!Action.preferences.conversation_history.length) {
+            LaunchBar.alert('ChipiChat history is empty.');
+            return;
+        }
+        const now = new Date();
+        const export_filename = `~/Downloads/ChipiChat export ${now.toISOString().split('T')[0]}-${Math.round(now.getTime() / 1000)}.md`;
+        let content = [`# Conversation with ${config.get('model')} exported from ChipiChat ${now.toLocaleString('en-CA')}`];
+        content = content.concat(Action.preferences.conversation_history.map(exchange => {
+            return `---\n\n**User:** ${exchange.user}\n\n**Assistant:** ${/^```|\n/.test(exchange.assistant) ? `\n\n${exchange.assistant}` : exchange.assistant}`;
+        }).reverse());
+        if (util.saveFile(export_filename, content.join(`\n\n`))) {
+            LaunchBar.displayNotification({
+                title: 'ChipiChat',
+                string: `Conversation history saved to Downloads. Click here to open.`,
+                url: File.fileURLForPath(export_filename)
+            });
+        }
+    }
 }
 

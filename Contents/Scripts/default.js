@@ -101,13 +101,17 @@ function runWithString(argument) {
         return;
 
     case 'configreset':
+        LaunchBar.displayNotification({title: 'ChipiChat', string: 'Configuration reset to defaults.'});
         config.setDefaults(['api_key']); // Don't reset API key.
-        LaunchBar.displayNotification({string: 'ChipiChat configuration reset to defaults.'});
         return;
 
     case 'clear':
         history.clear();
-        LaunchBar.displayNotification({string: 'ChipiChat conversation history erased.'});
+        LaunchBar.displayNotification({title: 'ChipiChat', string: 'Conversation history erased.'});
+        return;
+
+    case 'export':
+        history.export();
         return;
 
     case 'help':

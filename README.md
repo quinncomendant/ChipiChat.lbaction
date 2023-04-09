@@ -35,6 +35,7 @@ You can combine modifiers, e.g., “`code copy 4 js function to get a uuid`” s
 - `config`: Show current configuration settings.
 - `configreset`: Reset all configuration options to defaults.
 - `configset KEY VALUE`: Set the configuration KEY to VALUE.
+- `export`: Save conversation history to a file in ~/Downloads/.
 - `help`: Display this help message.
 - `history`: Display recent chat history.
 - `version`: Display ChipiChat version and check if a new version is available.
@@ -110,7 +111,6 @@ To reset all configuration options to defaults, send the `configreset` command.
     - `NAME USER-MESSAGE` to send USER-MESSAGE to the API using the system message persona assigned to NAME.
     - `persona NAME SYSTEM-MESSAGE` to create or update a persona.
     - For example, create a persona name `fix` that will be used to improve submitted text: `persona fix Rewrite the following text so that it is well reasoned and emotionally intelligent.` To use this persona, just send `fix Here is my text that needs to be fixed`.
-- [ ] Export conversation: `export` command saves all the user and assistent messages for the current session (since the last `clear`) to a `.md` file in ~/Downloads.
 - [ ] Hold option to auto-open QuickLook after receiving a response.
 
 

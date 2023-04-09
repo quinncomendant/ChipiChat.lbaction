@@ -47,6 +47,7 @@ Manage history and settings with special commands:
 ⚡️ config: Show current configuration settings.
 ⚡️ configreset: Reset all configuration options to defaults.
 ⚡️ configset KEY VALUE: Set the configuration KEY to VALUE.
+⚡️ export: Save conversation history to a file in ~/Downloads/.
 ⚡️ help: Display this help message.
 ⚡️ history: Display chat history.
 ⚡️ version: Display ChipiChat version and check if a new version is available.

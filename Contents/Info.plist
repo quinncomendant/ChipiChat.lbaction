@@ -14,6 +14,8 @@
 	<string>cc</string>
 	<key>LBArgument</key>
 	<string>text and files</string>
+	<key>LBDebugLogEnabled</key>
+	<true/>
 	<key>LBDescription</key>
 	<dict>
 		<key>LBArgument</key>

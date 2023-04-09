@@ -56,7 +56,7 @@ class Util {
     saveFile(output_filename, content) {
         if (!File.createDirectory(this.dirname(output_filename)) || !File.isWritable(this.dirname(output_filename))) {
             LaunchBar.alert(`Unable to write to directory: ${this.dirname(output_filename)}`);
-            return;
+            return false;
         }
 
         try {
@@ -64,7 +64,9 @@ class Util {
             LaunchBar.debugLog(`Created file: ${output_filename}`);
         } catch (e) {
             LaunchBar.alert(`Failed to write to file: ${output_filename} (${e})`);
+            return false;
         }
+        return true;
     }
 
     openFile(filename) {
