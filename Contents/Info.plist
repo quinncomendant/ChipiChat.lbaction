@@ -59,7 +59,13 @@
 			<string>default.js</string>
 		</dict>
 	</dict>
-	<key>NSHumanReadableCopyright</key>
-	<string>2023 Quinn Comendant</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>2023 Quinn Comendant</string>
+    <key>LBChangelog</key>
+    <string></string>
+    <key>LBDownloadURL</key>
+    <string>https://github.com/quinncomendant/ChipiChat.lbaction/releases/latest/download/ChipiChat.lbaction.zip</string>
+    <key>LBUpdateURL</key>
+    <string>https://github.com/quinncomendant/ChipiChat.lbaction/blob/main/Contents/Info.plist</string>
 </dict>
 </plist>
