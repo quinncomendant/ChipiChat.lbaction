@@ -16,7 +16,7 @@
 
 class Util {
     unprefix(str) {
-        return str.slice(str.indexOf(' ') + 1);
+        return str.slice(str.indexOf(' ') + 1).trim();
     }
 
     fnv1aHash(str) {
@@ -114,34 +114,18 @@ class Util {
                 return;
             }
             if (in_code_block) {
-                output.push({ title: line, icon: 'character:􀡅'});
+                output.push({ title: line, icon: 'font-awesome:fa-bug'});
                 return;
             }
             if (/^ *- /.test(line)) {
-                output.push({ title: line.replace(/^- /, ''), icon: 'character:🞄'});
+                output.push({ title: line.replace(/^- /, ''), icon: 'font-awesome:fa-caret-right'});
                 return;
             }
             if (/^ *\d{1,2}\. /.test(line)) {
-                // Or…? 􀃊􀃌􀃎􀃐􀃒􀃔􀃖􀃘􀃚􀃈
-                let match = line.match(/^ *(\d{1,2})\. /);
-                if (!match) {
-                    return;
-                }
-                switch (match[1]) {
-                    case '0': output.push({ title: line, icon: 'character:􀀸'}); return;
-                    case '1': output.push({ title: line, icon: 'character:􀀺'}); return;
-                    case '2': output.push({ title: line, icon: 'character:􀀼'}); return;
-                    case '3': output.push({ title: line, icon: 'character:􀀾'}); return;
-                    case '4': output.push({ title: line, icon: 'character:􀁀'}); return;
-                    case '5': output.push({ title: line, icon: 'character:􀁂'}); return;
-                    case '6': output.push({ title: line, icon: 'character:􀁄'}); return;
-                    case '7': output.push({ title: line, icon: 'character:􀁆'}); return;
-                    case '8': output.push({ title: line, icon: 'character:􀁈'}); return;
-                    case '9': output.push({ title: line, icon: 'character:􀁊'}); return;
-                    default: output.push({ title: line, icon: 'character:􀍡'});  return;
-                }
+                output.push({ title: line, icon: 'font-awesome:fa-genderless'});
+                return;
             }
-            output.push({ title: line, icon: 'character:􀌪'});
+            output.push({ title: line, icon: 'font-awesome:fa-comment'});
         });
         return output;
     }

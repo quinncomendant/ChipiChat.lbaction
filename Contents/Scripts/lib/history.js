@@ -49,9 +49,9 @@ class History {
     }
 
     getAssistantResponse(input_text_with_modifiers, max_age_seconds) {
-        max_age_seconds = max_age_seconds || 9999999999;
+        max_age_seconds = max_age_seconds ?? 1600000000;
         const exchange = Action.preferences.conversation_history.find(exchange => {
-            exchange.input_text_with_modifiers === input_text_with_modifiers && (new Date() - new Date(exchange.date)) <= max_age_seconds * 1000;
+            return exchange.input_text_with_modifiers === input_text_with_modifiers && (new Date() - new Date(exchange.date)) <= max_age_seconds * 1000;
         });
         return typeof exchange !== 'undefined' && exchange.assistant.length ? exchange.assistant : undefined;
     }

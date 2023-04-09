@@ -23,16 +23,11 @@ class OpenAI {
             return;
         }
 
-        let api_key = config.get('api_key');
-        let max_tokens = config.get('max_tokens');
         let model = config.get('model');
         let system_message = config.get('system_message');
         let user_message_addendum = config.get('user_message_addendum');
         let temperature = config.get('temperature');
         let max_history_minutes = config.get('max_history_minutes');
-        let max_history_tokens = config.get('max_history_tokens');
-        let cache_expiration_minutes = config.get('cache_expiration_minutes');
-        let timeout = config.get('timeout');
 
         input_text = input_text.trim().replace(/\s+/g, ' ');
         const input_text_with_modifiers = input_text;
@@ -94,7 +89,7 @@ class OpenAI {
                 break;
 
             case 'write':
-                // Writing persona
+                // Writing persona.
                 postprocessing.push('remove-markdown');
                 system_message = `You are a professional copywriter. Write using the following rules: avoid clichés and figures of speech, use short words, cut unnecessary words, prefer the active voice.`;
                 user_message_addendum = '';
@@ -110,11 +105,11 @@ class OpenAI {
             LaunchBar.debugLog(`Scanned modifier: ${modifier}`);
             return false;
         });
-        input_text = `${reprefix.join(' ')} ${input_text}`;
+        input_text = `${reprefix.join(' ')} ${input_text}`.trim();
 
         // Respond with cached response.
-        const cached_response_text = history.getAssistantResponse(input_text_with_modifiers, cache_expiration_minutes * 60);
-        if (typeof cached_response_text !== 'undefined' && str.split(' ').length >= cache_min_words) {
+        const cached_response_text = history.getAssistantResponse(input_text_with_modifiers, config.get('cache_expiration_minutes') * 60);
+        if (typeof cached_response_text !== 'undefined' && input_text_with_modifiers.split(' ').length >= config.get('cache_min_words')) {
             LaunchBar.debugLog(`Using cached response: ${cached_response_text}`);
             return cached_response_text;
         }
@@ -122,28 +117,28 @@ class OpenAI {
         // Build chat completion messages.
         let messages = [{role: 'system', content: system_message}];
         // Include previous non-stale exchanges.
-        history.get(max_history_minutes, max_history_tokens).forEach(exchange => {
+        history.get(max_history_minutes, config.get('max_history_tokens')).forEach(exchange => {
             messages.push({role: 'user', content: exchange.user});
             messages.push({role: 'assistant', content: exchange.assistant});
         });
         messages.push({role: 'user', content: `${/[.,;:!?]$/.test(input_text) ? input_text : input_text + '.'} ${user_message_addendum}`});
 
-        LaunchBar.debugLog(`Request: ${JSON.stringify(messages)}`);
-
-        if (!api_key.length) {
+        if (!config.get('api_key').length) {
             help.apiKey();
             return;
         }
 
+        let timeout = config.get('timeout');
         if (/^gpt-4/.test(model)) {
             timeout += 30;
         }
 
+        LaunchBar.debugLog(`Request: ${JSON.stringify(messages)}`);
         let result = HTTP.postJSON('https://api.openai.com/v1/chat/completions', {
-            headerFields: {'Authorization': `Bearer ${api_key}`},
+            headerFields: {'Authorization': `Bearer ${config.get('api_key')}`},
             resultType: 'json',
             timeout,
-            body: {model, temperature, max_tokens, messages}
+            body: {model, temperature, max_tokens: config.get('max_tokens'), messages}
         });
         if (typeof result.data !== 'undefined') {
             LaunchBar.debugLog(`Response: ${JSON.stringify(result.data)}`);
