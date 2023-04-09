@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>ChipiChat</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.0</string>
+	<string>v1.0.0</string>
 	<key>LBAbbreviation</key>
 	<string>cc</string>
 	<key>LBArgument</key>

@@ -86,19 +86,19 @@ class Util {
     versionCheck() {
         var result = HTTP.getJSON('https://api.github.com/repos/quinncomendant/ChipiChat.lbaction/releases/latest');
         if (typeof result.data !== 'undefined') {
-            if (version === result.data.tag_name) {
-                LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${version} which is the latest version available.`);
+            if (Action.version === result.data.tag_name) {
+                LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${Action.version} which is the latest version available.`);
                 return;
-            } else if (version > result.data.tag_name) {
-                const response = LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${version} which is newer than the latest version available.`, 'Close', 'Download old version');
+            } else if (Action.version > result.data.tag_name) {
+                const response = LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${Action.version} which is newer than the latest version available.`, 'Close', 'Download old version');
                 switch (response) {
                 case 1:
                     LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases')
                     break;
                 }
                 return;
-            } else if (result.data.tag_name > version) {
-                const response = LaunchBar.alert(`ChipiChat has a new version available`, `${result.data.tag_name} is the latest version available. You have version ${version}.`, 'Close', 'Download new version');
+            } else if (result.data.tag_name > Action.version) {
+                const response = LaunchBar.alert(`ChipiChat has a new version available`, `${result.data.tag_name} is the latest version available. You have version ${Action.version}.`, 'Close', 'Download new version');
                 switch (response) {
                 case 1:
                     LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases')
@@ -107,7 +107,7 @@ class Util {
                 return;
             }
         }
-        LaunchBar.alert(`ChipiChat version ${version}`, `Failed to check if a new version is available. ${typeof result.error !== 'undefined' ? result.error : ''}`);
+        LaunchBar.alert(`ChipiChat version ${Action.version}`, `Failed to check if a new version is available. ${typeof result.error !== 'undefined' ? result.error : ''}`);
     }
 
     actionOutputChildren(response_text) {

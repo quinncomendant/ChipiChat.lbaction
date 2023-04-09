@@ -23,8 +23,6 @@
 // limitations under the License.
 //
 
-const version = 'v1.0.0';
-
 include('lib/config.js');
 // Some default values may be overridden by modifiers.
 const config = new Config({
