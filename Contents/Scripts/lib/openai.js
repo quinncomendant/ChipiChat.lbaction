@@ -34,7 +34,7 @@ class OpenAI {
         let cache_expiration_minutes = config.get('cache_expiration_minutes');
         let timeout = config.get('timeout');
 
-        input_text = input_text.trim();
+        input_text = input_text.trim().replace(/\s+/g, ' ');
         const input_text_with_modifiers = input_text;
         let postprocessing = [];
         let reprefix = []
@@ -114,7 +114,7 @@ class OpenAI {
 
         // Respond with cached response.
         const cached_response_text = history.getAssistantResponse(input_text_with_modifiers, cache_expiration_minutes * 60);
-        if (typeof cached_response_text !== 'undefined' && str.split(' ').length > 4) {
+        if (typeof cached_response_text !== 'undefined' && str.split(' ').length >= cache_min_words) {
             LaunchBar.debugLog(`Using cached response: ${cached_response_text}`);
             return cached_response_text;
         }

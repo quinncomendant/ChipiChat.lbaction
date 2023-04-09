@@ -40,6 +40,7 @@ const config = new Config({
     max_history_minutes: 480,
     max_history_tokens: 500,
     cache_expiration_minutes: 5,
+    cache_min_words: 3,
     timeout: 15,
 });
 
@@ -128,7 +129,7 @@ function runWithString(argument) {
     }
 
     // Update config
-    if (argument.trim().split(' ')[0].toLowerCase() === 'configset') {
+    if (argument.trim().replace(/\s+/g, ' ').split(' ')[0].toLowerCase() === 'configset') {
         const [_, config_key, ...rest] = argument.split(' ');
         const config_val = rest.join(' ');
         config.set(config_key, config_val);

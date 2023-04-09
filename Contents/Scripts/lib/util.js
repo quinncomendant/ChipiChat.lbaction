@@ -20,6 +20,7 @@ class Util {
     }
 
     fnv1aHash(str) {
+        str = str.trim();
         const FNV_PRIME = 0x01000193;
         const FNV_OFFSET = 0x811c9dc5;
         let hash = FNV_OFFSET;
@@ -32,6 +33,8 @@ class Util {
 
     slug(str) {
         return str
+            .trim()
+            .replace(/\s+/g, ' ')
             .toLowerCase()
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
@@ -44,8 +47,8 @@ class Util {
     }
 
     safeFilename(str) {
-        const hash = this.fnv1aHash(str.trim()).toString();
-        const slug = this.slug(str.trim()).substring(0, 250 - hash.length);
+        const hash = this.fnv1aHash(str).toString();
+        const slug = this.slug(str).substring(0, 250 - hash.length);
         return `${slug}-${hash}`;
     }
 
