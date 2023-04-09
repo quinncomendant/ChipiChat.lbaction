@@ -53,7 +53,7 @@ class Util {
     }
 
     filenameFromInputString(str) {
-        return `${Action.cachePath}/${this.safeFilename(str)}.md`;
+        return `${Action.cachePath}/${this.safeFilename(str)}.${config.get('filename_extension')}`;
     }
 
     saveFile(output_filename, content) {

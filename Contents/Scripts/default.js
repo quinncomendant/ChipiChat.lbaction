@@ -29,19 +29,18 @@ include('lib/config.js');
 // Some default values may be overridden by modifiers.
 const config = new Config({
     api_key: '',
-    model: 'gpt-3.5-turbo',
-    // Set the overall behavior of the assistant.
-    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.",
-    // Text to include with every message, because `gpt-3.5-turbo-0301` does not always pay attention to system messages.
-    user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
-    default_action: "open",
-    temperature: 0.1,
-    max_tokens: 1024,
-    max_history_minutes: 480,
-    max_history_tokens: 500,
     cache_expiration_minutes: 5,
     cache_min_words: 3,
+    default_action: 'open',
+    filename_extension: 'txt', // Change this to 'md' if you use a QuickLook extension that supports markdown.
+    max_history_minutes: 480,
+    max_history_tokens: 500,
+    max_tokens: 1024,
+    model: 'gpt-3.5-turbo',
+    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.",
+    temperature: 0.1,
     timeout: 15,
+    user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
 });
 
 include('lib/history.js');

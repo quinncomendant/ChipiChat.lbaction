@@ -20,14 +20,14 @@ class Help {
 
 Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
-✨  ⌘ (held when running the action)  Immediately open the response as a .md file in your text editor.
+✨  ⌘ (held when running the action)  Immediately open the response in your text editor.
 ✨  ⇧ (held when running the action)  Immediately insert the response at the current cursor position.
 ✨  ⌘Y  QuickLook the response.
 ✨  ⌘C  Copy the response to the clipboard.
 ✨  ⌘Y  QuickLook the response.
-✨  ↵ (return)  Open the response as a .md file in your text editor.
-✨  → (right-arrow)  Browse the response as a list (ideal for copying only needed lines).
-✨  ⇥ (tab)  Send the text to other LaunchBar targets.
+✨  ↵ (return)  Open the response in your text editor (reconfigurable using the 'default_action' config option).
+✨  → (right-arrow)  Browse the response as a list (ideal for acting on specific lines of text).
+✨  ⇥ (tab)  Send the text to other LaunchBar targets, e.g., send the output to a friend by passing it to the Compose Message action.
 
 Prefix your message with one-or-more modifiers for enhanced functionality:
 

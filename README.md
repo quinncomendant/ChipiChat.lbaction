@@ -9,13 +9,13 @@ Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses dire
 
 ### Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
-- `⌘` *(held when running the action)* Immediately open the response as a .md file in your text editor.
+- `⌘` *(held when running the action)* Immediately open the response in your text editor.
 - `⇧` *(held when running the action)* Immediately insert the response at the current cursor position.
 -  `⌘C` Copy the response to the clipboard.
 -  `⌘Y` QuickLook the response.
--  `↵` *(return)* Open the response as a `.md` file in your text editor.
--  `→` *(right-arrow)* Browse the response as a list (ideal for copying only needed lines).
--  `⇥` *(tab)* Send the text to other LaunchBar targets.
+-  `↵` *(return)* Open the response in your text editor (reconfigurable using the `default_action` config [option](#options)).
+-  `→` *(right-arrow)* Browse the response as a list (ideal for acting on specific lines of text).
+-  `⇥` *(tab)* Send the text to other LaunchBar targets, e.g., send the output to a friend by passing it to the Compose Message action.
 
 ### Prefix your message with one-or-more modifiers for enhanced functionality:
 
@@ -76,7 +76,7 @@ That’s a bit hard to read, but if you press the right-arrow key, you can view 
 
 Or, you can view it in QuickLook (press the left-arrow key to go back, then press `⌘Y`):
 
-![Response As Quicklook](docs/5-response-as-quicklook.png)
+![Response As QuickLook](docs/5-response-as-quicklook.png)
 
 ## Configuration
 
@@ -93,16 +93,17 @@ To reset all configuration options to defaults, send the `configreset` command.
 ### Options
 
 - `api_key`: Your OpenAI API key (default: empty).
-- `default_action`: The action to run when hitting enter after receiving a response. (options: `open`, `insert`, `quicklook`, `largetype`; default: `open`).
+- `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., “show me how to do that” from the cache might contain an out-of-context response (default: `5`).
+- `default_action`: The action to run when hitting enter *after* receiving a response. (options: `open`, `insert`, `quicklook`, `largetype`; default: `open`).
+- `filename_extension`: The extension of cached files changes how they open in a text editor and QuickLook (default: `txt`). If you have a QuickLook extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting in QuickLook.
 - `max_history_minutes`: Include up to *max_history_minutes* of conversation history in requests (default: `480`).
 - `max_history_tokens`: Include up to *max_tokens* of conversation history in requests (default: `500`).
 - `max_tokens`: The maximum number of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to generate (default: `1024`).
 - `model`: Which OpenAI [model](https://platform.openai.com/docs/models/overview) to use (default: `gpt-3.5-turbo`).
-- `system_message`: The [system message](https://platform.openai.com/docs/guides/chat/introduction) to send in requests (default: `You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.`).
+- `system_message`: The [system message](https://platform.openai.com/docs/guides/chat/introduction) sets the overall behavior of the assistant (default: `You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.`).
 - `temperature`: What sampling [temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature) to use, between `0.0` and `2.0` (default: `0.1`).
-- `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., “show me how to do that” from the cache might contain an out-of-context response (default: `5`).
 - `timeout`: How many seconds to wait for a response from the API (default: `15`; note: when using the much slower GPT-4, there is a hard-coded 120 second timeout).
-- `user_message_addendum`: Supplemental instructions that are included with every user message (default: `Be succinct. Limit prose. Never repeat the user message.`).
+- `user_message_addendum`: Supplemental instructions that are included with every user message, useful because `gpt-3.5-turbo` does not always pay attention to system messages (default: `Be succinct. Limit prose. Never repeat the user message.`).
 
 ## To do
 

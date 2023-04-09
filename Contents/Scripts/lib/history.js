@@ -100,7 +100,7 @@ class History {
             return;
         }
         const now = new Date();
-        const export_filename = `~/Downloads/ChipiChat export ${now.toISOString().split('T')[0]}-${Math.round(now.getTime() / 1000)}.md`;
+        const export_filename = `~/Downloads/ChipiChat export ${now.toISOString().split('T')[0]}-${Math.round(now.getTime() / 1000)}.${config.get('filename_extension')}`;
         let content = [`# Conversation with ${config.get('model')} exported from ChipiChat ${now.toLocaleString('en-CA')}`];
         content = content.concat(Action.preferences.conversation_history.map(exchange => {
             return `---\n\n**User:** ${exchange.user}\n\n**Assistant:** ${/^```|\n/.test(exchange.assistant) ? `\n\n${exchange.assistant}` : exchange.assistant}`;
