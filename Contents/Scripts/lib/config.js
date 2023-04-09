@@ -28,7 +28,7 @@ class Config {
             // Try to get api_key from shell environment variable OPENAI_API_KEY.
             // The get_api_key.sh script just echos the OPENAI_API_KEY defined in the shell environment.
             const api_key_env = LaunchBar.execute(`./get_api_key.sh`).trim();
-            if (false && /^sk-/.test(api_key_env)) {
+            if (/^sk-/.test(api_key_env)) {
                 this.set('api_key', api_key_env)
             }
         }
@@ -48,7 +48,7 @@ class Config {
 
     requireVal(key, val) {
         if (typeof val === 'undefined' || !val.length) {
-            LaunchBar.alert(`Failed to set config; ${key} must not be empty.`);
+            LaunchBar.alert(`Failed to set configuration`, `${key} must not be empty.`);
             return false;
         }
         return true;
@@ -56,7 +56,7 @@ class Config {
 
     requireValidOption(key, val, valid_options) {
         if (!valid_options.includes(val)) {
-            LaunchBar.alert(`Failed to set configuration; ${key} must contain one of the following values:\n\n${valid_options.join('\n')}`);
+            LaunchBar.alert(`Failed to set configuration`, `${key} must contain one of the following values:\n\n${valid_options.join('\n')}`);
             return false;
         }
         return true;
@@ -64,7 +64,7 @@ class Config {
 
     requireInt(key, val) {
         if (!/^\d+$/.test(val)) {
-            LaunchBar.alert(`Failed to set configuration; ${key} must be an integer.`);
+            LaunchBar.alert(`Failed to set configuration`, `${key} must be an integer.`);
             return false;
         }
         return true;
@@ -77,7 +77,7 @@ class Config {
                 return false;
             }
             if (!/^sk-\w{45,}/.test(val)) {
-                LaunchBar.alert(`Failed to set configuration; not a valid API key (OpenAI API keys start with “sk-”).`);
+                LaunchBar.alert(`Failed to set configuration`, `Not a valid API key (OpenAI API keys start with “sk-”).`);
                 return false;
             }
             Action.preferences.config[key] = val;
@@ -98,7 +98,7 @@ class Config {
             break;
 
         case 'model':
-            if (!this.requireValidOption(key, val, ['gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-3.5-turbo', 'gpt-3.5-turbo-0301'])) {
+            if (!this.requireValidOption(key, val, ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k'])) {
                 return false;
             }
             Action.preferences.config[key] = val;
@@ -116,9 +116,24 @@ class Config {
             Action.preferences.config[key] = parseFloat(val);
             break;
 
-        case 'max_tokens':
-        case 'max_history_minutes':
         case 'max_history_tokens':
+        case 'max_response_tokens':
+        case 'max_user_message_tokens':
+            // The total length of input tokens and generated tokens is limited by the model's context length.
+            // https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens
+            if (key === 'max_history_tokens' && (parseFloat(val) + this.get('max_response_tokens') + this.get('max_user_message_tokens')) > model_context_length) {
+                LaunchBar.alert(`Failed to set configuration`, `${key} value is too large.\n\nThe sum of tokens used for max_user_message_tokens (${this.get('max_user_message_tokens')}) + max_history_tokens (which you tried to set to ${val}) + max_response_tokens (${this.get('max_response_tokens')}) must not exceed the model's context length (${model_context_length}).`);
+                return false;
+            }
+            if (key === 'max_response_tokens' && (parseFloat(val) + this.get('max_history_tokens') + this.get('max_user_message_tokens')) > model_context_length) {
+                LaunchBar.alert(`Failed to set configuration`, `${key} value is too large.\n\nThe sum of tokens used for max_user_message_tokens (${this.get('max_user_message_tokens')}) + max_history_tokens (${this.get('max_history_tokens')}) + max_response_tokens (which you tried to set to ${val}) must not exceed the model's context length (${model_context_length}).`);
+                return false;
+            }
+            if (key === 'max_user_message_tokens' && (parseFloat(val) + this.get('max_response_tokens') + this.get('max_history_tokens')) > model_context_length) {
+                LaunchBar.alert(`Failed to set configuration`, `${key} value is too large.\n\nThe sum of tokens used for max_user_message_tokens (which you tried to set to ${val}) + max_history_tokens (${this.get('max_history_tokens')}) + max_response_tokens (${this.get('max_response_tokens')}) must not exceed the model's context length (${model_context_length}).`);
+                return false;
+            }
+        case 'max_history_minutes':
         case 'cache_expiration_minutes':
         case 'cache_min_words':
         case 'timeout':

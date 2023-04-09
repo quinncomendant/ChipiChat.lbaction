@@ -15,7 +15,7 @@
 //
 
 class OpenAI {
-    chat(input_text, output_filename) {
+    chat(input_text) {
         LaunchBar.debugLog(`Input text: ${input_text}`);
 
         if (typeof input_text !== 'string' || !input_text.trim().length) {
@@ -66,7 +66,7 @@ class OpenAI {
 
             case 'config':
                 // The user is lost.
-                LaunchBar.alert(`Are you looking for the “configset” and “configreset” commands? If you need help send the “help” command.`);
+                LaunchBar.alert(`Are you looking for the “configset” and “configreset” commands?`, `If you need help send the “help” command.`);
                 return true;
 
             case 'copy':
@@ -114,6 +114,12 @@ class OpenAI {
             return cached_response_text;
         }
 
+        let final_user_message = `${/[.,;:!?]$/.test(input_text) ? input_text : input_text + '.'} ${user_message_addendum}`;
+        if (util.countTokens(final_user_message) > config.get('max_user_message_tokens')) {
+            final_user_message = final_user_message.slice(0, config.get('max_user_message_tokens'));
+            LaunchBar.displayNotification({title: 'ChipiChat', string: `Input text truncated to avoid exceeding max tokens.`});
+        }
+
         // Build chat completion messages.
         let messages = [{role: 'system', content: system_message}];
         // Include previous non-stale exchanges.
@@ -121,7 +127,7 @@ class OpenAI {
             messages.push({role: 'user', content: exchange.user});
             messages.push({role: 'assistant', content: exchange.assistant});
         });
-        messages.push({role: 'user', content: `${/[.,;:!?]$/.test(input_text) ? input_text : input_text + '.'} ${user_message_addendum}`});
+        messages.push({role: 'user', content: final_user_message});
 
         if (!config.get('api_key').length) {
             help.apiKey();
@@ -130,7 +136,10 @@ class OpenAI {
 
         let timeout = config.get('timeout');
         if (/^gpt-4/.test(model)) {
-            timeout += 30;
+            timeout += 60;
+            LaunchBar.displayNotification({title: 'ChipiChat', string: 'Message sent. GPT-4 is slow; please have patience!'});
+        } else if (util.countTokens(final_user_message) > 750) {
+            LaunchBar.displayNotification({title: 'ChipiChat', string: 'That was a large message. It may take awhile to get a response; please have patience!'});
         }
 
         LaunchBar.debugLog(`Request: ${JSON.stringify(messages)}`);
@@ -138,7 +147,7 @@ class OpenAI {
             headerFields: {'Authorization': `Bearer ${config.get('api_key')}`},
             resultType: 'json',
             timeout,
-            body: {model, temperature, max_tokens: config.get('max_tokens'), messages}
+            body: {model, temperature, max_tokens: config.get('max_response_tokens'), messages}
         });
         if (typeof result.data !== 'undefined') {
             LaunchBar.debugLog(`Response: ${JSON.stringify(result.data)}`);

@@ -58,13 +58,11 @@ class History {
 
     // Return conversation newer than max_age_seconds.
     get(max_age_seconds, max_tokens) {
-        // One token generally corresponds to ~4 characters of text for common English text. https://platform.openai.com/tokenizer
-        const max_chars = max_tokens * 4;
-        let chars = 0;
+        let tokens = 0;
         return Action.preferences.conversation_history.filter(exchange => {
-            const return_val = chars < max_chars && (new Date() - new Date(exchange.date)) <= max_age_seconds * 1000;
-            chars += exchange.user.length + exchange.assistant.length;
-            LaunchBar.debugLog(`History.get ${return_val ? 'included' : 'excluded'} exchange from ${(new Date() - new Date(exchange.date)) / 1000} secs ago: “${exchange.user}”${chars < max_chars ? '' : ' (exceeded max_chars)'}`);
+            const return_val = tokens < max_tokens && (new Date() - new Date(exchange.date)) <= max_age_seconds * 1000;
+            tokens += util.countTokens(exchange.user + exchange.assistant);
+            LaunchBar.debugLog(`History.get ${return_val ? 'included' : 'excluded'} exchange from ${(new Date() - new Date(exchange.date)) / 1000} secs ago: “${exchange.user}”${tokens < max_tokens ? '' : ' (exceeded max_tokens)'}`);
             return return_val;
         }).reverse();
     }

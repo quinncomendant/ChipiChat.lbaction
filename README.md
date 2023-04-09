@@ -95,15 +95,17 @@ To reset all configuration options to defaults, send the `configreset` command.
 
 - `api_key`: Your OpenAI API key (default: empty).
 - `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., “show me how to do that” from the cache might contain an out-of-context response (default: `5`).
+- `cache_min_words`: Minimum words in input text required before response is cached. Short phrases are less unique, and are more likely to load cached respones from a different context (default: `3`).
 - `default_action`: The action to run when hitting enter *after* receiving a response. (options: `open`, `insert`, `quicklook`, `largetype`; default: `open`).
 - `filename_extension`: The extension of cached files changes how they open in a text editor and Quick Look (default: `txt`). If you have a Quick Look extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting. 😎
-- `max_history_minutes`: Include up to *max_history_minutes* of conversation history in requests (default: `480`).
-- `max_history_tokens`: Include up to *max_tokens* of conversation history in requests (default: `500`).
-- `max_tokens`: The maximum number of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to generate (default: `1024`).
+- `max_history_minutes`: Maximum age of conversation history in requests (default: `480`).
+- `max_history_tokens`: Maximum amount of conversation history in requests (default: `1000`).
+- `max_response_tokens`: Maximum amount of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to return in the response (default: `2000`).
+- `max_user_message_tokens`: Maximum amount of tokens allowed in the input text (default: `1000`).
 - `model`: Which OpenAI [model](https://platform.openai.com/docs/models/overview) to use (default: `gpt-3.5-turbo`).
-- `system_message`: The [system message](https://platform.openai.com/docs/guides/chat/introduction) sets the overall behavior of the assistant (default: `You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.`).
+- `system_message`: The [system message](https://platform.openai.com/docs/guides/chat/introduction) sets the overall behavior of the assistant (default: `You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never say “As an AI language model”.`).
 - `temperature`: What sampling [temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature) to use, between `0.0` and `2.0` (default: `0.1`).
-- `timeout`: How many seconds to wait for a response from the API (default: `15`; note: when using the much slower GPT-4, there is a hard-coded 120 second timeout).
+- `timeout`: How many seconds to wait for a response from the API (default: `20`; using GPT-4 adds timeout + 60 seconds).
 - `user_message_addendum`: Supplemental instructions that are included with every user message, useful because `gpt-3.5-turbo` does not always pay attention to system messages (default: `Be succinct. Limit prose. Never repeat the user message.`).
 
 ## To do

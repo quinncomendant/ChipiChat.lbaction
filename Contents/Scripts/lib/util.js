@@ -15,6 +15,11 @@
 //
 
 class Util {
+    countTokens(str) {
+        // One token generally corresponds to ~4 characters of text for common English text. https://platform.openai.com/tokenizer
+        return str.length / 4;
+    }
+
     unprefix(str) {
         return str.slice(str.indexOf(' ') + 1).trim();
     }

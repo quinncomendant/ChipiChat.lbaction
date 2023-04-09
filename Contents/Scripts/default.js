@@ -34,14 +34,23 @@ const config = new Config({
     default_action: 'open',
     filename_extension: 'txt', // Change this to 'md' if you use a Quick Look extension that supports markdown.
     max_history_minutes: 480,
-    max_history_tokens: 500,
-    max_tokens: 1024,
+    max_history_tokens: 1000,
+    max_response_tokens: 2000,
+    max_user_message_tokens: 1000,
     model: 'gpt-3.5-turbo',
-    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.",
+    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never say “As an AI language model”.",
     temperature: 0.1,
-    timeout: 15,
+    timeout: 30,
     user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
 });
+
+// The sum of tokens used for max_user_message_tokens + max_history_tokens + max_response_tokens must not exceed the model's context length.
+let model_context_length = 4096;
+if (config.get('model').includes('gpt-4')) {
+    let model_context_length = 8192;
+} else if (config.get('model').includes('gpt-4-32k')) {
+    let model_context_length = 32768;
+}
 
 include('lib/history.js');
 const history = new History();
@@ -102,8 +111,8 @@ function runWithString(argument) {
         return;
 
     case 'configreset':
-        LaunchBar.displayNotification({title: 'ChipiChat', string: 'Configuration reset to defaults.'});
         config.setDefaults(['api_key']); // Don't reset API key.
+        LaunchBar.displayNotification({title: 'ChipiChat', string: 'Configuration reset to defaults.'});
         return;
 
     case 'clear':
@@ -135,8 +144,8 @@ function runWithString(argument) {
         return;
     }
 
+    const response_text = openai.chat(argument);
     const output_filename = util.filenameFromInputString(argument);
-    const response_text = openai.chat(argument, output_filename);
     if (typeof response_text === 'string') {
         // Save to a temporary file to open via Quick Look or text editor.
         util.saveFile(output_filename, response_text);
@@ -164,14 +173,14 @@ function runWithPaths(paths) {
     let contents = [];
     paths.forEach(function(path) {
         if (File.isDirectory(path)) {
-            LaunchBar.alert('ChipiChat can’t process directories.');
+            LaunchBar.alert('ChipiChat can’t process directories', path);
             return;
         }
         if (File.isReadable(path)) {
             try {
                 contents.push(File.readText(path));
             } catch (exception) {
-                LaunchBar.alert(`Failed to read text file: ${path}`);
+                LaunchBar.alert('ChipiChat failed to read text file', path);
             }
         }
     });
