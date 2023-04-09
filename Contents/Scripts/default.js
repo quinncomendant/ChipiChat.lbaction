@@ -39,6 +39,7 @@ const config = new Config({
     max_tokens: 1024,
     max_history_minutes: 480,
     max_history_tokens: 500,
+    cache_expiration_minutes: 5,
     timeout: 15,
 });
 

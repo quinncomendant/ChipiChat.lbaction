@@ -31,6 +31,7 @@ class OpenAI {
         let temperature = config.get('temperature');
         let max_history_minutes = config.get('max_history_minutes');
         let max_history_tokens = config.get('max_history_tokens');
+        let cache_expiration_minutes = config.get('cache_expiration_minutes');
         let timeout = config.get('timeout');
 
         input_text = input_text.trim();
@@ -112,7 +113,7 @@ class OpenAI {
         input_text = `${reprefix.join(' ')} ${input_text}`;
 
         // Respond with cached response.
-        const cached_response_text = history.getAssistantResponse(input_text_with_modifiers, 3600);
+        const cached_response_text = history.getAssistantResponse(input_text_with_modifiers, cache_expiration_minutes * 60);
         if (typeof cached_response_text !== 'undefined' && str.split(' ').length > 4) {
             LaunchBar.debugLog(`Using cached response: ${cached_response_text}`);
             return cached_response_text;

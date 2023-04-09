@@ -112,6 +112,7 @@ class Config {
         case 'max_tokens':
         case 'max_history_minutes':
         case 'max_history_tokens':
+        case 'cache_expiration_minutes':
         case 'timeout':
             if (!this.requireInt(key, val)) {
                 return false;

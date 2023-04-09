@@ -100,6 +100,7 @@ To reset all configuration options to defaults, send the `configreset` command.
 - `model`: Which OpenAI [model](https://platform.openai.com/docs/models/overview) to use (default: `gpt-3.5-turbo`).
 - `system_message`: The [system message](https://platform.openai.com/docs/guides/chat/introduction) to send in requests (default: `You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never write “As an AI language model”.`).
 - `temperature`: What sampling [temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature) to use, between `0.0` and `2.0` (default: `0.1`).
+- `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., “show me how to do that” from the cache might contain an out-of-context response (default: `5`).
 - `timeout`: How many seconds to wait for a response from the API (default: `15`; note: when using the much slower GPT-4, there is a hard-coded 120 second timeout).
 - `user_message_addendum`: Supplemental instructions that are included with every user message (default: `Be succinct. Limit prose. Never repeat the user message.`).
 
