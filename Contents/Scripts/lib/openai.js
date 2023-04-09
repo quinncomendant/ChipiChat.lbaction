@@ -136,7 +136,7 @@ class OpenAI {
         }
 
         if (/^gpt-4/.test(model)) {
-            timeout = 120;
+            timeout += 30;
         }
 
         let result = HTTP.postJSON('https://api.openai.com/v1/chat/completions', {
