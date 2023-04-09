@@ -16,15 +16,15 @@
 
 class Help {
     general() {
-        const response = LaunchBar.alert('ChipiChat: LaunchBar🥂ChatGPT', `Interact with ChatGPT and receive responses as LaunchBar items. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk.
+        const response = LaunchBar.alert('ChipiChat: LaunchBar🥂ChatGPT', `Interact with ChatGPT and receive responses as LaunchBar items. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk for ${config.get('cache_expiration_minutes')} minutes.
 
 Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
-✨  ⌘ (held when running the action)  Immediately open the response in your text editor.
-✨  ⇧ (held when running the action)  Immediately insert the response at the current cursor position.
-✨  ⌘Y  QuickLook the response.
+✨  ⌘ (command, held when running the action)  Automatically open the response in your text editor.
+✨  ⇧ (shift, held when running the action)  Automatically insert the response at the current cursor position.
+✨  ⌃ (control, held when running the action)  Automatically Quick Look the response.
 ✨  ⌘C  Copy the response to the clipboard.
-✨  ⌘Y  QuickLook the response.
+✨  ⌘Y  Quick Look the response.
 ✨  ↵ (return)  Open the response in your text editor (reconfigurable using the 'default_action' config option).
 ✨  → (right-arrow)  Browse the response as a list (ideal for acting on specific lines of text).
 ✨  ⇥ (tab)  Send the text to other LaunchBar targets, e.g., send the output to a friend by passing it to the Compose Message action.

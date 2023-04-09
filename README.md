@@ -9,10 +9,11 @@ Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses dire
 
 ### Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
-- `⌘` *(held when running the action)* Immediately open the response in your text editor.
-- `⇧` *(held when running the action)* Immediately insert the response at the current cursor position.
+- `⌘` *(command, held when running the action)* Automatically open the response in your text editor.
+- `⇧` *(shift, held when running the action)* Automatically insert the response at the current cursor position.
+- `⌃` *(control, held when running the action)* Automatically Quick Look the response.
 -  `⌘C` Copy the response to the clipboard.
--  `⌘Y` QuickLook the response.
+-  `⌘Y` Quick Look the response.
 -  `↵` *(return)* Open the response in your text editor (reconfigurable using the `default_action` config [option](#options)).
 -  `→` *(right-arrow)* Browse the response as a list (ideal for acting on specific lines of text).
 -  `⇥` *(tab)* Send the text to other LaunchBar targets, e.g., send the output to a friend by passing it to the Compose Message action.
@@ -74,9 +75,9 @@ That’s a bit hard to read, but if you press the right-arrow key, you can view 
 
 ![Response As List](docs/4-response-as-list.png)
 
-Or, you can view it in QuickLook (press the left-arrow key to go back, then press `⌘Y`):
+Or, you can view it in Quick Look (press the left-arrow key to go back, then press `⌘Y`):
 
-![Response As QuickLook](docs/5-response-as-quicklook.png)
+![Response As Quick Look](docs/5-response-as-quicklook.png)
 
 ## Configuration
 
@@ -95,7 +96,7 @@ To reset all configuration options to defaults, send the `configreset` command.
 - `api_key`: Your OpenAI API key (default: empty).
 - `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., “show me how to do that” from the cache might contain an out-of-context response (default: `5`).
 - `default_action`: The action to run when hitting enter *after* receiving a response. (options: `open`, `insert`, `quicklook`, `largetype`; default: `open`).
-- `filename_extension`: The extension of cached files changes how they open in a text editor and QuickLook (default: `txt`). If you have a QuickLook extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting in QuickLook.
+- `filename_extension`: The extension of cached files changes how they open in a text editor and Quick Look (default: `txt`). If you have a Quick Look extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting. 😎
 - `max_history_minutes`: Include up to *max_history_minutes* of conversation history in requests (default: `480`).
 - `max_history_tokens`: Include up to *max_tokens* of conversation history in requests (default: `500`).
 - `max_tokens`: The maximum number of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to generate (default: `1024`).
@@ -113,12 +114,11 @@ To reset all configuration options to defaults, send the `configreset` command.
     - `NAME USER-MESSAGE` to send USER-MESSAGE to the API using the system message persona assigned to NAME.
     - `persona NAME SYSTEM-MESSAGE` to create or update a persona.
     - For example, create a persona name `fix` that will be used to improve submitted text: `persona fix Rewrite the following text so that it is well reasoned and emotionally intelligent.` To use this persona, just send `fix Here is my text that needs to be fixed`.
-- [ ] Hold option to auto-open QuickLook after receiving a response.
 
 
 ## Support
 
-Contact me [on Twitter](https://twitter.com/com) or file an [issue](https://github.com/quinncomendant/ChipiChat.lbaction/issues).
+Contact me [on Twitter](https://twitter.com/com) or create a [GitHub issue](https://github.com/quinncomendant/ChipiChat.lbaction/issues).
 
 Do you find this free software useful? [Say thanks with a coffee!](https://ko-fi.com/strangecode)
 

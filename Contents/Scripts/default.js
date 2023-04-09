@@ -32,7 +32,7 @@ const config = new Config({
     cache_expiration_minutes: 5,
     cache_min_words: 3,
     default_action: 'open',
-    filename_extension: 'txt', // Change this to 'md' if you use a QuickLook extension that supports markdown.
+    filename_extension: 'txt', // Change this to 'md' if you use a Quick Look extension that supports markdown.
     max_history_minutes: 480,
     max_history_tokens: 500,
     max_tokens: 1024,
@@ -138,11 +138,11 @@ function runWithString(argument) {
     const output_filename = util.filenameFromInputString(argument);
     const response_text = openai.chat(argument, output_filename);
     if (typeof response_text === 'string') {
-        // Save to a temporary file to open via QuickLook or text editor.
+        // Save to a temporary file to open via Quick Look or text editor.
         util.saveFile(output_filename, response_text);
 
         if (LaunchBar.options.controlKey) {
-            // QuickLook the response document immediately.
+            // Quick Look the response document immediately.
             LaunchBar.openQuickLook(File.fileURLForPath(output_filename));
             return util.actionOutput(response_text, output_filename);
         } else if (LaunchBar.options.commandKey) {

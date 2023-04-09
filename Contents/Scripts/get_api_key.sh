@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-. ~/.bash_profile-local
+[[ -f ~/.bash_profile ]] && . ~/.bash_profile
 echo "$OPENAI_API_KEY";
