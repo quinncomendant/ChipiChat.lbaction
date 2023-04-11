@@ -34,12 +34,14 @@ class Config {
         }
     }
 
-    setDefaults(keys_to_skip=[]) {
-        if (!keys_to_skip.length) {
-            Action.preferences.config = {};
-        }
+    setDefaults(keys_to_retain=[]) {
+        let retained_options = {};
+        keys_to_retain.forEach(key => {
+            retained_options[key] = this.get(key);
+        });
+        Action.preferences.config = retained_options;
         Object.entries(this.defaults).forEach(([key, val]) => {
-            if (!keys_to_skip.includes(key)) {
+            if (!keys_to_retain.includes(key)) {
                 LaunchBar.debugLog(`Setting default config: ${key} = ${val}`);
                 Action.preferences.config[key] = val;
             }

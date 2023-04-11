@@ -94,8 +94,12 @@ function defaultAction(filename) {
         return util.actionOutput(response_text, filename);
 
     case 'alert':
-        LaunchBar.alert('ChipiChat', response_text);
-        LaunchBar.performAction('ChipiChat');
+        const response = LaunchBar.alert('ChipiChat', response_text, 'Reply', 'Close');
+        switch (response) {
+        case 0:
+            LaunchBar.performAction('ChipiChat');
+            break;
+        }
         return;
 
     case 'copy':
