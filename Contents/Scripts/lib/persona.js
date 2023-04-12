@@ -18,7 +18,7 @@ class Persona {
     #defaults = {};
 
     constructor(defaults) {
-        this.defaults = defaults;
+        this.#defaults = defaults;
         LaunchBar.debugLog(`Previously saved personas: (${typeof Action.preferences.personas}) ${JSON.stringify(Action.preferences.personas)}`);
         if (typeof Action.preferences.personas === 'undefined' || !Object.keys(Action.preferences.personas).length) {
             this.setDefaults();
@@ -27,7 +27,7 @@ class Persona {
 
     setDefaults() {
         Action.preferences.personas = {};
-        Object.entries(this.defaults).forEach(([key, val]) => {
+        Object.entries(this.#defaults).forEach(([key, val]) => {
             LaunchBar.debugLog(`Setting default persona: ${key} = ${val}`);
             Action.preferences.personas[key] = val;
         });

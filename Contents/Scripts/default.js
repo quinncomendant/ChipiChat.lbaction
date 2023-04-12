@@ -61,12 +61,12 @@ const persona = new Persona({
         retain_prefix: true,
     },
     list: {
-        system_message: "You are an quiet assistent researcher who compiles accurate, succinct reports of information requested by the user. Respond only with a bulleted list. Be succinct. Limit prose. Never repeat the user message.",
+        system_message: "Write a succinct, bulleted list. Do not include an introduction or description of the list.",
         user_message_addendum: "Respond with a bulleted list.",
         retain_prefix: true,
     },
     rewrite: {
-        system_message: "Rewrite the following text so that it is well reasoned and emotionally intelligent. Avoid clichés and figures of speech, use short words, cut unnecessary words, and prefer the active voice.",
+        system_message: "Rewrite the following text so that it is well reasoned and emotionally intelligent. Avoid clichés and figures of speech, remove superfluous adjectives, use short words, cut unnecessary words, and prefer the active voice.",
         user_message_addendum: '',
         retain_prefix: false,
     },

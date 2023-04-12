@@ -28,19 +28,19 @@ class OpenAI {
             LaunchBar.alert('ChipiChat', `Failed to add ${role} message because it was empty.`);
             return false;
         }
-        this.messages.push({
+        this.#messages.push({
             role: role,
             content: content
         });
     }
 
     chat() {
-        timeout = config.get('timeout');
+        let timeout = config.get('timeout');
         if (/^gpt-4/.test(this.model)) {
             timeout += 60;
             LaunchBar.displayNotification({title: 'ChipiChat', string: 'Message sent. GPT-4 is slow; please have patience!'});
         }
-        LaunchBar.debugLog(`Request: ${JSON.stringify(this.messages)}`);
+        LaunchBar.debugLog(`Request: ${JSON.stringify(this.#messages)}`);
         let result = HTTP.postJSON('https://api.openai.com/v1/chat/completions', {
             headerFields: {'Authorization': `Bearer ${config.get('api_key')}`},
             resultType: 'json',
@@ -48,7 +48,7 @@ class OpenAI {
             body: {
                 model: this.model,
                 temperature: this.temperature,
-                messages: this.messages,
+                messages: this.#messages,
                 max_tokens: config.get('max_response_tokens')
             }
         });

@@ -18,7 +18,7 @@ class Config {
     #defaults = {};
 
     constructor(defaults) {
-        this.defaults = defaults;
+        this.#defaults = defaults;
         LaunchBar.debugLog(`Previously saved config: (${typeof Action.preferences.config}) ${JSON.stringify(Action.preferences.config)}`);
         if (typeof Action.preferences.config === 'undefined' || !Object.keys(Action.preferences.config).length) {
             this.setDefaults();
@@ -40,7 +40,7 @@ class Config {
             retained_options[key] = this.get(key);
         });
         Action.preferences.config = retained_options;
-        Object.entries(this.defaults).forEach(([key, val]) => {
+        Object.entries(this.#defaults).forEach(([key, val]) => {
             if (!keys_to_retain.includes(key)) {
                 LaunchBar.debugLog(`Setting default config: “${key}” = “${val}”`);
                 Action.preferences.config[key] = val;

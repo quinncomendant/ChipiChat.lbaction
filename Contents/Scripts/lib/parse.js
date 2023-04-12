@@ -149,7 +149,7 @@ class Parse {
             }
 
             // The modifier matched a keyword or persona, continue with the next word.
-            LaunchBar.debugLog(`Scanned modifier: ${modifier}`);
+            LaunchBar.debugLog(`Scanned modifier: “${modifier}”`);
             return false;
         });
         input_text = `${reprefix.join(' ')} ${input_text}`.trim();

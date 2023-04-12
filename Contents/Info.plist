@@ -25,11 +25,11 @@
 		<key>LBEmail</key>
 		<string>quinn@strangecode.com</string>
 		<key>LBRequirements</key>
-		<string>You need an OpenAI API key, and access to the internet.</string>
+		<string>OpenAI API key and internet access</string>
 		<key>LBResult</key>
-		<string>Response message from ChatGPT as a LaunchBar item</string>
+		<string>Response from ChatGPT as a LaunchBar item</string>
 		<key>LBSummary</key>
-		<string>Interact with ChatGPT</string>
+		<string>Interact with the ChatGPT API</string>
 		<key>LBTwitter</key>
 		<string>@com</string>
 		<key>LBWebsiteURL</key>

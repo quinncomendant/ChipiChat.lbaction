@@ -77,7 +77,7 @@ class History {
     show() {
         if (!Action.preferences.conversation_history.length) {
             LaunchBar.alert('ChipiChat history is empty.');
-            return;
+            return true;
         }
         return Action.preferences.conversation_history.map(exchange => {
             return {
