@@ -89,16 +89,16 @@ class Util {
                 LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${Action.version} which is the latest version available.`);
                 return;
             } else if (Action.version > result.data.tag_name) {
-                const response = LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${Action.version} which is newer than the latest version available.`, 'Close', 'Download old version');
-                switch (response) {
+                const up_to_date_response = LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${Action.version} which is newer than the latest version available.`, 'Close', 'Download old version');
+                switch (up_to_date_response) {
                 case 1:
                     LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases')
                     break;
                 }
                 return;
             } else if (result.data.tag_name > Action.version) {
-                const response = LaunchBar.alert(`ChipiChat has a new version available`, `${result.data.tag_name} is the latest version available. You have version ${Action.version}.`, 'Close', 'Download new version');
-                switch (response) {
+                const new_version_response = LaunchBar.alert(`ChipiChat has a new version available`, `${result.data.tag_name} is the latest version available. You have version ${Action.version}.`, 'Close', 'Download new version');
+                switch (new_version_response) {
                 case 1:
                     LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases')
                     break;
@@ -109,10 +109,10 @@ class Util {
         LaunchBar.alert(`ChipiChat version ${Action.version}`, `Failed to check if a new version is available. ${typeof result.error !== 'undefined' ? result.error : ''}`);
     }
 
-    actionOutputChildren(response_text) {
+    actionOutputChildren(assistant_message) {
         let output = [];
         let in_code_block = false;
-        response_text.split('\n').forEach(line => {
+        assistant_message.split('\n').forEach(line => {
             if (/^ *```/.test(line)) {
                 in_code_block = !in_code_block;
                 return;
@@ -134,10 +134,10 @@ class Util {
         return output;
     }
 
-    actionOutput(response_text, output_filename) {
+    actionOutput(assistant_message, output_filename) {
         return {
-            title: response_text,
-            children: this.actionOutputChildren(response_text),
+            title: assistant_message,
+            children: this.actionOutputChildren(assistant_message),
             action: 'defaultAction',
             actionArgument: output_filename,
             quickLookURL: File.fileURLForPath(output_filename),

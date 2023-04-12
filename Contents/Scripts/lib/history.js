@@ -28,41 +28,48 @@ class History {
         Action.preferences.conversation_history = [];
     }
 
-    add(input_text_with_modifiers, input_text, response_text) {
-        const exchange = {
+    add(input_text, user_message, assistant_message) {
+        // Transform useless responses.
+        if (/(as an ai language model|i am a language model)/i.test(assistant_message)) {
+            assistant_message = assistant_message.replace(/^[^.]*(as an ai language model|i am a language model)[^.]*\./i, '').trim();
+        }
+        if (/^sorry, I (cannot|can.t)/i.test(assistant_message)) {
+            assistant_message = assistant_message.replace(/^sorry, I (cannot|can.t) [^\.]+\./i, '').trim();
+        }
+
+        if (!input_text.length || !user_message.length || !assistant_message.length) {
+            LaunchBar.debugLog('history.add: attempt to empty string');
+            return;
+        }
+
+        Action.preferences.conversation_history.unshift({
             date: new Date().toISOString(),
-            input_text_with_modifiers: input_text_with_modifiers,
-            user: input_text,
-            assistant: response_text
-        };
-        // Exclude useless responses.
-        if (exchange.assistant.includes(`I don't have enough context to answer your question.`)) {
-            exchange.assistant = '';
-        }
-        if (/(as an ai language model|i am a language model)/i.test(exchange.assistant)) {
-            exchange.assistant = exchange.assistant.replace(/^[^.]*(as an ai language model|i am a language model)[^.]*\./i, '').trim();
-        }
-        if (/^sorry, I (cannot|can.t)/i.test(exchange.assistant)) {
-            exchange.assistant = exchange.assistant.replace(/^sorry, I (cannot|can.t) [^\.]+\./i, '').trim();
-        }
-        Action.preferences.conversation_history.unshift(exchange);
-    }
-
-    getAssistantResponse(input_text_with_modifiers, max_age_seconds) {
-        max_age_seconds = max_age_seconds ?? 1600000000;
-        const exchange = Action.preferences.conversation_history.find(exchange => {
-            return exchange.input_text_with_modifiers === input_text_with_modifiers && (new Date() - new Date(exchange.date)) <= max_age_seconds * 1000;
+            input_text: input_text,
+            user: user_message,
+            assistant: assistant_message
         });
-        return typeof exchange !== 'undefined' && exchange.assistant.length ? exchange.assistant : undefined;
     }
 
-    // Return conversation newer than max_age_seconds.
-    get(max_age_seconds, max_tokens) {
+    // Test if history.get() will return a match.
+    exists(input_text) {
+        return typeof this.get(input_text) !== 'undefined' ? true : false;
+    }
+
+    // Get the most recent exchange that matches input_text and is not older than cache_expiration_minutes.
+    get(input_text) {
+        const exchange = Action.preferences.conversation_history.find(exchange => {
+            return exchange.input_text === input_text && (new Date() - new Date(exchange.date)) <= config.get('cache_expiration_minutes') * 60 * 1000;
+        });
+        return typeof exchange !== 'undefined' ? exchange : undefined;
+    }
+
+    // Return a list of conversations newer than max_history_minutes and until their length reaches max_history_tokens.
+    list() {
         let tokens = 0;
         return Action.preferences.conversation_history.filter(exchange => {
-            const return_val = tokens < max_tokens && (new Date() - new Date(exchange.date)) <= max_age_seconds * 1000;
+            const return_val = tokens < config.get('max_history_tokens') && (new Date() - new Date(exchange.date)) <= config.get('max_history_minutes') * 60 * 1000;
             tokens += util.countTokens(exchange.user + exchange.assistant);
-            LaunchBar.debugLog(`History.get ${return_val ? 'included' : 'excluded'} exchange from ${(new Date() - new Date(exchange.date)) / 1000} secs ago: “${exchange.user}”${tokens < max_tokens ? '' : ' (exceeded max_tokens)'}`);
+            LaunchBar.debugLog(`History.get ${return_val ? 'included' : 'excluded'} exchange from ${(new Date() - new Date(exchange.date)) / 1000} secs ago: “${exchange.user}”${tokens < config.get('max_history_tokens') ? '' : ' (exceeded max_history_tokens)'}`);
             return return_val;
         }).reverse();
     }
@@ -79,11 +86,10 @@ class History {
                 alwaysShowsSubtitle: true,
                 children: util.actionOutputChildren(exchange.assistant),
                 action: 'defaultAction',
-                actionArgument: util.filenameFromInputString(exchange.user),
-                quickLookURL: File.fileURLForPath(util.filenameFromInputString(exchange.user)),
+                actionArgument: util.filenameFromInputString(exchange.input_text),
+                quickLookURL: File.fileURLForPath(util.filenameFromInputString(exchange.input_text)),
                 icon: 'ChipiChat-bw.png'
             };
-
         });
     }
 

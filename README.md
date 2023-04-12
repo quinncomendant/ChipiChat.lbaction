@@ -1,6 +1,6 @@
 # ChipiChat: LaunchBar🥂ChatGPT
 
-Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/index.html "LaunchBar 6"). Conversation history is preserved for context. Responses are cached on disk.
+Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform.openai.com/docs/models/chatgpt) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/). Conversation history is preserved for context. Responses are cached on disk. Understands keyword modifiers, commands, personas. Is cute. *Requires an OpenAI API key.*
 
 ![Demo](https://send.strangecode.com/f/chipichat-demo-20230404.gif)
 
@@ -9,36 +9,43 @@ Interact with [ChatGPT](https://chat.openai.com/chat) and receive responses dire
 
 ### Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
-- `⌘` *(command, held when running the action)* Automatically open the response in your text editor.
-- `⇧` *(shift, held when running the action)* Automatically insert the response at the current cursor position.
-- `⌃` *(control, held when running the action)* Automatically Quick Look the response.
--  `⌘Y` Quick Look the response.
--  `⌘C` Copy the response to the clipboard.
--  `↵` *(return)* Open the response in your text editor (reconfigurable using the `default_action` config [option](#options)).
--  `→` *(right-arrow)* Browse the response as a list (ideal for acting on specific lines of text).
--  `⇥` *(tab)* Send the text to other LaunchBar targets, e.g., send the output to a friend by passing it to the Compose Message action.
+- `⌘ ↵` *(command + return)* Open the response in your text editor.
+- `⇧ ↵` *(shift + return)* Insert the response at the current cursor position.
+- `⌃ ↵` *(control + return)* Quick Look the response.
+- `⌘ Y` Quick Look the response.
+- `⌘ C` Copy the response to the clipboard.
+- `↵` *(return)* Open the response in your text editor (reconfigurable using the `default_action` [config option](#options)).
+- `→` *(right-arrow)* Browse the response as a list (ideal for acting on specific lines of text).
+- `⇥` *(tab)* Send the text to other LaunchBar targets, e.g., send the output to a friend by passing it to the Compose Message action.
 
-### Prefix your message with one-or-more modifiers for enhanced functionality:
+### Keyword modifiers
 
--  `N.N`: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
+Prefix your message with one-or-more modifiers for enhanced functionality:
+
+-  `N.N`: Adjust response randomness by using temperature value `N.N`, e.g., “1.5 why is the sky blue?”.
 -  `4`: Use the GPT-4 model (requires GPT-4 API access).
--  `code`: Use the coder persona for code-only responses.
 -  `copy`: Automatically copy the response to the clipboard.
--  `list`: Request response formatted as a bulleted list.
 -  `new`: Start a new conversation with no history.
--  `write`: Use the copywriter persona, adhering to Orwell’s six rules for writers.
+- `(persona name)`: Use a custom or predefined [persona](#personas).
 
-You can combine modifiers, e.g., “`code copy 4 js function to get a uuid`” sends “`js function to get a uuid`” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
+You can combine modifiers, e.g., “**code copy 4** js uuid function” sends “js uuid function” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
 
-### Manage history and settings with special commands:
+### Commands
 
-- `clear`: Remove chat history without sending a message.
-- `config`: Show current configuration settings.
+Manage conversation history, settings, and personas by sending commands to ChipiChat:
+
+- `help`: Display a help message.
+- `history`: Display recent conversation history.
+- `export`: Save conversation history to a file in ~/Downloads/.
+- `clear`: Erase all conversation history (otherwise, conversations are stored up to one week).
+- `config list`: Show current configuration settings.
 - `config reset`: Reset all configuration options to defaults.
 - `config set OPTION VALUE`: Set the configuration OPTION to VALUE, e.g., `config set default_action alert`.
-- `export`: Save conversation history to a file in `~/Downloads/`.
-- `help`: Display this help message.
-- `history`: Display recent chat history.
+- `persona list`: View all personas.
+- `persona export`: Save all personas to a file in ~/Downloads/.
+- `persona reset`: Reset personas to defaults. This will erase any custom personas you added.
+- `persona set default SYSTEM_MESSAGE`: Change the *default* persona’s system message.
+- `persona set NAME SYSTEM_MESSAGE`: Add or modify a persona.
 - `version`: Display ChipiChat version and check if a new version is available.
 
 ## Installation
@@ -59,17 +66,17 @@ Before you can use ChatGPT, you must get an OpenAI API key:
 xattr -d com.apple.quarantine ~/Library/Application\ Support/LaunchBar/Actions/ChipiChat.lbaction
 ```
 3. Open LaunchBar and type `cc` to invoke ChipiChat. 
-4. Hit the spacebar, type `config set api_key YOURAPIKEYHERE`, and hit enter to save your API key in LaunchBar:
+4. Hit the spacebar, type `config set api_key YOURAPIKEYHERE`, and hit return to save your API key in LaunchBar:
 
 ![config set api_key yourkeyhere](docs/1-set-api-key.png)
 
-(Alternatively, you can use `export OPENAI_API_KEY="…"` in your `~/.profile` or `~/.bash_profile` file.)
+(Alternatively, you can use `export OPENAI_API_KEY="…"` in your shell profile.)
 
 Now you’re ready to use ChipiChat!
 
 ### Usage example
 
-Invoke ChipiChat again (type `cc`), hit the spacebar, then enter a message and hit enter:
+Invoke ChipiChat (type `cc`), hit the spacebar, then return a message and hit return:
 
 ![Example Message](docs/2-example-message.png)
 
@@ -81,7 +88,7 @@ That’s a bit hard to read, but if you press the right-arrow key, you can view 
 
 ![Response As List](docs/4-response-as-list.png)
 
-Or, you can view it in Quick Look (press the left-arrow key to go back, then press `⌘Y`):
+Or, you can view it in Quick Look (press the left-arrow key to go back, then press `⌘ Y`):
 
 ![Response As Quick Look](docs/5-response-as-quicklook.png)
 
@@ -93,35 +100,56 @@ ChipiChat has many features and myriad customizable options. Practice all the co
 2. Download the new `ChipiChat.lbaction.zip` file from [releases](https://github.com/quinncomendant/ChipiChat.lbaction/releases), unzip it, and double-click it to install.
 3. Read the change log on the release page, which may have special instructions such as a requirement to run `config reset` after updating.
 
-## Configuration
+## Personas
 
-The following options can be changed using the `config set OPTION VALUE` command. For example, to change the `system_message`:
+Use a persona to set the overall behavior of the assistant. Create your own or use one of the predefined personas. A default persona is used if no persona is specified when you send a message.
+
+Manage personas with these commands:
+
+- `persona list`: View all personas.
+- `persona export`: Save all personas to a file in `~/Downloads/`
+- `persona reset`: Reset personas to defaults. This will erase any custom personas you added.
+- `persona set default SYSTEM_MESSAGE`: Change the *default* persona’s system message.
+- `persona set NAME SYSTEM_MESSAGE`: Add or modify a persona.
+
+The `SYSTEM_MESSAGE` is the [system message](https://platform.openai.com/docs/guides/chat/introduction) that is included with the request to ChatGPT that influences the behavior of the assistant.
+
+As an example, to create a persona named “Pierre” who translates user messages to French:
 
 ```
-config set system_message You are a helpful but sarcastic assistent.
-````
+persona set pierre Translate the user message to French
+```
 
-To view currently-set values, send the `config` command.
+To use a persona, add the persona’s NAME to the beginning of your message. So, to use the Pierre persona, just write “**pierre** retirement in france must be amazing” and the assistant will respond, “La retraite en France doit être incroyable.” The persona can be combined with other keyword modifiers, e.g., “**copy** **list** mexican zombie films” to use the “list” persona and copy the results to the clipboard automatically.
+
+
+## Configuration
+
+The following options can be changed using the `config set OPTION VALUE` command. For example, to change the `default_action`:
+
+```
+config set default_action quicklook
+```
+
+To view currently-set values, send the `config list` command.
 
 To reset all configuration options to defaults, send the `config reset` command.
 
 ### Options
 
-- `api_key`: Your OpenAI API key (default: empty).
-- `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., “show me how to do that” from the cache might contain an out-of-context response (default: `5`).
-- `cache_min_words`: Minimum words in input text required before response is cached. Short phrases are less unique, and are more likely to load cached respones from a different context (default: `3`).
-- `default_action`: The action to run when hitting enter *after* receiving a response. (options: `open`, `insert`, `quicklook`, `alert`, `copy`, `largetype`; default: `open`).
-- `default_action_opens_automatically`: Set this to `true` to run the `default_action` automatically without having to hit enter after receiving a response. (options: `true`, `false`; default: `false`).
-- `filename_extension`: The extension of cached files changes how they open in a text editor and Quick Look (options: `txt`, `md`, `markdown`; default: `txt`). If you have a Quick Look extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting. 😎
-- `max_history_minutes`: Maximum age of conversation history in requests (default: `480`).
-- `max_history_tokens`: Maximum amount of conversation history in requests (default: `1000`).
+- `api_key`: Your OpenAI API key (default: empty or imported from `$OPENAI_API_KEY`).
+- `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., the message “please continue” might match a cached response from an earlier reply (default: `15`). If a message loads a cached response unexpectedly, you can reduce the cache expiration, clear the history, or just send the query again with extra characters that make it unique.
+- `cache_min_words`: Minimum words in input text required before response is cached. Short phrases are less unique, and are more likely to load cached responses from a different context (default: `3`).
+- `default_action`: The action to run when hitting return *after* receiving a response. (options: `open`, `insert`, `quicklook`, `alert`, `copy`, `largetype`; default: `open`).
+- `default_action_opens_automatically`: Set this to `true` to run the `default_action` automatically without having to hit return after receiving a response. (options: `true`, `false`; default: `false`).
+- `filename_extension`: The extension of cached files changes how they open in a text editor and Quick Look (options: `txt`, `md`, `markdown`; default: `txt`). If you have a Quick Look extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting.
+- `max_history_minutes`: Maximum age of conversation history to include in requests for context (default: `480`).
+- `max_history_tokens`: Maximum amount of conversation history to include in requests for context (default: `1000`).
 - `max_response_tokens`: Maximum amount of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to return in the response (default: `2000`).
 - `max_user_message_tokens`: Maximum amount of tokens allowed in the input text (default: `1000`).
 - `model`: Which OpenAI [model](https://platform.openai.com/docs/models/overview) to use (default: `gpt-3.5-turbo`).
-- `system_message`: The [system message](https://platform.openai.com/docs/guides/chat/introduction) sets the overall behavior of the assistant (default: `You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never say “As an AI language model”.`).
 - `temperature`: What sampling [temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature) to use, between `0.0` and `2.0` (default: `0.1`).
 - `timeout`: How many seconds to wait for a response from the API (default: `30`; using GPT-4 adds timeout + 60 seconds).
-- `user_message_addendum`: Supplemental instructions that are included with every user message, useful because `gpt-3.5-turbo` does not always pay attention to system messages (default: `Be succinct. Limit prose. Never repeat the user message.`).
 
 ### Default actions
 
@@ -131,7 +159,7 @@ Use the `default_action` and `default_action_opens_automatically` options to cus
 - `insert`: Paste the contents of the response into the cursor position. Hide LaunchBar.
 - `quicklook`: Open the response in Quick Look. LaunchBar remains open, so you can easily close the Quick Look (`Esc` key) and do something else with the response.
 - `alert`: Open the response in a LaunchBar alert. Hit “Reply” to keep the conversation going (the cursor will return to the input field, ready to send the next message).
-- `copy`: Copy the contents of the response. Hide LaunchBar.
+- `copy`: Copy the contents of the response on the clipboard. Hide LaunchBar.
 - `largetype`: Open the response in a LaunchBar’s large type display. Only useful for short responses.
 
 ## Tips
@@ -144,7 +172,7 @@ config set default_action quicklook
 config set default_action_opens_automatically true
 ```
 
-The best settings to carry on a conversation is to use the LaunchBar alert model dialog, with a Reply button:
+The best settings to carry on a conversation is to use LaunchBar alerts, which has a Reply button:
 
 ```
 config set default_action alert
@@ -162,16 +190,6 @@ Press the right-arrow to view a response as a [list with icons](https://send.str
 <img src="docs/icons/genderless.svg" alt="⚫️" class="icon-inline"> for ordered list,
 <img src="docs/icons/caret-right.svg" alt="▶️" class="icon-inline"> for unordered list,
 and <img src="docs/icons/comment.svg" alt="💬" class="icon-inline"> for all other text).
-
-## To do
-
-- [ ] How to do garbage collection on the cache dir? `~/Library/Caches/at.obdev.LaunchBar/Actions/com.strangecode.LaunchBar.action.ChipiChat/`
-- [ ] Persona management:
-    - `persona NAME SYSTEM-MESSAGE` to create or update a persona.
-    - `persona NAME` to set a persona as the default.
-    - `NAME USER-MESSAGE` to send USER-MESSAGE to the API using the system message persona assigned to NAME.
-    - `persona NAME SYSTEM-MESSAGE` to create or update a persona.
-    - For example, to create a persona name `pierre` that will translate submitted text into French: `persona pierre Translate the following text into French.` To use this persona: `pierre seventeen baguettes please`.
 
 
 ## Support

@@ -15,162 +15,54 @@
 //
 
 class OpenAI {
-    chat(input_text) {
-        LaunchBar.debugLog(`Input text: ${input_text}`);
+    model = config.get('model');
+    temperature = config.get('temperature');
+    #messages = [];
 
-        if (typeof input_text !== 'string' || !input_text.trim().length) {
-            LaunchBar.alert('No input text was passed to ChipiChat');
-            return;
-        }
-
-        let model = config.get('model');
-        let system_message = config.get('system_message');
-        let user_message_addendum = config.get('user_message_addendum');
-        let temperature = config.get('temperature');
-        let max_history_minutes = config.get('max_history_minutes');
-
-        input_text = input_text.trim().replace(/\s+/g, ' ');
-        const input_text_with_modifiers = input_text;
-        let postprocessing = [];
-        let reprefix = []
-
-        // Modifiers customizes ChatGPT's behavior.
-        let x = input_text.replace(/[^\x00-\x7F]/g, '').toLowerCase().split(' ').some(modifier => {
-            // The some(=>) function exits on the first `return true`, e.g., on the first non-modifier word.
-            switch (modifier) {
-            case '0.0': case '0.1': case '0.2': case '0.3': case '0.4': case '0.5': case '0.6': case '0.7': case '0.8': case '0.9': case '1.0': case '1.1': case '1.2': case '1.3': case '1.4': case '1.5': case '1.6': case '1.7': case '1.8': case '1.9': case '2.0':
-                // Set temperature
-                temperature = parseFloat(modifier);
-                input_text = util.unprefix(input_text);
-                break;
-
-            case '4':
-            case 'gpt4':
-                // Use GPT-4.
-                model = 'gpt-4';
-                input_text = util.unprefix(input_text);
-                break;
-
-            case 'amnesia':
-                // Exclude conversation history for this message.
-                max_history_minutes = 0;
-                input_text = util.unprefix(input_text);
-                break;
-
-            case 'code':
-                // Output only code. Markdown code blocks will be removed later.
-                system_message = 'You are an assistent to a senior software engineer. Write code only, no description or explanation besides code comments. If the code is more than 3 lines long, add comments to the code. Be succinct. Limit prose.';
-                input_text = util.unprefix(input_text);
-                reprefix.push(modifier);
-                break;
-
-            case 'copy':
-                // Copy the response to the clipboard.
-                postprocessing.push('copy-to-clipboard');
-                input_text = util.unprefix(input_text);
-                break;
-
-            case 'list':
-                // Always create a bulleted list.
-                user_message_addendum = `Respond with a bulleted list. ${user_message_addendum}`;
-                input_text = util.unprefix(input_text);
-                reprefix.push(modifier);
-                break;
-
-            case 'new':
-                // Erase conversation history and start a new chat.
-                history.clear();
-                input_text = util.unprefix(input_text);
-                break;
-
-            case 'write':
-                // Writing persona.
-                postprocessing.push('remove-markdown');
-                system_message = `You are a professional copywriter. Write using the following rules: avoid clichés and figures of speech, use short words, cut unnecessary words, prefer the active voice.`;
-                user_message_addendum = '';
-                input_text = util.unprefix(input_text);
-                reprefix.push(modifier);
-                break;
-
-            default:
-                LaunchBar.debugLog(`Done scanning modifiers`);
-                return true;
-            }
-
-            LaunchBar.debugLog(`Scanned modifier: ${modifier}`);
+    addMessage(role, content) {
+        if (!['system', 'user', 'assistant'].includes(role)) {
+            LaunchBar.alert('ChipiChat', `Failed to add message because “${role}” is not a valid role.`);
             return false;
+        }
+        if (!content.length) {
+            LaunchBar.alert('ChipiChat', `Failed to add ${role} message because it was empty.`);
+            return false;
+        }
+        this.messages.push({
+            role: role,
+            content: content
         });
-        input_text = `${reprefix.join(' ')} ${input_text}`.trim();
+    }
 
-        // Respond with cached response.
-        const cached_response_text = history.getAssistantResponse(input_text_with_modifiers, config.get('cache_expiration_minutes') * 60);
-        if (typeof cached_response_text !== 'undefined' && input_text_with_modifiers.split(' ').length >= config.get('cache_min_words')) {
-            LaunchBar.debugLog(`Using cached response: ${cached_response_text}`);
-            return cached_response_text;
-        }
-
-        let final_user_message = `${/[.,;:!?]$/.test(input_text) ? input_text : input_text + '.'} ${user_message_addendum}`;
-        if (util.countTokens(final_user_message) > config.get('max_user_message_tokens')) {
-            final_user_message = final_user_message.slice(0, config.get('max_user_message_tokens'));
-            LaunchBar.displayNotification({title: 'ChipiChat', string: `Input text truncated to avoid exceeding max tokens.`});
-        }
-
-        // Build chat completion messages.
-        let messages = [{role: 'system', content: system_message}];
-        // Include previous non-stale exchanges.
-        history.get(max_history_minutes, config.get('max_history_tokens')).forEach(exchange => {
-            messages.push({role: 'user', content: exchange.user});
-            messages.push({role: 'assistant', content: exchange.assistant});
-        });
-        messages.push({role: 'user', content: final_user_message});
-
-        if (!config.get('api_key').length) {
-            help.apiKey();
-            return;
-        }
-
-        let timeout = config.get('timeout');
-        if (/^gpt-4/.test(model)) {
+    chat() {
+        timeout = config.get('timeout');
+        if (/^gpt-4/.test(this.model)) {
             timeout += 60;
             LaunchBar.displayNotification({title: 'ChipiChat', string: 'Message sent. GPT-4 is slow; please have patience!'});
-        } else if (util.countTokens(final_user_message) > 750) {
-            LaunchBar.displayNotification({title: 'ChipiChat', string: 'That was a large message. It may take awhile to get a response; please have patience!'});
         }
-
-        LaunchBar.debugLog(`Request: ${JSON.stringify(messages)}`);
+        LaunchBar.debugLog(`Request: ${JSON.stringify(this.messages)}`);
         let result = HTTP.postJSON('https://api.openai.com/v1/chat/completions', {
             headerFields: {'Authorization': `Bearer ${config.get('api_key')}`},
             resultType: 'json',
             timeout,
-            body: {model, temperature, max_tokens: config.get('max_response_tokens'), messages}
+            body: {
+                model: this.model,
+                temperature: this.temperature,
+                messages: this.messages,
+                max_tokens: config.get('max_response_tokens')
+            }
         });
         if (typeof result.data !== 'undefined') {
             LaunchBar.debugLog(`Response: ${JSON.stringify(result.data)}`);
             if (typeof result.data.error !== 'undefined') {
-                LaunchBar.alert(`API request failed: ${result.data.error.message}`);
+                LaunchBar.alert(`The request to ChatGPT failed: ${result.data.error.message}`);
                 return;
             }
             if (typeof result.data.choices === 'undefined' || !result.data.choices.length || !result.data.choices[0].message.content.length) {
-                LaunchBar.alert(`Empty response from API.`);
-                return;
+                LaunchBar.alert('The response from ChatGPT was empty.');
+                return '';
             }
-
-            let response_text = result.data.choices[0].message.content.trim();
-
-            // Save the conversation history to include in future instructions.
-            history.add(input_text_with_modifiers, input_text, response_text);
-
-            // Post-processes lines.
-            postprocessing.forEach(action => {
-                switch (action) {
-                case 'copy-to-clipboard':
-                    LaunchBar.setClipboardString(response_text);
-                    LaunchBar.displayNotification({title: 'Copied to clipboard', string: response_text});
-                    break;
-                }
-            });
-
-            return response_text;
+            return result.data.choices[0].message.content.trim();
         } else if (typeof result.error !== 'undefined') {
             LaunchBar.debugLog(`Response error: ${JSON.stringify(result.error)}`);
             LaunchBar.alert('LaunchBar error', result.error);

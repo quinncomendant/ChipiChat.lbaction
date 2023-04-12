@@ -16,41 +16,44 @@
 
 class Help {
     general() {
-        const response = LaunchBar.alert('ChipiChat: LaunchBar🥂ChatGPT', `Interact with ChatGPT and receive responses as LaunchBar items. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk for ${config.get('cache_expiration_minutes')} minutes.
+        const response = LaunchBar.alert('ChipiChat: LaunchBar🥂ChatGPT', `Interact with the ChatGPT API and receive responses in LaunchBar. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk for ${config.get('cache_expiration_minutes')} minutes.
 
 Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
 
-✨  ⌘ (command, held when running the action)  Automatically open the response in your text editor.
-✨  ⇧ (shift, held when running the action)  Automatically insert the response at the current cursor position.
-✨  ⌃ (control, held when running the action)  Automatically Quick Look the response.
-✨  ⌘Y  Quick Look the response.
-✨  ⌘C  Copy the response to the clipboard.
+✨  ⌘↵ (command + return)  Open the response in your text editor.
+✨  ⇧↵ (shift + return)  Insert the response at the current cursor position.
+✨  ⌃↵ (control + return)  Quick Look the response.
+✨  ⌘Y Quick Look the response.
+✨  ⌘C Copy the response to the clipboard.
 ✨  ↵ (return)  Open the response in your text editor (reconfigurable using the 'default_action' config option).
 ✨  → (right-arrow)  Browse the response as a list (ideal for acting on specific lines of text).
 ✨  ⇥ (tab)  Send the text to other LaunchBar targets, e.g., send the output to a friend by passing it to the Compose Message action.
 
 Prefix your message with one-or-more modifiers for enhanced functionality:
 
-🏷️  “N.N”: Set temperature to adjust response randomness, e.g., “1.5 why is the sky blue?”.
+🏷️  “N.N”: Adjust response randomness by using temperature value “N.N”, e.g., “1.5 why is the sky blue?”.
 🏷️  “4”: Use the GPT-4 model (requires GPT-4 API access).
-🏷️  “code”: Use the coder persona for code-only responses.
 🏷️  “copy”: Automatically copy the response to the clipboard.
-🏷️  “list”: Request response formatted as a bulleted list.
 🏷️  “new”: Start a new conversation with no history.
-🏷️  “write”: Use the copywriter persona, adhering to Orwell’s six rules for writers.
+🏷️  “(persona name)”: Use a custom or predefined persona.
 
-You can combine modifiers, e.g., “code copy 4 js function to get a uuid” sends “js function to get a uuid” to GPT-4 API with the code persona and copies the response. All modifiers must go before your message.
+You can combine modifiers, e.g., “code copy 4 js uuid function” sends “js uuid function” to GPT-4 API with the code persona and copies the response. All modifiers must go at the beginning of the message.
 
-Manage history and settings with special commands:
+Manage conversation history, settings, and personas by sending commands:
 
-⚡️ “clear”: Remove chat history without sending a message.
-⚡️ “config”: Show current configuration settings.
-⚡️ “config reset”: Reset all configuration options to defaults.
-⚡️ “config set OPTION VALUE”: Set the configuration OPTION to VALUE.
-⚡️ “export”: Save conversation history to a file in ~/Downloads/.
-⚡️ “help”: Display this help message.
-⚡️ “history”: Display chat history.
-⚡️ “version”: Display ChipiChat version and check if a new version is available.
+⚡️  “help”: Display a help message.
+⚡️  “history”: Display recent conversation history.
+⚡️  “export”: Save conversation history to a file in ~/Downloads/.
+⚡️  “clear”: Erase all conversation history (otherwise, conversations are stored up to one week).
+⚡️  “config list”: Show current configuration settings.
+⚡️  “config reset”: Reset all configuration options to defaults.
+⚡️  “config set OPTION VALUE”: Set the configuration OPTION to VALUE, e.g., “config set default_action alert”.
+⚡️  “persona list”: View all personas.
+⚡️  “persona export”: Save all personas to a file in ~/Downloads/.
+⚡️  “persona reset”: Reset personas to defaults. This will erase any custom personas you added.
+⚡️  “persona set default SYSTEM_MESSAGE”: Change the default persona’s system message.
+⚡️  “persona set NAME SYSTEM_MESSAGE”: Add or modify a persona.
+⚡️  “version”: Display ChipiChat version and check if a new version is available.
 
 ⎯
 
@@ -74,7 +77,7 @@ ChipiChat was created by by Quinn Comendant
         const response = LaunchBar.alert('ChatGPT requires an OpenAI API key', `1. Create an OpenAI account at https://platform.openai.com/signup.
 2. Add a credit card in Account → Billing → Payment methods.
 3. Get an API key at https://platform.openai.com/account/api-keys.
-4. Invoke ChipiChat and enter this command to save your API key in LaunchBar:
+4. Invoke ChipiChat and send this command to save your API key in LaunchBar:
 
 👉    config set api_key sk-×××××××××××××××××××
 `, 'Close', 'Open URL for API key', 'Open URL to create account');
@@ -90,15 +93,32 @@ ChipiChat was created by by Quinn Comendant
     }
 
     config() {
-        const response = LaunchBar.alert('ChipiChat configuration', `To change any of the following values, use the “config set” command, e.g., “config set system_message You are a helpful but sarcastic assistent”.
+        const response = LaunchBar.alert('ChipiChat configuration', `To change any of the following values, use the “config set” command, e.g., “config set default_action quicklook”.
 
 ⎯
 
-${config.show()}`, 'Close', 'View descriptions of these options');
+${config.show()}`, 'Close', 'View the docs');
 
         switch (response) {
         case 1:
             LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction#options')
+            break;
+        }
+    }
+
+    persona() {
+        const response = LaunchBar.alert('ChipiChat personas', `To add or update personas, use the “persona set” command, e.g., “persona set pierre Translate the following text into French”.
+
+⎯
+
+${persona.show()}`, 'Close', 'View the docs', 'Export this list to a file');
+
+        switch (response) {
+        case 1:
+            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction#personas')
+            break;
+        case 2:
+            persona.export();
             break;
         }
     }

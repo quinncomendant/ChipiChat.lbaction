@@ -24,23 +24,20 @@
 //
 
 include('lib/config.js');
-// Some default values may be overridden by modifiers.
 const config = new Config({
     api_key: '',
-    cache_expiration_minutes: 5,
+    cache_expiration_minutes: 15,
     cache_min_words: 3,
     default_action: 'open',
     default_action_opens_automatically: 'false',
-    filename_extension: 'txt', // Change this to 'md' if you use a Quick Look extension that supports markdown.
+    filename_extension: 'txt',
     max_history_minutes: 480,
     max_history_tokens: 1000,
     max_response_tokens: 2000,
     max_user_message_tokens: 1000,
     model: 'gpt-3.5-turbo',
-    system_message: "You are a helpful assistant to an expert audience. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never say “As an AI language model”.",
     temperature: 0.1,
-    timeout: 30,
-    user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
+    timeout: 30
 });
 
 // The sum of tokens used for max_user_message_tokens + max_history_tokens + max_response_tokens must not exceed the model's context length.
@@ -50,6 +47,38 @@ if (config.get('model').includes('gpt-4')) {
 } else if (config.get('model').includes('gpt-4-32k')) {
     let model_context_length = 32768;
 }
+
+include('lib/persona.js');
+const persona = new Persona({
+    _default: {
+        system_message: "You are a helpful assistant to an expert user. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never say “As an AI language model”.",
+        user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
+        retain_prefix: true,
+    },
+    code: {
+        system_message: "You are an assistent to a senior software engineer. Write code only, no description or explanation besides code comments. If the code is more than 3 lines long, add comments to the code. Be succinct. Limit prose.",
+        user_message_addendum: '',
+        retain_prefix: true,
+    },
+    list: {
+        system_message: "You are an quiet assistent researcher who compiles accurate, succinct reports of information requested by the user. Respond only with a bulleted list. Be succinct. Limit prose. Never repeat the user message.",
+        user_message_addendum: "Respond with a bulleted list.",
+        retain_prefix: true,
+    },
+    rewrite: {
+        system_message: "Rewrite the following text so that it is well reasoned and emotionally intelligent. Avoid clichés and figures of speech, use short words, cut unnecessary words, and prefer the active voice.",
+        user_message_addendum: '',
+        retain_prefix: false,
+    },
+    write: {
+        system_message: "You are a professional copywriter. Write using the following rules: avoid clichés and figures of speech, use short words, cut unnecessary words, and prefer the active voice.",
+        user_message_addendum: '',
+        retain_prefix: true,
+    },
+});
+
+include('lib/parse.js');
+const parse = new Parse();
 
 include('lib/history.js');
 const history = new History();
@@ -63,10 +92,10 @@ const util = new Util();
 include('lib/openai.js');
 const openai = new OpenAI();
 
-// This function must remain global. It is the returned item's `action` function (enter key).
+// This function must remain global. It is the returned item's `action` function (return key).
 function defaultAction(filename) {
     let action = config.get('default_action');
-    const response_text = File.readText(filename);
+    const assistant_message = File.readText(filename);
 
     // Override default action if a key is held down.
     if (LaunchBar.options.controlKey) {
@@ -84,31 +113,31 @@ function defaultAction(filename) {
         return;
 
     case 'insert':
-        LaunchBar.paste(response_text);
+        LaunchBar.paste(assistant_message);
         LaunchBar.hide();
         return;
 
     case 'quicklook':
         LaunchBar.openQuickLook(File.fileURLForPath(filename));
         // For some reason Quick Look doesn't open if there is no action output.
-        return util.actionOutput(response_text, filename);
+        return util.actionOutput(assistant_message, filename);
 
     case 'alert':
-        const response = LaunchBar.alert('ChipiChat', response_text, 'Reply', 'Close');
-        switch (response) {
+        const alert_action_response = LaunchBar.alert('ChipiChat', assistant_message, 'Reply', 'Close');
+        switch (alert_action_response) {
         case 0:
-            LaunchBar.performAction('ChipiChat');
+            LaunchBar.performAction('ChipiChat'); // Including a text argument will crash LaunchBar; this bug has been reported.
             break;
         }
         return;
 
     case 'copy':
-        LaunchBar.setClipboardString(response_text);
-        LaunchBar.displayNotification({title: 'Copied to clipboard', string: response_text});
+        LaunchBar.setClipboardString(assistant_message);
+        LaunchBar.displayNotification({title: 'Copied to clipboard', string: assistant_message});
         return;
 
     case 'largetype':
-        LaunchBar.displayInLargeType({string: response_text});
+        LaunchBar.displayInLargeType({string: assistant_message});
         LaunchBar.hide();
         return;
 
@@ -122,52 +151,45 @@ function defaultAction(filename) {
 function runWithString(argument) {
     const input_text = argument.trim().replace(/\s+/g, ' ');
 
-    // Commands
-    switch (input_text.replace(/^(config) *(reset|set).*$/, '$1$2').toLowerCase()) {
-    case 'config':
-        help.config();
-        return;
-
-    case 'configreset':
-        config.setDefaults(['api_key']); // Don't reset API key.
-        LaunchBar.displayNotification({title: 'ChipiChat', string: 'Configuration reset to defaults.'});
-        return;
-
-    case 'configset':
-        const [config_key, ...rest] = input_text.replace(/^config *set */, '').split(' ');
-        const config_val = rest.join(' ');
-        config.set(config_key, config_val);
-        return;
-
-    case 'clear':
-        history.clear();
-        LaunchBar.displayNotification({title: 'ChipiChat', string: 'Conversation history erased.'});
-        return;
-
-    case 'export':
-        history.export();
-        return;
-
-    case 'help':
-        help.general();
-        return;
-
-    case 'history':
-        return history.show();
-
-    case 'version':
-        util.versionCheck();
-        return;
+    const command_output = parse.commands(input_text);
+    if (command_output) {
+        return command_output;
     }
 
-    const response_text = openai.chat(input_text);
+    const user_message = parse.modifiers(input_text);
+
+    let assistant_message;
+    if (input_text.split(' ').length >= config.get('cache_min_words') && history.exists(input_text)) {
+        // Get cached response.
+        assistant_message = history.get(input_text).assistant;
+        LaunchBar.debugLog(`Using cached response: ${assistant_message}`);
+    } else {
+        // Get response from API.
+        if (!config.get('api_key').length) {
+            help.apiKey();
+            return;
+        }
+        assistant_message = openai.chat(input_text);
+        history.add(input_text, user_message, assistant_message);
+    }
+
+    // Post-processes response.
+    parse.postprocessing.forEach(task => {
+        switch (task) {
+        case 'copy-to-clipboard':
+            LaunchBar.setClipboardString(assistant_message);
+            LaunchBar.displayNotification({title: 'Copied to clipboard', string: assistant_message});
+            break;
+        }
+    });
+
     const output_filename = util.filenameFromInputString(input_text);
-    if (typeof response_text === 'string') {
-        util.saveFile(output_filename, response_text);
-        if (config.get('default_action_opens_automatically') === 'true') {
+    if (typeof assistant_message === 'string') {
+        util.saveFile(output_filename, assistant_message);
+        if (config.get('default_action_opens_automatically') === 'true' || LaunchBar.options.controlKey || LaunchBar.options.commandKey || LaunchBar.options.shiftKey) {
             return defaultAction(output_filename);
         }
-        return util.actionOutput(response_text, output_filename);
+        return util.actionOutput(assistant_message, output_filename);
     }
 }
 
@@ -198,9 +220,6 @@ function run(argument) {
     if (typeof argument === 'undefined') {
         help.general();
         return;
-    }
-    if (typeof argument === 'string') {
-        return runWithString(argument);
     }
     LaunchBar.alert(`ChipiChat doesn’t know how to handle this type of input: ${JSON.stringify(argument)}`);
 }
