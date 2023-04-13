@@ -28,7 +28,7 @@ class History {
         Action.preferences.conversation_history = [];
     }
 
-    add(input_text, user_message, assistant_message) {
+    add(input_text, user_message, assistant_message, transient) {
         // Transform useless responses.
         if (/(as an ai language model|i am a language model)/i.test(assistant_message)) {
             assistant_message = assistant_message.replace(/^[^.]*(as an ai language model|i am a language model)[^.]*\./i, '').trim();
@@ -46,7 +46,8 @@ class History {
             date: new Date().toISOString(),
             input_text: input_text,
             user: user_message,
-            assistant: assistant_message
+            assistant: assistant_message,
+            transient: transient ?? false
         });
     }
 
@@ -63,13 +64,21 @@ class History {
         return typeof exchange !== 'undefined' ? exchange : undefined;
     }
 
+    // Remove and return the last added exchange.
+    pop() {
+        return Action.preferences.conversation_history.length ? Action.preferences.conversation_history.pop() : [];
+    }
+
     // Return a list of conversations newer than max_history_minutes and until their length reaches max_history_tokens.
+    // Exchanges that are “transient” should not be included as conversation history context.
     list() {
         let tokens = 0;
         return Action.preferences.conversation_history.filter(exchange => {
-            const return_val = tokens < config.get('max_history_tokens') && (new Date() - new Date(exchange.date)) <= config.get('max_history_minutes') * 60 * 1000;
-            tokens += util.countTokens(exchange.user + exchange.assistant);
-            LaunchBar.debugLog(`History.get ${return_val ? 'included' : 'excluded'} exchange from ${(new Date() - new Date(exchange.date)) / 1000} secs ago: “${exchange.user}”${tokens < config.get('max_history_tokens') ? '' : ' (exceeded max_history_tokens)'}`);
+            const return_val = !exchange.transient && tokens < config.get('max_history_tokens') && (new Date() - new Date(exchange.date)) <= config.get('max_history_minutes') * 60 * 1000;
+            if (return_val) {
+                tokens += util.countTokens(exchange.user + exchange.assistant);
+            }
+            LaunchBar.debugLog(`History.get ${return_val ? 'included' : 'excluded'} ${exchange.transient ? 'transient' : 'intransient'} exchange from ${(new Date() - new Date(exchange.date)) / 1000} secs ago: “${exchange.user}”${tokens < config.get('max_history_tokens') ? '' : ' (exceeded max_history_tokens)'}`);
             return return_val;
         }).reverse();
     }

@@ -26,7 +26,7 @@ Prefix your message with one-or-more modifiers for enhanced functionality:
 -  `4`: Use the GPT-4 model (requires GPT-4 API access).
 -  `copy`: Automatically copy the response to the clipboard.
 -  `new`: Start a new conversation with no history.
-- `(persona name)`: Use a custom or predefined [persona](#personas).
+- `(persona name)`: Use a predefined or custom [persona](#personas).
 
 You can combine modifiers, e.g., “**code copy 4** js uuid function” sends “js uuid function” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
 
@@ -41,11 +41,13 @@ Manage conversation history, settings, and personas by sending commands to Chipi
 - `config list`: Show current configuration settings.
 - `config reset`: Reset all configuration options to defaults.
 - `config set OPTION VALUE`: Set the configuration OPTION to VALUE, e.g., `config set default_action alert`.
-- `persona list`: View all personas.
-- `persona export`: Save all personas to a file in ~/Downloads/.
+- `persona list`: View a summary of personas.
+- `persona export`: Save all personas and their prompts to a file in ~/Downloads/.
+- `persona delete NAME`: Delete a persona.
 - `persona reset`: Reset personas to defaults. This will erase any custom personas you added.
 - `persona set default SYSTEM_MESSAGE`: Change the *default* persona’s system message.
 - `persona set NAME SYSTEM_MESSAGE`: Add or modify a persona.
+- `redo`: Resend the previous message, simulating ChatGPT’s “regenerate” function.
 - `version`: Display ChipiChat version and check if a new version is available.
 
 ## Installation
@@ -106,8 +108,9 @@ Use a persona to set the overall behavior of the assistant. Create your own or u
 
 Manage personas with these commands:
 
-- `persona list`: View all personas.
-- `persona export`: Save all personas to a file in `~/Downloads/`
+- `persona list`: View a summary of personas.
+- `persona export`: Save all personas and their prompts to a file in ~/Downloads/.
+- `persona delete NAME`: Delete a persona.
 - `persona reset`: Reset personas to defaults. This will erase any custom personas you added.
 - `persona set default SYSTEM_MESSAGE`: Change the *default* persona’s system message.
 - `persona set NAME SYSTEM_MESSAGE`: Add or modify a persona.
@@ -138,6 +141,7 @@ To reset all configuration options to defaults, send the `config reset` command.
 ### Options
 
 - `api_key`: Your OpenAI API key (default: empty or imported from `$OPENAI_API_KEY`).
+- `cache_enabled`: If you prefer to have a fresh response for every message, set this to `false` (default: `true`).
 - `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., the message “please continue” might match a cached response from an earlier reply (default: `15`). If a message loads a cached response unexpectedly, you can reduce the cache expiration, clear the history, or just send the query again with extra characters that make it unique.
 - `cache_min_words`: Minimum words in input text required before response is cached. Short phrases are less unique, and are more likely to load cached responses from a different context (default: `3`).
 - `default_action`: The action to run when hitting return *after* receiving a response. (options: `open`, `insert`, `quicklook`, `alert`, `copy`, `largetype`; default: `open`).

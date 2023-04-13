@@ -95,6 +95,7 @@ class Config {
             Action.preferences.config[key] = val;
             break;
 
+        case 'cache_enable':
         case 'default_action_opens_automatically':
             if (!this.requireValidOption(key, val, ['true', 'false'])) {
                 return false;
@@ -123,6 +124,7 @@ class Config {
             Action.preferences.config[key] = parseFloat(val);
             break;
 
+        // Integer options.
         case 'max_history_tokens':
         case 'max_response_tokens':
         case 'max_user_message_tokens':
@@ -139,7 +141,7 @@ class Config {
             if (key === 'max_user_message_tokens' && (parseFloat(val) + this.get('max_response_tokens') + this.get('max_history_tokens')) > model_context_length) {
                 LaunchBar.alert(`Failed to set configuration`, `“${key}” value is too large.\n\nThe sum of tokens used for max_user_message_tokens (which you tried to set to “${val}”) + max_history_tokens (${this.get('max_history_tokens')}) + max_response_tokens (${this.get('max_response_tokens')}) must not exceed the model's context length (${model_context_length}).`);
                 return false;
-            }
+            } // Continue…
         case 'max_history_minutes':
         case 'cache_expiration_minutes':
         case 'cache_min_words':

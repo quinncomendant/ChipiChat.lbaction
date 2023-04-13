@@ -26,10 +26,11 @@
 include('lib/config.js');
 const config = new Config({
     api_key: '',
+    cache_enable: 'true', // Not a boolean.
     cache_expiration_minutes: 15,
     cache_min_words: 3,
     default_action: 'open',
-    default_action_opens_automatically: 'false',
+    default_action_opens_automatically: 'false', // Not a boolean.
     filename_extension: 'txt',
     max_history_minutes: 480,
     max_history_tokens: 1000,
@@ -49,33 +50,8 @@ if (config.get('model').includes('gpt-4')) {
 }
 
 include('lib/persona.js');
-const persona = new Persona({
-    _default: {
-        system_message: "You are a helpful assistant to an expert user. Be succinct. Limit prose. Never repeat the user message. Never apologize. Never say “As an AI language model”.",
-        user_message_addendum: "Be succinct. Limit prose. Never repeat the user message.",
-        retain_prefix: true,
-    },
-    code: {
-        system_message: "You are an assistent to a senior software engineer. Write code only, no description or explanation besides code comments. If the code is more than 3 lines long, add comments to the code. Be succinct. Limit prose.",
-        user_message_addendum: '',
-        retain_prefix: true,
-    },
-    list: {
-        system_message: "Write a succinct, bulleted list. Do not include an introduction or description of the list.",
-        user_message_addendum: "Respond with a bulleted list.",
-        retain_prefix: true,
-    },
-    rewrite: {
-        system_message: "Rewrite the following text so that it is well reasoned and emotionally intelligent. Avoid clichés and figures of speech, remove superfluous adjectives, use short words, cut unnecessary words, and prefer the active voice.",
-        user_message_addendum: '',
-        retain_prefix: false,
-    },
-    write: {
-        system_message: "You are a professional copywriter. Write using the following rules: avoid clichés and figures of speech, use short words, cut unnecessary words, and prefer the active voice.",
-        user_message_addendum: '',
-        retain_prefix: true,
-    },
-});
+include('persona_defaults.js');
+const persona = new Persona(persona_defaults);
 
 include('lib/parse.js');
 const parse = new Parse();
@@ -126,7 +102,7 @@ function defaultAction(filename) {
         const alert_action_response = LaunchBar.alert('ChipiChat', assistant_message, 'Reply', 'Close');
         switch (alert_action_response) {
         case 0:
-            LaunchBar.performAction('ChipiChat'); // Including a text argument will crash LaunchBar; this bug has been reported.
+            LaunchBar.performAction('ChipiChat'); // Including a second argument to performAction() will crash LaunchBar; this bug has been reported.
             break;
         }
         return;
@@ -151,15 +127,17 @@ function defaultAction(filename) {
 function runWithString(argument) {
     const input_text = argument.trim().replace(/\s+/g, ' ');
 
-    const command_output = parse.commands(input_text);
-    if (command_output) {
-        return command_output;
+    // Parse the user input.
+    parse.process(input_text);
+
+    // If a command was entered, run it.
+    if (parse.get('command')) {
+        return parse.get('command');
     }
 
-    const user_message = parse.modifiers(input_text);
-
+    // Submit the request to ChatGPT if a cached response is not available.
     let assistant_message;
-    if (input_text.split(' ').length >= config.get('cache_min_words') && history.exists(input_text)) {
+    if (config.get('cache_enable') === 'true' && input_text.split(' ').length >= config.get('cache_min_words') && history.exists(input_text)) {
         // Get cached response.
         assistant_message = history.get(input_text).assistant;
         LaunchBar.debugLog(`Using cached response: ${assistant_message}`);
@@ -170,19 +148,23 @@ function runWithString(argument) {
             return;
         }
         assistant_message = openai.chat(input_text);
-        history.add(input_text, user_message, assistant_message);
+        history.add(input_text, parse.get('user_message'), assistant_message, parse.get('transient'));
     }
 
-    // Post-processes response.
-    parse.postprocessing.forEach(task => {
+    // Do post-processing on the response.
+    parse.get('postprocessing').forEach(task => {
         switch (task) {
         case 'copy-to-clipboard':
             LaunchBar.setClipboardString(assistant_message);
             LaunchBar.displayNotification({title: 'Copied to clipboard', string: assistant_message});
             break;
+        case 'concatenate-messages':
+            assistant_message = `${parse.get('user_message')} ${assistant_message}`;
+            break;
         }
     });
 
+    // Save the response to a file and run the action.
     const output_filename = util.filenameFromInputString(input_text);
     if (typeof assistant_message === 'string') {
         util.saveFile(output_filename, assistant_message);

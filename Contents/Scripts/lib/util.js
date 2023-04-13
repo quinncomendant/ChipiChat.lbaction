@@ -20,8 +20,19 @@ class Util {
         return str.length / 4;
     }
 
+    characterLengthFromTokens(token_count) {
+        // One token generally corresponds to ~4 characters of text for common English text. https://platform.openai.com/tokenizer
+        return token_count * 4;
+    }
+
     unprefix(str) {
-        return str.slice(str.indexOf(' ') + 1).trim();
+        const words = str.replace(/\s+/g, ' ').trim().split(' ');
+        words.shift();
+        return words.join(' ');
+    }
+
+    truncate(str, max_length) {
+        return str.length <= max_length ? str : str.substr(0, str.lastIndexOf(' ', max_length)).replace(/[,.!? ]*$/, '').trim() + '…';
     }
 
     fnv1aHash(str) {
@@ -112,7 +123,8 @@ class Util {
     actionOutputChildren(assistant_message) {
         let output = [];
         let in_code_block = false;
-        assistant_message.split('\n').forEach(line => {
+        // Make one line out of bulleted lines that break to the next line.
+        assistant_message.replace(/^(- \w[^\n\r]+)[\n\r]  /gm, '$1 ').split('\n').forEach(line => {
             if (/^ *```/.test(line)) {
                 in_code_block = !in_code_block;
                 return;

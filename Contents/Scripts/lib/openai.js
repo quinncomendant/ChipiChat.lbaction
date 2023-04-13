@@ -15,40 +15,21 @@
 //
 
 class OpenAI {
-    model = config.get('model');
-    temperature = config.get('temperature');
-    #messages = [];
-
-    addMessage(role, content) {
-        if (!['system', 'user', 'assistant'].includes(role)) {
-            LaunchBar.alert('ChipiChat', `Failed to add message because “${role}” is not a valid role.`);
-            return false;
-        }
-        if (!content.length) {
-            LaunchBar.alert('ChipiChat', `Failed to add ${role} message because it was empty.`);
-            return false;
-        }
-        this.#messages.push({
-            role: role,
-            content: content
-        });
-    }
-
     chat() {
         let timeout = config.get('timeout');
-        if (/^gpt-4/.test(this.model)) {
+        if (/^gpt-4/.test(parse.get('model'))) {
             timeout += 60;
             LaunchBar.displayNotification({title: 'ChipiChat', string: 'Message sent. GPT-4 is slow; please have patience!'});
         }
-        LaunchBar.debugLog(`Request: ${JSON.stringify(this.#messages)}`);
+        LaunchBar.debugLog(`Request: ${JSON.stringify(parse.get('messages'))}`);
         let result = HTTP.postJSON('https://api.openai.com/v1/chat/completions', {
             headerFields: {'Authorization': `Bearer ${config.get('api_key')}`},
             resultType: 'json',
             timeout,
             body: {
-                model: this.model,
-                temperature: this.temperature,
-                messages: this.#messages,
+                model: parse.get('model'),
+                temperature: parse.get('temperature'),
+                messages: parse.get('messages'),
                 max_tokens: config.get('max_response_tokens')
             }
         });

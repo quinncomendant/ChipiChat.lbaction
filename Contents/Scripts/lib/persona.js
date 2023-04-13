@@ -71,7 +71,6 @@ class Persona {
         case 'default':
             Action.preferences.personas['_default'] = {
                 system_message: val,
-                user_message_addendum: "",
                 retain_prefix: true,
             };
             break;
@@ -79,7 +78,6 @@ class Persona {
         default:
             Action.preferences.personas[key] = {
                 system_message: val,
-                user_message_addendum: "",
                 retain_prefix: false,
             };
             break;
@@ -91,13 +89,20 @@ class Persona {
         });
     }
 
+    unset(key) {
+        key = key.toLowerCase();
+        if (typeof Action.preferences.personas[key] !== 'undefined') {
+            Action.preferences.personas.slice(key, 1);
+        }
+    }
+
     get(key) {
         key = key.toLowerCase();
         return typeof Action.preferences.personas[key] !== 'undefined' ? Action.preferences.personas[key] : false;
     }
 
     emoji(persona) {
-        const occupational_emoji = ['🧑‍🏭', '💂', '🥷', '👷', '🧑‍🔬', '🧛', '🧝', '🧟', '🧑‍⚕️', '🧑‍🎓', '🧑‍🏫', '🧑‍⚖️', '🧑‍🔧', '🕵️', '🧙', '🧑‍💻', '🧑‍🎤', '🧑‍🎨', '🦸', '🦹', '🧑‍🌾', '🧑‍🍳'];
+        const occupational_emoji = ['🧝', '🧑‍⚕️', '🧑‍🎓', '💂', '🧑‍⚖️', '👷', '🕵️', '🧑‍🎨', '🧑‍🌾', '🧟', '🧑‍🍳'];
         let hash = 0;
         for (let i = 0; i < persona.length; i++) {
             hash += persona.charCodeAt(i);
@@ -108,9 +113,10 @@ class Persona {
     show() {
         return Object.entries(Action.preferences.personas).sort().map(([key, val]) => {
             if (key === '_default') {
-                return `🎭 default (used when no persona is specified)\n\n“${val.system_message}”\n`
+                return `🎭 default (used when no persona is specified): “${val.system_message}”\n`
             }
-            return `${this.emoji(key)} ${key}\n\n“${val.system_message}”\n`
+            const emoji = typeof val.emoji !== 'undefined' ? val.emoji : this.emoji(key);
+            return `${emoji} ${key}: ${val.description ? val.description : '“' + util.truncate(val.system_message, 50) + '”'}\n`
         }).join('\n');
     }
 
@@ -120,9 +126,10 @@ class Persona {
         let content = [`# Personas exported from ChipiChat ${now.toLocaleString('en-CA')}`];
         content = content.concat(Object.entries(Action.preferences.personas).sort().map(([key, val]) => {
             if (key === '_default') {
-                return `## Default persona\n\n${val.system_message}`;
+                return `## 🎭 Default persona\n\n${val.system_message}`;
             }
-            return `## ${key}\n\n${val.system_message}`;
+            const emoji = typeof val.emoji !== 'undefined' ? val.emoji : this.emoji(key);
+            return `## ${emoji} ${key}\n\n${val.system_message}`;
         }));
         if (util.saveFile(export_filename, content.join(`\n\n`))) {
             LaunchBar.displayNotification({
