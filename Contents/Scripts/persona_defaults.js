@@ -33,7 +33,7 @@ const persona_defaults = {
     code: {
         emoji: '🧑‍💻',
         description: `Write code only, no explanation or description.`,
-        system_message: `You are an assistent to a senior software engineer. Please write code only, no description or explanation besides code comments. If the code is more than 3 lines long, add comments to the code. Be succinct. Limit prose.`,
+        system_message: `You are an assistent to a senior software engineer.\n\nPlease write code only, no description or explanation besides code comments. If the code is more than 3 lines long, add comments to the code. Be succinct. Limit prose.`,
         retain_prefix: true,
     },
     commit: {
@@ -45,20 +45,20 @@ const persona_defaults = {
     complete: {
         emoji: '🧙',
         description: `Continue writing at the end of the text.`,
-        system_message: `${copywriter_template} Please continue writing where the user message ends to complete the text into a coherent paragraph.`,
+        system_message: `${copywriter_template}\n\nPlease continue writing where the user message ends to complete the text into a coherent paragraph.`,
         transient: true,
         postprocessing: 'concatenate-messages',
     },
     condense: {
         emoji: '🦸',
         description: `Shorten text while maintaining its original meaning.`,
-        system_message: `${copyeditor_template} Please shorten the given text while maintaining its original meaning.`,
+        system_message: `${copyeditor_template}\n\nPlease shorten the given text while maintaining its original meaning.`,
         transient: true,
     },
     expand: {
         emoji: '🦹',
         description: `Expand on text by adding details.`,
-        system_message: `${copyeditor_template} Please expand on the following text, adding information to enhance understanding of the topic.`,
+        system_message: `${copyeditor_template}\n\nPlease expand on the following text, adding information to enhance understanding of the topic.`,
         transient: true,
     },
     fix: {
@@ -70,13 +70,13 @@ const persona_defaults = {
     list: {
         emoji: '🧑‍🏫',
         description: `Respond with a bulleted list.`,
-        system_message: `Please respond in the form of a bulleted list. Do not include an introduction or description of the list.`,
+        system_message: `Please respond in the form of a bulleted list. Do not include an introduction or description of the list. Format as a markdown list with no introduction.`,
         retain_prefix: true,
     },
     rewrite: {
         emoji: '🧑‍🎤',
         description: `Rewrite the text to enhance clarity and consistency.`,
-        system_message: `${copyeditor_template} Please rewrite the given text to enhance clarity and consistency, so that it is well reasoned and emotionally intelligent.`,
+        system_message: `${copyeditor_template}\n\nPlease rewrite the given text to enhance clarity and consistency, so that it is well reasoned and emotionally intelligent.`,
         transient: true,
     },
     safe: {
@@ -85,10 +85,17 @@ const persona_defaults = {
         system_message: `List health and safety concerns for ingredients in food and consumer products using data from public safety databases.\n\nPlease list the given ingredients with an abbreviated safety profile. Prefix with "- ✅" for safe ingredients and "- 🚫" for those with health, ecotoxicity, contamination, or negative externality concerns.`,
         transient: true,
     },
+    sum: {
+        emoji: '💁',
+        description: `Summarize as a bulleted list.`,
+        system_message: `Please summarize the given text, responding with an abridged version with only the main points. Format as a markdown list with no introduction.`,
+        retain_prefix: true,
+        transient: true,
+    },
     write: {
         emoji: '🧛',
         description: `Write clear, consistent text according to the user’s instructions.`,
-        system_message: `${copywriter_template} Please write according to the user's instructions.`,
+        system_message: `${copywriter_template}\n\nPlease write according to the user's instructions.`,
         retain_prefix: true,
         transient: true,
     },

@@ -7,7 +7,17 @@ Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform
 
 ## Usage
 
-### Send a message, question, or instruction to Chat GPT and quickly obtain and manipulate responses, LaunchBar-style:
+Open ChipiChat in LaunchBar, hit the spacebar, enter a command or message, then hit return to send it to ChatGPT. 
+
+The input will be taken from the clipboard if no text is entered into LaunchBar. This enables a powerful workflow to quickly pass text through ChatGPT, for example:
+
+1. Select and copy text in a document.
+2. Invoke ChipiChat.
+3. Hit the spacebar to open the LaunchBar input and type `fix`. If no other text is entered, ChipiChat will prompt to use text from the clipboard.
+4. Hold `⇧` *(shift)* and hit `↵` *(return)* to send the clipboard to ChatGPT using the *fix* persona (“Correct spelling and grammar”).
+5. The response will replace the selected text in your document.
+
+### Response manipulation
 
 - `⌘ ↵` *(command + return)* Open the response in your text editor.
 - `⇧ ↵` *(shift + return)* Insert the response at the current cursor position.

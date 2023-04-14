@@ -125,21 +125,24 @@ function defaultAction(filename) {
 
 // This function is called by LaunchBar when the user passes text to the action.
 function runWithString(argument) {
-    const input_text = argument.trim().replace(/\s+/g, ' ');
-
     // Parse the user input.
-    parse.process(input_text);
+    parse.process(argument.trim().replace(/\s+/g, ' '));
 
     // If a command was entered, run it.
     if (parse.get('command')) {
         return parse.get('command');
     }
 
+    // No input entered, or the user declined to use content from the clipboard.
+    if (!parse.get('user_message')) {
+        return;
+    }
+
     // Submit the request to ChatGPT if a cached response is not available.
     let assistant_message;
-    if (config.get('cache_enable') === 'true' && input_text.split(' ').length >= config.get('cache_min_words') && history.exists(input_text)) {
+    if (config.get('cache_enable') === 'true' && parse.get('input_text').split(' ').length >= config.get('cache_min_words') && history.exists(parse.get('input_text'))) {
         // Get cached response.
-        assistant_message = history.get(input_text).assistant;
+        assistant_message = history.get(parse.get('input_text')).assistant;
         LaunchBar.debugLog(`Using cached response: ${assistant_message}`);
     } else {
         // Get response from API.
@@ -147,8 +150,8 @@ function runWithString(argument) {
             help.apiKey();
             return;
         }
-        assistant_message = openai.chat(input_text);
-        history.add(input_text, parse.get('user_message'), assistant_message, parse.get('transient'));
+        assistant_message = openai.chat(parse.get('input_text'));
+        history.add(parse.get('input_text'), parse.get('user_message'), assistant_message, parse.get('transient'));
     }
 
     // Do post-processing on the response.
@@ -165,7 +168,7 @@ function runWithString(argument) {
     });
 
     // Save the response to a file and run the action.
-    const output_filename = util.filenameFromInputString(input_text);
+    const output_filename = util.filenameFromInputString(parse.get('input_text'));
     if (typeof assistant_message === 'string') {
         util.saveFile(output_filename, assistant_message);
         if (config.get('default_action_opens_automatically') === 'true' || LaunchBar.options.controlKey || LaunchBar.options.commandKey || LaunchBar.options.shiftKey) {

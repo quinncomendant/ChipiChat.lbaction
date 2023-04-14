@@ -17,6 +17,9 @@
 class Parse {
     // The private #results object will be populated when process() is run.
     #results = {
+        // Input text, provided via LaunchBar input or copied from the clipboard.
+        input_text: '',
+
         // If the user sends a command, this will be returned to LaunchBar as output (mixed).
         command: undefined,
 
@@ -148,39 +151,39 @@ class Parse {
     }
 
     modifiers(input_text) {
-        input_text = input_text.replace(/\s+/g, ' ').trim();
+        this.#results.input_text = input_text.replace(/\s+/g, ' ').trim();
 
         let system_message = persona.get('_default')['system_message'];
         let reprefix = []
         let persona_unspecified = true;
 
         // Modifiers customizes ChatGPT's behavior.
-        let x = input_text.replace(/[^\x00-\x7F]/g, '').toLowerCase().split(' ').some(modifier => {
+        this.#results.input_text.replace(/[^\x00-\x7F]/g, '').toLowerCase().split(' ').some(modifier => {
             // The some(=>) function exits on the first `return true`, e.g., on the first non-modifier word.
             switch (modifier) {
             case '0.0': case '0.1': case '0.2': case '0.3': case '0.4': case '0.5': case '0.6': case '0.7': case '0.8': case '0.9': case '1.0': case '1.1': case '1.2': case '1.3': case '1.4': case '1.5': case '1.6': case '1.7': case '1.8': case '1.9': case '2.0':
                 // Set temperature
                 this.#results.temperature = parseFloat(modifier);
-                input_text = util.unprefix(input_text);
+                this.#results.input_text = util.unprefix(this.#results.input_text);
                 break;
 
             case '4':
             case 'gpt4':
                 // Use GPT-4.
                 this.#results.model = 'gpt-4';
-                input_text = util.unprefix(input_text);
+                this.#results.input_text = util.unprefix(this.#results.input_text);
                 break;
 
             case 'copy':
                 // Copy the response to the clipboard.
                 this.#results.postprocessing.push('copy-to-clipboard');
-                input_text = util.unprefix(input_text);
+                this.#results.input_text = util.unprefix(this.#results.input_text);
                 break;
 
             case 'new':
                 // Erase conversation history and start a new chat.
                 history.clear();
-                input_text = util.unprefix(input_text);
+                this.#results.input_text = util.unprefix(this.#results.input_text);
                 break;
 
             case 'redo':
@@ -188,7 +191,7 @@ class Parse {
                 // This is actually a “command” but must be processed in this step.
                 const prev = history.pop();
                 if (typeof prev.user !== 'undefined' && prev.user.length && !prev.input_text.includes('redo')) {
-                    input_text = prev.input_text;
+                    this.#results.input_text = prev.input_text;
                     return true;
                 }
                 break;
@@ -207,7 +210,7 @@ class Parse {
                     if (typeof p.postprocessing !== 'undefined' && p.postprocessing.length) {
                         this.#results.postprocessing.push(p.postprocessing);
                     }
-                    input_text = util.unprefix(input_text);
+                    this.#results.input_text = util.unprefix(this.#results.input_text);
                     persona_unspecified = false;
                     break;
                 }
@@ -222,10 +225,23 @@ class Parse {
             return false;
         });
 
-        // If no text entered, use contents of clipboard.
-        if (!input_text.trim().length) {
-            input_text = LaunchBar.getClipboardString().replace(/\s+/g, ' ').trim();
-            LaunchBar.debugLog(`Input from clipboard: ${input_text}`);
+        // If no text entered, try to use contents of clipboard.
+        if (!this.#results.input_text.trim().length) {
+            let clipboard_text = LaunchBar.getClipboardString();
+            if (typeof clipboard_text === 'undefined' || !clipboard_text.length) {
+                LaunchBar.alert('ChipiChat is sad 🥺', 'No text was entered.');
+                return '';
+            }
+            clipboard_text = clipboard_text.replace(/\s+/g, ' ').trim();
+            const clipboard_response = LaunchBar.alert('Send this clipboard text to ChatGPT?', `“${util.truncate(clipboard_text, 1000)}”`, 'Ok', 'Cancel');
+            switch (clipboard_response) {
+            case 0:
+                this.#results.input_text = clipboard_text;
+                LaunchBar.debugLog(`Input from clipboard: ${this.#results.input_text}`);
+                break;
+            case 1:
+                return '';
+            }
         }
 
         // Build chat completion messages.
@@ -239,7 +255,7 @@ class Parse {
             });
         }
 
-        let final_user_message = input_text.trim();
+        let final_user_message = this.#results.input_text.trim();
         if (util.countTokens(final_user_message) > config.get('max_user_message_tokens')) {
             final_user_message = final_user_message.slice(0, util.characterLengthFromTokens(config.get('max_user_message_tokens')));
             LaunchBar.displayNotification({title: 'ChipiChat', string: `Input text truncated to avoid exceeding max tokens.`});
