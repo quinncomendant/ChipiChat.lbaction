@@ -125,23 +125,12 @@ class Config {
             break;
 
         // Integer options.
-        case 'max_history_tokens':
         case 'max_response_tokens':
-        case 'max_user_message_tokens':
-            // The total length of input tokens and generated tokens is limited by the model's context length.
-            // https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens
-            if (key === 'max_history_tokens' && (parseFloat(val) + this.get('max_response_tokens') + this.get('max_user_message_tokens')) > model_context_length) {
-                LaunchBar.alert(`Failed to set configuration`, `“${key}” value is too large.\n\nThe sum of tokens used for max_user_message_tokens (${this.get('max_user_message_tokens')}) + max_history_tokens (which you tried to set to “${val}”) + max_response_tokens (${this.get('max_response_tokens')}) must not exceed the model's context length (${model_context_length}).`);
-                return false;
+            if (val.toLowerCase() === 'infinity') {
+                Action.preferences.config[key] = Infinity;
+                break;
             }
-            if (key === 'max_response_tokens' && (parseFloat(val) + this.get('max_history_tokens') + this.get('max_user_message_tokens')) > model_context_length) {
-                LaunchBar.alert(`Failed to set configuration`, `“${key}” value is too large.\n\nThe sum of tokens used for max_user_message_tokens (${this.get('max_user_message_tokens')}) + max_history_tokens (${this.get('max_history_tokens')}) + max_response_tokens (which you tried to set to “${val}”) must not exceed the model's context length (${model_context_length}).`);
-                return false;
-            }
-            if (key === 'max_user_message_tokens' && (parseFloat(val) + this.get('max_response_tokens') + this.get('max_history_tokens')) > model_context_length) {
-                LaunchBar.alert(`Failed to set configuration`, `“${key}” value is too large.\n\nThe sum of tokens used for max_user_message_tokens (which you tried to set to “${val}”) + max_history_tokens (${this.get('max_history_tokens')}) + max_response_tokens (${this.get('max_response_tokens')}) must not exceed the model's context length (${model_context_length}).`);
-                return false;
-            } // Continue…
+        case 'max_history_tokens':
         case 'max_history_minutes':
         case 'cache_expiration_minutes':
         case 'cache_min_words':

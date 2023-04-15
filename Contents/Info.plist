@@ -15,7 +15,7 @@
 	<key>LBArgument</key>
 	<string>text and files</string>
 	<key>LBDebugLogEnabled</key>
-	<false/>
+	<true/>
 	<key>LBDescription</key>
 	<dict>
 		<key>LBArgument</key>

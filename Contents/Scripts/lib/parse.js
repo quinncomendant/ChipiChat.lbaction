@@ -254,18 +254,14 @@ class Parse {
         this.addMessage('system', system_message);
 
         if (!this.#results.transient) {
+            // Include previous non-stale exchanges.
             history.list().forEach(exchange => {
-                // Include previous non-stale exchanges.
                 this.addMessage('user', exchange.user);
                 this.addMessage('assistant', exchange.assistant);
             });
         }
 
         let final_user_message = this.#results.input_text.trim();
-        if (util.countTokens(final_user_message) > config.get('max_user_message_tokens')) {
-            final_user_message = final_user_message.slice(0, util.characterLengthFromTokens(config.get('max_user_message_tokens')));
-            LaunchBar.displayNotification({title: 'ChipiChat', string: `Input text truncated to avoid exceeding max tokens.`});
-        }
         this.addMessage('user', final_user_message);
 
         return final_user_message;

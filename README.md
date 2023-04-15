@@ -160,8 +160,7 @@ To reset all configuration options to defaults, send the `config reset` command.
 - `filename_extension`: The extension of cached files changes how they open in a text editor and Quick Look (options: `txt`, `md`, `markdown`; default: `txt`). If you have a Quick Look extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting.
 - `max_history_minutes`: Maximum age of conversation history to include in requests for context (default: `480`).
 - `max_history_tokens`: Maximum amount of conversation history to include in requests for context (default: `1000`).
-- `max_response_tokens`: Maximum amount of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to return in the response (default: `2000`).
-- `max_user_message_tokens`: Maximum amount of tokens allowed in the input text (default: `1000`).
+- `max_response_tokens`: Maximum amount of [tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens) to return in the response (default: `Infinity`).
 - `model`: Which OpenAI [model](https://platform.openai.com/docs/models/overview) to use (default: `gpt-3.5-turbo`).
 - `temperature`: What sampling [temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature) to use, between `0.0` and `2.0` (default: `0.1`).
 - `timeout`: How many seconds to wait for a response from the API (default: `30`; using GPT-4 adds timeout + 120 seconds).

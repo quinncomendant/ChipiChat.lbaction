@@ -30,13 +30,13 @@ class OpenAI {
                 model: parse.get('model'),
                 temperature: parse.get('temperature'),
                 messages: parse.get('messages'),
-                max_tokens: config.get('max_response_tokens')
+                max_tokens: config.get('max_response_tokens') < Infinity ? config.get('max_response_tokens') : null
             }
         });
         if (typeof result.data !== 'undefined') {
             LaunchBar.debugLog(`Response: ${JSON.stringify(result.data)}`);
             if (typeof result.data.error !== 'undefined') {
-                LaunchBar.alert(`The request to ChatGPT failed: ${result.data.error.message}`);
+                LaunchBar.alert('The request to ChatGPT failed', result.data.error.message);
                 return;
             }
             if (typeof result.data.choices === 'undefined' || !result.data.choices.length || !result.data.choices[0].message.content.length) {

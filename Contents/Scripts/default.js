@@ -34,20 +34,11 @@ const config = new Config({
     filename_extension: 'txt',
     max_history_minutes: 480,
     max_history_tokens: 1000,
-    max_response_tokens: 2000,
-    max_user_message_tokens: 1000,
+    max_response_tokens: Infinity,
     model: 'gpt-3.5-turbo',
     temperature: 0.1,
     timeout: 30
 });
-
-// The sum of tokens used for max_user_message_tokens + max_history_tokens + max_response_tokens must not exceed the model's context length.
-let model_context_length = 4096;
-if (config.get('model').includes('gpt-4')) {
-    let model_context_length = 8192;
-} else if (config.get('model').includes('gpt-4-32k')) {
-    let model_context_length = 32768;
-}
 
 include('lib/persona.js');
 include('persona_defaults.js');
@@ -168,8 +159,8 @@ function runWithString(argument) {
     });
 
     // Save the response to a file and run the action.
-    const output_filename = util.filenameFromInputString(parse.get('input_text'));
     if (typeof assistant_message === 'string') {
+        const output_filename = util.filenameFromInputString(parse.get('input_text'));
         util.saveFile(output_filename, assistant_message);
         if (config.get('default_action_opens_automatically') === 'true' || LaunchBar.options.controlKey || LaunchBar.options.commandKey || LaunchBar.options.shiftKey) {
             return defaultAction(output_filename);
