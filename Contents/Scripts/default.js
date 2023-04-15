@@ -126,7 +126,7 @@ function defaultAction(filename) {
 // This function is called by LaunchBar when the user passes text to the action.
 function runWithString(argument) {
     // Parse the user input.
-    parse.process(argument.trim().replace(/\s+/g, ' '));
+    parse.process(argument.trim().replace(/[^\S\r\n]+/g, ' '));
 
     // If a command was entered, run it.
     if (parse.get('command')) {

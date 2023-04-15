@@ -26,7 +26,7 @@ class Util {
     }
 
     unprefix(str) {
-        const words = str.replace(/\s+/g, ' ').trim().split(' ');
+        const words = str.replace(/[^\S\r\n]+/g, ' ').trim().split(' ');
         words.shift();
         return words.join(' ');
     }

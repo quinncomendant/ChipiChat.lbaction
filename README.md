@@ -7,7 +7,7 @@ Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform
 
 ## Usage
 
-Open ChipiChat in LaunchBar, hit the spacebar, enter a command or message, then hit return to send it to ChatGPT. 
+Open ChipiChat in LaunchBar, hit the spacebar, enter a command or message, then hit return to send it to ChatGPT.
 
 The input will be taken from the clipboard if no text is entered into LaunchBar. This enables a powerful workflow to quickly pass text through ChatGPT, for example:
 
@@ -32,11 +32,12 @@ The input will be taken from the clipboard if no text is entered into LaunchBar.
 
 Prefix your message with one-or-more modifiers for enhanced functionality:
 
+- `(persona name)`: Use a predefined or custom [persona](#personas).
 -  `N.N`: Adjust response randomness by using temperature value `N.N`, e.g., “1.5 why is the sky blue?”.
 -  `4`: Use the GPT-4 model (requires GPT-4 API access).
 -  `copy`: Automatically copy the response to the clipboard.
 -  `new`: Start a new conversation with no history.
-- `(persona name)`: Use a predefined or custom [persona](#personas).
+-  `transient`: Exclude conversation history for this message.
 
 You can combine modifiers, e.g., “**code copy 4** js uuid function” sends “js uuid function” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
 
@@ -114,7 +115,7 @@ ChipiChat has many features and myriad customizable options. Practice all the co
 
 ## Personas
 
-Use a persona to set the overall behavior of the assistant. Create your own or use one of the predefined personas. A default persona is used if no persona is specified when you send a message.
+Use a persona to set the overall behavior of the assistant. Create your own or use one of the predefined personas (`changelog`, `code`, `commit`, `complete`, `condense`, `expand`, `fix`, `list`, `reply`, `rewrite`, `safe`, `summarize`, `write`). A default persona is used if no persona is specified when you send a message.
 
 Manage personas with these commands:
 
@@ -163,7 +164,7 @@ To reset all configuration options to defaults, send the `config reset` command.
 - `max_user_message_tokens`: Maximum amount of tokens allowed in the input text (default: `1000`).
 - `model`: Which OpenAI [model](https://platform.openai.com/docs/models/overview) to use (default: `gpt-3.5-turbo`).
 - `temperature`: What sampling [temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature) to use, between `0.0` and `2.0` (default: `0.1`).
-- `timeout`: How many seconds to wait for a response from the API (default: `30`; using GPT-4 adds timeout + 60 seconds).
+- `timeout`: How many seconds to wait for a response from the API (default: `30`; using GPT-4 adds timeout + 120 seconds).
 
 ### Default actions
 

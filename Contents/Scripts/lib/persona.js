@@ -116,7 +116,8 @@ class Persona {
                 return `🎭 default (used when no persona is specified): “${val.system_message}”\n`
             }
             const emoji = typeof val.emoji !== 'undefined' ? val.emoji : this.emoji(key);
-            return `${emoji} ${key}: ${val.description ? val.description : '“' + util.truncate(val.system_message, 50) + '”'}\n`
+            const transient_note = typeof val.transient !== 'undefined' && val.transient ? '†' : '';
+            return `${emoji} ${key}: ${val.description ? val.description : '“' + util.truncate(val.system_message, 50) + '”'}${transient_note}\n`
         }).join('\n');
     }
 
@@ -129,8 +130,10 @@ class Persona {
                 return `## 🎭 Default persona\n\n${val.system_message}`;
             }
             const emoji = typeof val.emoji !== 'undefined' ? val.emoji : this.emoji(key);
-            return `## ${emoji} ${key}\n\n${val.system_message}`;
+            const transient_note = typeof val.transient !== 'undefined' && val.transient ? ' †' : '';
+            return `## ${emoji} ${key}${transient_note}\n\n${val.system_message}`;
         }));
+        content.push(`---\n† These personas are transient. Messages sent using a transient persona will not include conversation history, and will not be sent in future history. Responses will still be cached.`);
         if (util.saveFile(export_filename, content.join(`\n\n`))) {
             LaunchBar.displayNotification({
                 title: 'ChipiChat',

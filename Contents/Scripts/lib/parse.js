@@ -151,7 +151,7 @@ class Parse {
     }
 
     modifiers(input_text) {
-        this.#results.input_text = input_text.replace(/\s+/g, ' ').trim();
+        this.#results.input_text = input_text.replace(/[^\S\r\n]+/g, ' ').trim();
 
         let system_message = persona.get('_default')['system_message'];
         let reprefix = []
@@ -196,6 +196,12 @@ class Parse {
                 }
                 break;
 
+            case 'transient':
+                // Exclude conversation history for this message.
+                this.#results.transient = true;
+                input_text = util.unprefix(input_text);
+                break;
+
             default:
                 let p = persona.get(modifier);
                 if (persona_unspecified && p) {
@@ -232,7 +238,7 @@ class Parse {
                 LaunchBar.alert('ChipiChat is sad 🥺', 'No text was entered.');
                 return '';
             }
-            clipboard_text = clipboard_text.replace(/\s+/g, ' ').trim();
+            clipboard_text = clipboard_text.replace(/[^\S\r\n]+/g, ' ').trim();
             const clipboard_response = LaunchBar.alert('Send this clipboard text to ChatGPT?', `“${util.truncate(clipboard_text, 1000)}”`, 'Ok', 'Cancel');
             switch (clipboard_response) {
             case 0:

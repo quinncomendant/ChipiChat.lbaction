@@ -64,7 +64,7 @@ const persona_defaults = {
     fix: {
         emoji: '🧑‍🏭',
         description: `Correct spelling and grammar.`,
-        system_message: `Please correct the spelling and grammar in given text. Make no other changes. Do not include an introduction or explanation.`,
+        system_message: `Please correct the spelling and grammar in given text. Make no other changes; don't rewrite the text. Do not include an introduction or explanation.`,
         transient: true,
     },
     list: {
@@ -72,6 +72,12 @@ const persona_defaults = {
         description: `Respond with a bulleted list.`,
         system_message: `Please respond in the form of a bulleted list. Do not include an introduction or description of the list. Format as a markdown list with no introduction.`,
         retain_prefix: true,
+    },
+    reply: {
+        emoji: '🤽',
+        description: `Reply with interleaved quoting of the original message.`,
+        system_message: `Please write a reply (technical, professional first-person active voice) to the email given by the user. Use an interleaved reply style, quoting the main points and questions from the original message using "> " as the quote-prefix, as recommended by draft RFC 1849.`,
+        transient: true,
     },
     rewrite: {
         emoji: '🧑‍🎤',
@@ -85,9 +91,9 @@ const persona_defaults = {
         system_message: `List health and safety concerns for ingredients in food and consumer products using data from public safety databases.\n\nPlease list the given ingredients with an abbreviated safety profile. Prefix with "- ✅" for safe ingredients and "- 🚫" for those with health, ecotoxicity, contamination, or negative externality concerns.`,
         transient: true,
     },
-    sum: {
+    summarize: {
         emoji: '💁',
-        description: `Summarize as a bulleted list.`,
+        description: `Summarize text as a bulleted list.`,
         system_message: `Please summarize the given text, responding with an abridged version with only the main points. Format as a markdown list with no introduction.`,
         retain_prefix: true,
         transient: true,

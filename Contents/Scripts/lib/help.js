@@ -31,11 +31,12 @@ Send a message, question, or instruction to Chat GPT and quickly obtain and mani
 
 Prefix your message with modifiers for enhanced functionality:
 
+🏷️  “(persona name)”: Use a custom or predefined persona.
 🏷️  “N.N”: Adjust response randomness by using temperature value “N.N”, e.g., “1.5 why is the sky blue?”.
 🏷️  “4”: Use the GPT-4 model (requires GPT-4 API access).
 🏷️  “copy”: Automatically copy the response to the clipboard.
 🏷️  “new”: Start a new conversation with no history.
-🏷️  “(persona name)”: Use a custom or predefined persona.
+🏷️  “transient”: Exclude conversation history for this message.
 
 You can combine modifiers, e.g., “code copy 4 js uuid function” sends “js uuid function” to GPT-4 API with the code persona and copies the response. All modifiers must go at the beginning of the message.
 
@@ -111,7 +112,9 @@ ${config.show()}`, 'Close', 'View the docs');
 
 ⎯
 
-${persona.show()}`, 'Close', 'View the docs', 'Export personas to a file');
+${persona.show()}
+
+† These personas are transient. Messages sent using a transient persona will not include conversation history, and will not be sent in future history. Responses will still be cached.`, 'Close', 'View the docs', 'Export personas to a file');
 
         switch (response) {
         case 1:

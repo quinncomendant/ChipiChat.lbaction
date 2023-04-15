@@ -37,8 +37,10 @@ class History {
             assistant_message = assistant_message.replace(/^sorry, I (cannot|can.t) [^\.]+\./i, '').trim();
         }
 
-        if (!input_text.length || !user_message.length || !assistant_message.length) {
-            LaunchBar.debugLog('history.add: attempt to empty string');
+        if (typeof input_text !== 'string' || !input_text.length
+        || typeof user_message !== 'string' || !user_message.length
+        || typeof assistant_message !== 'string' || !assistant_message.length) {
+            LaunchBar.debugLog('history.add: skipping non-string or empty string');
             return;
         }
 

@@ -18,7 +18,7 @@ class OpenAI {
     chat() {
         let timeout = config.get('timeout');
         if (/^gpt-4/.test(parse.get('model'))) {
-            timeout += 60;
+            timeout += 120;
             LaunchBar.displayNotification({title: 'ChipiChat', string: 'Message sent. GPT-4 is slow; please have patience!'});
         }
         LaunchBar.debugLog(`Request: ${JSON.stringify(parse.get('messages'))}`);
