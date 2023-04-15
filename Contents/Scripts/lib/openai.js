@@ -21,17 +21,18 @@ class OpenAI {
             timeout += 120;
             LaunchBar.displayNotification({title: 'ChipiChat', string: 'Message sent. GPT-4 is slow; please have patience!'});
         }
-        LaunchBar.debugLog(`Request: ${JSON.stringify(parse.get('messages'))}`);
+        const request_body = {
+            model: parse.get('model'),
+            temperature: parse.get('temperature'),
+            messages: parse.get('messages'),
+            max_tokens: config.get('max_response_tokens') < Infinity ? config.get('max_response_tokens') : null
+        };
+        LaunchBar.debugLog(`Request: ${JSON.stringify(request_body)}`);
         let result = HTTP.postJSON('https://api.openai.com/v1/chat/completions', {
             headerFields: {'Authorization': `Bearer ${config.get('api_key')}`},
             resultType: 'json',
             timeout,
-            body: {
-                model: parse.get('model'),
-                temperature: parse.get('temperature'),
-                messages: parse.get('messages'),
-                max_tokens: config.get('max_response_tokens') < Infinity ? config.get('max_response_tokens') : null
-            }
+            body: request_body
         });
         if (typeof result.data !== 'undefined') {
             LaunchBar.debugLog(`Response: ${JSON.stringify(result.data)}`);
@@ -44,6 +45,40 @@ class OpenAI {
                 return '';
             }
             return result.data.choices[0].message.content.trim();
+        } else if (typeof result.error !== 'undefined') {
+            LaunchBar.debugLog(`Response error: ${JSON.stringify(result.error)}`);
+            LaunchBar.alert('LaunchBar error', result.error);
+        } else {
+            LaunchBar.debugLog(`Unknown error: ${JSON.stringify(result)}`);
+            LaunchBar.alert('An unknown error occurred');
+        }
+    }
+
+    image() {
+        const request_body = {
+            n: 1,
+            prompt: parse.get('user_message'),
+            size: '1024x1024',
+            response_format: 'url'
+        };
+        LaunchBar.debugLog(`Request: ${JSON.stringify(request_body)}`);
+        let result = HTTP.postJSON('https://api.openai.com/v1/images/generations', {
+            headerFields: {'Authorization': `Bearer ${config.get('api_key')}`},
+            resultType: 'json',
+            timeout: 30,
+            body: request_body
+        });
+        if (typeof result.data !== 'undefined') {
+            LaunchBar.debugLog(`Response: ${JSON.stringify(result.data)}`);
+            if (typeof result.data.error !== 'undefined') {
+                LaunchBar.alert('The request to DALL·E failed', result.data.error.message);
+                return;
+            }
+            if (!result.data.data.length || typeof result.data.data[0].url === 'undefined') {
+                LaunchBar.alert('The response from DALL·E was empty.');
+                return '';
+            }
+            return result.data.data[0].url;
         } else if (typeof result.error !== 'undefined') {
             LaunchBar.debugLog(`Response error: ${JSON.stringify(result.error)}`);
             LaunchBar.alert('LaunchBar error', result.error);

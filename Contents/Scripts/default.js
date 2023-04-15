@@ -141,7 +141,13 @@ function runWithString(argument) {
             help.apiKey();
             return;
         }
-        assistant_message = openai.chat(parse.get('input_text'));
+        switch (parse.get('model')) {
+        case 'dall-e':
+            assistant_message = openai.image();
+            break;
+        default:
+            assistant_message = openai.chat();
+        }
         history.add(parse.get('input_text'), parse.get('user_message'), assistant_message, parse.get('transient'));
     }
 

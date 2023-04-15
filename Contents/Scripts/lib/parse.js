@@ -180,6 +180,13 @@ class Parse {
                 this.#results.input_text = util.unprefix(this.#results.input_text);
                 break;
 
+            case 'image':
+                // Generate an image using DALL·E.
+                this.#results.model = 'dall-e';
+                this.#results.transient = true;
+                this.#results.input_text = util.unprefix(this.#results.input_text);
+                break;
+
             case 'new':
                 // Erase conversation history and start a new chat.
                 history.clear();

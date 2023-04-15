@@ -147,13 +147,24 @@ class Util {
     }
 
     actionOutput(assistant_message, output_filename) {
-        return {
-            title: assistant_message,
-            children: this.actionOutputChildren(assistant_message),
-            action: 'defaultAction',
-            actionArgument: output_filename,
-            quickLookURL: File.fileURLForPath(output_filename),
-            icon: 'ChipiChat-bw.png'
-        };
+        if (/^https:/.test(assistant_message)) {
+            // URL
+            return {
+                url: assistant_message,
+                title: assistant_message,
+                quickLookURL: assistant_message,
+                icon: 'ChipiChat-bw.png'
+            };
+        } else {
+            // String
+            return {
+                title: assistant_message,
+                children: this.actionOutputChildren(assistant_message),
+                action: 'defaultAction',
+                actionArgument: output_filename,
+                quickLookURL: File.fileURLForPath(output_filename),
+                icon: 'ChipiChat-bw.png'
+            };
+        }
     }
 }

@@ -33,11 +33,12 @@ The input will be taken from the clipboard if no text is entered into LaunchBar.
 Prefix your message with one-or-more modifiers for enhanced functionality:
 
 - `(persona name)`: Use a predefined or custom [persona](#personas).
--  `N.N`: Adjust response randomness by using temperature value `N.N`, e.g., “1.5 why is the sky blue?”.
--  `4`: Use the GPT-4 model (requires GPT-4 API access).
--  `copy`: Automatically copy the response to the clipboard.
--  `new`: Start a new conversation with no history.
--  `transient`: Exclude conversation history for this message.
+- `N.N`: Adjust response randomness by using temperature value `N.N`, e.g., “1.5 why is the sky blue?”.
+- `4`: Use the GPT-4 model (requires GPT-4 API access).
+- `copy`: Automatically copy the response to the clipboard.
+- `image`: Generate an image with DALL·E and return the image URL.
+- `new`: Start a new conversation with no history.
+- `transient`: Exclude conversation history for this message.
 
 You can combine modifiers, e.g., “**code copy 4** js uuid function” sends “js uuid function” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
 

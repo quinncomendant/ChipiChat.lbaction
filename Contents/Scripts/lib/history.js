@@ -91,16 +91,29 @@ class History {
             return true;
         }
         return Action.preferences.conversation_history.map(exchange => {
-            return {
-                title: exchange.assistant,
-                subtitle: exchange.user,
-                alwaysShowsSubtitle: true,
-                children: util.actionOutputChildren(exchange.assistant),
-                action: 'defaultAction',
-                actionArgument: util.filenameFromInputString(exchange.input_text),
-                quickLookURL: File.fileURLForPath(util.filenameFromInputString(exchange.input_text)),
-                icon: 'ChipiChat-bw.png'
-            };
+            if (/^https:/.test(exchange.assistant)) {
+                // URL
+                return {
+                    url: exchange.assistant,
+                    title: exchange.assistant,
+                    subtitle: exchange.user,
+                    alwaysShowsSubtitle: true,
+                    quickLookURL: exchange.assistant,
+                    icon: 'ChipiChat-bw.png'
+                };
+            } else {
+                // String
+                return {
+                    title: exchange.assistant,
+                    subtitle: exchange.user,
+                    alwaysShowsSubtitle: true,
+                    children: util.actionOutputChildren(exchange.assistant),
+                    action: 'defaultAction',
+                    actionArgument: util.filenameFromInputString(exchange.input_text),
+                    quickLookURL: File.fileURLForPath(util.filenameFromInputString(exchange.input_text)),
+                    icon: 'ChipiChat-bw.png'
+                };
+            }
         });
     }
 

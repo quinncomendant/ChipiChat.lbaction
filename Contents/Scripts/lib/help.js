@@ -35,6 +35,7 @@ Prefix your message with modifiers for enhanced functionality:
 🏷️  “N.N”: Adjust response randomness by using temperature value “N.N”, e.g., “1.5 why is the sky blue?”.
 🏷️  “4”: Use the GPT-4 model (requires GPT-4 API access).
 🏷️  “copy”: Automatically copy the response to the clipboard.
+🏷️  “image”: Generate an image with DALL·E and return the image URL.
 🏷️  “new”: Start a new conversation with no history.
 🏷️  “transient”: Exclude conversation history for this message.
 
