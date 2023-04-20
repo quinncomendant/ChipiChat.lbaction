@@ -161,7 +161,8 @@ To reset all configuration options to default, send the `config reset` command.
 - `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., the message “please continue” might match a cached response from an earlier reply (default: `15`). If a message loads a cached response unexpectedly, you can reduce the cache expiration, clear the history, or just send the query again with extra characters that make it unique.
 - `cache_min_words`: Minimum words in input text required before response is cached. Short phrases are less unique, and are more likely to load cached responses from a different context (default: `3`).
 - `default_action`: The action to run when hitting return *after* receiving a response. (options: `open`, `insert`, `quicklook`, `alert`, `copy`, `largetype`; default: `open`).
-- `default_action_opens_automatically`: Set this to `true` to run the `default_action` automatically without having to hit return after receiving a response. (options: `true`, `false`; default: `false`).
+- `default_action_auto`: Set this to `true` to run the `default_action` automatically without having to hit return after receiving a response. (options: `true`, `false`; default: `false`).
+- `hide`: Set this to `true` to hide LaunchBar while waiting for a response from ChatGPT. (options: `true`, `false`; default: `false`).
 - `filename_extension`: The extension of cached files changes how they open in a text editor and Quick Look (options: `txt`, `md`, `markdown`; default: `txt`). If you have a Quick Look extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting.
 - `max_history_minutes`: Maximum age of conversation history to include in requests for context (default: `480`).
 - `max_history_tokens`: Maximum amount of conversation history to include in requests for context (default: `1000`).
@@ -172,7 +173,7 @@ To reset all configuration options to default, send the `config reset` command.
 
 ### Default actions
 
-Use the `default_action` and `default_action_opens_automatically` options to customize your preferred interface for receiving responses. 
+Use the `default_action` and `default_action_auto` options to customize your preferred interface for receiving responses. 
 
 - `open`: Open the response in the default text editor. Hide LaunchBar.
 - `insert`: Paste the contents of the response into the cursor position. Hide LaunchBar.
@@ -188,14 +189,14 @@ If you use a Quick Look plugin that formats markdown with syntax highlighting (s
 ```
 config set filename_extension md
 config set default_action quicklook
-config set default_action_opens_automatically true
+config set default_action_auto true
 ```
 
 The best settings to carry on a conversation is to use LaunchBar alerts, which has a Reply button:
 
 ```
 config set default_action alert
-config set default_action_opens_automatically true
+config set default_action_auto true
 ```
 
 The `open` and `insert` actions are best for generating content, such as generating blog posts or emails.

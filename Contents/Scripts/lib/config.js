@@ -96,7 +96,8 @@ class Config {
             break;
 
         case 'cache_enable':
-        case 'default_action_opens_automatically':
+        case 'default_action_auto':
+        case 'hide':
             if (!this.requireValidOption(key, val, ['true', 'false'])) {
                 return false;
             }

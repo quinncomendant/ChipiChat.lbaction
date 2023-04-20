@@ -30,8 +30,9 @@ const config = new Config({
     cache_expiration_minutes: 15,
     cache_min_words: 3,
     default_action: 'open',
-    default_action_opens_automatically: 'false', // Not a boolean.
+    default_action_auto: 'false', // Not a boolean.
     filename_extension: 'txt',
+    hide: 'false', // Not a boolean.
     max_history_minutes: 480,
     max_history_tokens: 1000,
     max_response_tokens: Infinity,
@@ -141,6 +142,7 @@ function runWithString(argument) {
             help.apiKey();
             return;
         }
+        config.get('hide') && LaunchBar.hide();
         switch (parse.get('model')) {
         case 'dall-e':
             assistant_message = openai.image();
@@ -148,6 +150,7 @@ function runWithString(argument) {
         default:
             assistant_message = openai.chat();
         }
+        config.get('hide') && LaunchBar.executeAppleScript('tell application "LaunchBar" to activate');
         history.add(parse.get('input_text'), parse.get('user_message'), assistant_message, parse.get('transient'));
     }
 
@@ -168,7 +171,7 @@ function runWithString(argument) {
     if (typeof assistant_message === 'string') {
         const output_filename = util.filenameFromInputString(parse.get('input_text'));
         util.saveFile(output_filename, assistant_message);
-        if (config.get('default_action_opens_automatically') === 'true' || LaunchBar.options.controlKey || LaunchBar.options.commandKey || LaunchBar.options.shiftKey) {
+        if (config.get('default_action_auto') === 'true' || LaunchBar.options.controlKey || LaunchBar.options.commandKey || LaunchBar.options.shiftKey) {
             return defaultAction(output_filename);
         }
         return util.actionOutput(assistant_message, output_filename);
