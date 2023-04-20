@@ -92,7 +92,7 @@ class Persona {
     unset(key) {
         key = key.toLowerCase();
         if (typeof Action.preferences.personas[key] !== 'undefined') {
-            Action.preferences.personas.slice(key, 1);
+            delete Action.preferences.personas[key];
         }
     }
 

@@ -1,6 +1,6 @@
 # ChipiChat: LaunchBar🥂ChatGPT
 
-Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform.openai.com/docs/models/chatgpt) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/). Conversation history is preserved for context. Responses are cached on disk. Understands keyword modifiers, commands, personas. Is cute. *Requires an OpenAI API key.*
+Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform.openai.com/docs/models/chatgpt) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/). Conversation history is preserved for context. Responses are cached on disk. Understands keyword modifiers, commands, personas. *Requires an OpenAI API key.*
 
 ![Demo](https://send.strangecode.com/f/chipichat-demo-20230404.gif)
 
@@ -9,13 +9,15 @@ Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform
 
 Open ChipiChat in LaunchBar, hit the spacebar, enter a command or message, then hit return to send it to ChatGPT.
 
-The input will be taken from the clipboard if no text is entered into LaunchBar. This enables a powerful workflow to quickly pass text through ChatGPT, for example:
+The input will be taken from the clipboard if no text is entered into LaunchBar. This enables a powerful workflow to quickly pass text through ChatGPT.
+
+As an example, this will rewrite the selected text:
 
 1. Select and copy text in a document.
 2. Invoke ChipiChat.
-3. Hit the spacebar to open the LaunchBar input and type `fix`. If no other text is entered, ChipiChat will prompt to use text from the clipboard.
-4. Hold `⇧` *(shift)* and hit `↵` *(return)* to send the clipboard to ChatGPT using the *fix* persona (“Correct spelling and grammar”).
-5. The response will replace the selected text in your document.
+3. Hit the spacebar to open the LaunchBar input and type `rewrite` to use the *rewrite* persona. (If no other text is entered, ChipiChat will prompt to use text from the clipboard.)
+4. Hold `⇧` *(shift)* and hit `↵` *(return)* to send the clipboard to ChatGPT and immediately insert the response.
+5. After a few seconds the response replaces the selected text in the frontmost document.
 
 ### Response manipulation
 
@@ -33,33 +35,34 @@ The input will be taken from the clipboard if no text is entered into LaunchBar.
 Prefix your message with one-or-more modifiers for enhanced functionality:
 
 - `(persona name)`: Use a predefined or custom [persona](#personas).
-- `N.N`: Adjust response randomness by using temperature value `N.N`, e.g., “1.5 why is the sky blue?”.
+- `N.N`: Adjust response randomness by using the specified temperature value, e.g., “1.5 why is the sky blue?”.
 - `4`: Use the GPT-4 model (requires GPT-4 API access).
 - `copy`: Automatically copy the response to the clipboard.
 - `image`: Generate an image with DALL·E and return the image URL.
 - `new`: Start a new conversation with no history.
 - `transient`: Exclude conversation history for this message.
 
-You can combine modifiers, e.g., “**code copy 4** js uuid function” sends “js uuid function” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
+You can combine modifiers, e.g., “*code copy 4* js uuid function” sends “js uuid function” to *GPT-4* API with the *code persona* and *copies the response*. All modifiers must go at the beginning of the message.
 
 ### Commands
 
 Manage conversation history, settings, and personas by sending commands to ChipiChat:
 
-- `help`: Display a help message.
+- `help`: Display a short user guide.
 - `history`: Display recent conversation history.
 - `export`: Save conversation history to a file in ~/Downloads/.
 - `clear`: Erase all conversation history (otherwise, conversations are stored up to one week).
+- `cache`: Open the cache directory in the Finder.
 - `config list`: Show current configuration settings.
-- `config reset`: Reset all configuration options to defaults.
+- `config reset`: Reset all configuration options to default.
 - `config set OPTION VALUE`: Set the configuration OPTION to VALUE, e.g., `config set default_action alert`.
 - `persona list`: View a summary of personas.
 - `persona export`: Save all personas and their prompts to a file in ~/Downloads/.
 - `persona delete NAME`: Delete a persona.
-- `persona reset`: Reset personas to defaults. This will erase any custom personas you added.
+- `persona reset`: Reset personas to default. This will erase any custom personas you added.
 - `persona set default SYSTEM_MESSAGE`: Change the *default* persona’s system message.
 - `persona set NAME SYSTEM_MESSAGE`: Add or modify a persona.
-- `redo`: Resend the previous message, simulating ChatGPT’s “regenerate” function.
+- `redo`: Regenerate the response using a random temperature between 0–1.
 - `version`: Display ChipiChat version and check if a new version is available.
 
 ## Installation
@@ -74,8 +77,9 @@ Before you can use ChatGPT, you must get an OpenAI API key:
 
 ### Install ChipiChat
 
-1. Download `ChipiChat.lbaction.zip` from [releases](https://github.com/quinncomendant/ChipiChat.lbaction/releases), unzip it, and double-click it to install (or copy the `ChipiChat.lbaction` file into `~/Library/Application Support/LaunchBar/Actions/`).
-2. Run the following command in Terminal.app to allow this unsigned action to run (otherwise [macOS Gatekeeper](https://support.apple.com/guide/security/gatekeeper-and-runtime-protection-sec5599b66df/web) will [complain](https://send.strangecode.com/f/gatekeeper-warning.png)):
+1. Download `ChipiChat.lbaction.zip` from [releases](https://github.com/quinncomendant/ChipiChat.lbaction/releases)
+2. Unzip it, and double-click the resulting `ChipiChat.lbaction` file to install (or manually move it into `~/Library/Application Support/LaunchBar/Actions/`).
+3. Run the following command in Terminal.app to allow this unsigned action to run (otherwise [macOS Gatekeeper](https://support.apple.com/guide/security/gatekeeper-and-runtime-protection-sec5599b66df/web) will [complain](https://send.strangecode.com/f/gatekeeper-warning.png)):
 ```bash
 xattr -d com.apple.quarantine ~/Library/Application\ Support/LaunchBar/Actions/ChipiChat.lbaction
 ```
@@ -90,7 +94,7 @@ Now you’re ready to use ChipiChat!
 
 ### Usage example
 
-Invoke ChipiChat (type `cc`), hit the spacebar, then return a message and hit return:
+Invoke ChipiChat, hit the spacebar, then type a message and hit return:
 
 ![Example Message](docs/2-example-message.png)
 
@@ -98,11 +102,11 @@ After a couple seconds, you receive the response:
 
 ![Response](docs/3-response.png)
 
-That’s a bit hard to read, but if you press the right-arrow key, you can view it as a list:
+That’s a bit hard to read because not all the response text is visible, but if you press the right-arrow key, you can view it as a list:
 
 ![Response As List](docs/4-response-as-list.png)
 
-Or, you can view it in Quick Look (press the left-arrow key to go back, then press `⌘ Y`):
+Or, you can view it in Quick Look (press the left-arrow key to go back, then press `⌘ Y` or `⌃ ↵`):
 
 ![Response As Quick Look](docs/5-response-as-quicklook.png)
 
@@ -123,19 +127,19 @@ Manage personas with these commands:
 - `persona list`: View a summary of personas.
 - `persona export`: Save all personas and their prompts to a file in ~/Downloads/.
 - `persona delete NAME`: Delete a persona.
-- `persona reset`: Reset personas to defaults. This will erase any custom personas you added.
+- `persona reset`: Reset personas to default. This will erase any custom personas you added.
 - `persona set default SYSTEM_MESSAGE`: Change the *default* persona’s system message.
 - `persona set NAME SYSTEM_MESSAGE`: Add or modify a persona.
 
 The `SYSTEM_MESSAGE` is the [system message](https://platform.openai.com/docs/guides/chat/introduction) that is included with the request to ChatGPT that influences the behavior of the assistant.
 
-As an example, to create a persona named “Pierre” who translates user messages to French:
+As an example, to create a persona named “Pierre” which translates user messages to French:
 
 ```
 persona set pierre Translate the user message to French
 ```
 
-To use a persona, add the persona’s NAME to the beginning of your message. So, to use the Pierre persona, just write “**pierre** retirement in france must be amazing” and the assistant will respond, “La retraite en France doit être incroyable.” The persona can be combined with other keyword modifiers, e.g., “**copy** **list** mexican zombie films” to use the “list” persona and copy the results to the clipboard automatically.
+To use a persona, add the persona’s NAME to the beginning of your message. So, to use the Pierre persona, just write “*pierre* retirement in france must be amazing” and the assistant will respond, “La retraite en France doit être incroyable.” The persona can be combined with other keyword modifiers, e.g., “*copy* *list* mexican zombie films” to use the *list* persona and *copy* the results to the clipboard automatically.
 
 
 ## Configuration
@@ -148,12 +152,12 @@ config set default_action quicklook
 
 To view currently-set values, send the `config list` command.
 
-To reset all configuration options to defaults, send the `config reset` command.
+To reset all configuration options to default, send the `config reset` command.
 
 ### Options
 
 - `api_key`: Your OpenAI API key (default: empty or imported from `$OPENAI_API_KEY`).
-- `cache_enabled`: If you prefer to have a fresh response for every message, set this to `false` (default: `true`).
+- `cache_enable`: If you prefer to have a fresh response for every message, set this to `false` (default: `true`).
 - `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., the message “please continue” might match a cached response from an earlier reply (default: `15`). If a message loads a cached response unexpectedly, you can reduce the cache expiration, clear the history, or just send the query again with extra characters that make it unique.
 - `cache_min_words`: Minimum words in input text required before response is cached. Short phrases are less unique, and are more likely to load cached responses from a different context (default: `3`).
 - `default_action`: The action to run when hitting return *after* receiving a response. (options: `open`, `insert`, `quicklook`, `alert`, `copy`, `largetype`; default: `open`).

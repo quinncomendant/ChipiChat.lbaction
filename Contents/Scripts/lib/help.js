@@ -46,22 +46,23 @@ Manage conversation history, settings, and personas by sending commands:
 ⚡️  “help”: Display a help message.
 ⚡️  “history”: Display recent conversation history.
 ⚡️  “export”: Save conversation history to a file in ~/Downloads/.
+⚡️  “cache”: Open the cache directory in the Finder.
 ⚡️  “clear”: Erase all conversation history (otherwise, conversations are stored up to one week).
 ⚡️  “config list”: Show current configuration settings.
-⚡️  “config reset”: Reset all configuration options to defaults.
+⚡️  “config reset”: Reset all configuration options to default.
 ⚡️  “config set OPTION VALUE”: Set the configuration OPTION to VALUE, e.g., “config set default_action alert”.
 ⚡️  “persona list”: View a summary of personas.
 ⚡️  “persona export”: Save all personas and their prompts to a file in ~/Downloads/.
 ⚡️  “persona delete NAME”: Delete a persona.
-⚡️  “persona reset”: Reset personas to defaults. This will erase any custom personas you added.
+⚡️  “persona reset”: Reset personas to default. This will erase any custom personas you added.
 ⚡️  “persona set default SYSTEM_MESSAGE”: Change the default persona’s system message.
 ⚡️  “persona set NAME SYSTEM_MESSAGE”: Add or modify a persona.
-⚡️  “redo”: Resend the previous message, simulating ChatGPT’s regenerate function.
+⚡️  “redo”: Regenerate the response using a random temperature between 0–1.
 ⚡️  “version”: Display ChipiChat version and check if a new version is available.
 
 ChipiChat was created by by Quinn Comendant
 
-`, 'Close', 'View on GitHub', 'Follow me on Twitter', '☕️ Support me on Ko-fi');
+`, 'Close', 'View on GitHub', 'Follow on Twitter', '☕️ Support on Ko-fi');
         switch (response) {
         case 1:
             LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction')
@@ -109,7 +110,7 @@ ${config.show()}`, 'Close', 'View the docs');
     }
 
     persona() {
-        const response = LaunchBar.alert('ChipiChat personas', `To add or update personas, use the “persona set NAME SYSTEM_MESSAGE” command, e.g., “persona set pierre Translate the following text into French”. Delete a persona with “persona delete NAME”.
+        const response = LaunchBar.alert('ChipiChat personas', `To add or update personas, use the “persona set NAME SYSTEM_MESSAGE” command, e.g., “persona set pierre Translate the following text into French”. Delete a persona with “persona delete NAME”. Revert all personas to default with “persona reset”.
 
 ⎯
 

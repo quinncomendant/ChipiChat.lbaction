@@ -69,6 +69,10 @@ class Parse {
 
     commands(input_text) {
         switch (input_text.replace(/^(config|persona) *(delete|export|list|reset|set ).*$/, '$1$2').trim().toLowerCase()) {
+        case 'cache':
+            LaunchBar.execute('/usr/bin/open', Action.cachePath);
+            return true;
+
         case 'config':
         case 'configlist':
             help.config();
@@ -79,7 +83,7 @@ class Parse {
             switch (configreset_response) {
             case 1:
                 config.setDefaults(['api_key']); // Don't reset API key.
-                LaunchBar.displayNotification({title: 'ChipiChat', string: 'Configuration reset to defaults.'});
+                LaunchBar.displayNotification({title: 'ChipiChat', string: 'Configuration reset to default.'});
                 break;
             }
             return true;
@@ -129,7 +133,7 @@ class Parse {
             switch (personareset_response) {
             case 1:
                 persona.setDefaults();
-                LaunchBar.displayNotification({title: 'ChipiChat', string: 'Personas reset to defaults.'});
+                LaunchBar.displayNotification({title: 'ChipiChat', string: 'Personas reset to default.'});
                 break;
             }
             return true;
@@ -152,6 +156,7 @@ class Parse {
 
     modifiers(input_text) {
         this.#results.input_text = input_text.replace(/[^\S\r\n]+/g, ' ').trim();
+        let user_message = this.#results.input_text;
 
         let system_message = persona.get('_default')['system_message'];
         let reprefix = []
@@ -164,33 +169,33 @@ class Parse {
             case '0.0': case '0.1': case '0.2': case '0.3': case '0.4': case '0.5': case '0.6': case '0.7': case '0.8': case '0.9': case '1.0': case '1.1': case '1.2': case '1.3': case '1.4': case '1.5': case '1.6': case '1.7': case '1.8': case '1.9': case '2.0':
                 // Set temperature
                 this.#results.temperature = parseFloat(modifier);
-                this.#results.input_text = util.unprefix(this.#results.input_text);
+                user_message = util.unprefix(user_message);
                 break;
 
             case '4':
             case 'gpt4':
                 // Use GPT-4.
                 this.#results.model = 'gpt-4';
-                this.#results.input_text = util.unprefix(this.#results.input_text);
+                user_message = util.unprefix(user_message);
                 break;
 
             case 'copy':
                 // Copy the response to the clipboard.
                 this.#results.postprocessing.push('copy-to-clipboard');
-                this.#results.input_text = util.unprefix(this.#results.input_text);
+                user_message = util.unprefix(user_message);
                 break;
 
             case 'image':
                 // Generate an image using DALL·E.
                 this.#results.model = 'dall-e';
                 this.#results.transient = true;
-                this.#results.input_text = util.unprefix(this.#results.input_text);
+                user_message = util.unprefix(user_message);
                 break;
 
             case 'new':
                 // Erase conversation history and start a new chat.
                 history.clear();
-                this.#results.input_text = util.unprefix(this.#results.input_text);
+                user_message = util.unprefix(user_message);
                 break;
 
             case 'redo':
@@ -198,7 +203,9 @@ class Parse {
                 // This is actually a “command” but must be processed in this step.
                 const prev = history.pop();
                 if (typeof prev.user !== 'undefined' && prev.user.length && !prev.input_text.includes('redo')) {
+                    user_message = prev.user;
                     this.#results.input_text = prev.input_text;
+                    this.#results.temperature = Math.random();
                     return true;
                 }
                 break;
@@ -223,7 +230,7 @@ class Parse {
                     if (typeof p.postprocessing !== 'undefined' && p.postprocessing.length) {
                         this.#results.postprocessing.push(p.postprocessing);
                     }
-                    this.#results.input_text = util.unprefix(this.#results.input_text);
+                    user_message = util.unprefix(user_message);
                     persona_unspecified = false;
                     break;
                 }
@@ -239,7 +246,7 @@ class Parse {
         });
 
         // If no text entered, try to use contents of clipboard.
-        if (!this.#results.input_text.trim().length) {
+        if (!user_message.trim().length) {
             let clipboard_text = LaunchBar.getClipboardString();
             if (typeof clipboard_text === 'undefined' || !clipboard_text.length) {
                 LaunchBar.alert('ChipiChat is sad 🥺', 'No text was entered.');
@@ -249,8 +256,9 @@ class Parse {
             const clipboard_response = LaunchBar.alert('Send this clipboard text to ChatGPT?', `“${util.truncate(clipboard_text, 1000)}”`, 'Ok', 'Cancel');
             switch (clipboard_response) {
             case 0:
-                this.#results.input_text = clipboard_text;
-                LaunchBar.debugLog(`Input from clipboard: ${this.#results.input_text}`);
+                this.#results.input_text = `${this.#results.input_text} ${clipboard_text}`;
+                user_message = clipboard_text.trim();
+                LaunchBar.debugLog(`Input from clipboard: ${clipboard_text}`);
                 break;
             case 1:
                 return '';
@@ -268,9 +276,8 @@ class Parse {
             });
         }
 
-        let final_user_message = this.#results.input_text.trim();
-        this.addMessage('user', final_user_message);
+        this.addMessage('user', user_message);
 
-        return final_user_message;
+        return user_message;
     }
 }
