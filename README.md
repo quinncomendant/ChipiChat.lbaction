@@ -1,6 +1,6 @@
 # ChipiChat: LaunchBar🥂ChatGPT
 
-Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform.openai.com/docs/models/chatgpt) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/). Conversation history is preserved for context. Responses are cached on disk. Understands keyword modifiers, commands, personas. *Requires an OpenAI API key.*
+Interact with the [ChatGPT](https://chat.openai.com/chat) [API](https://platform.openai.com/docs/models/chatgpt) and receive responses directly in [LaunchBar](https://www.obdev.at/products/launchbar/). Conversation history is preserved for context. Responses are cached on disk. Understands keyword modifiers and commands. ChatGPT system messages are configurable via personas. *Requires an OpenAI API key.*
 
 ![Demo](https://send.strangecode.com/f/chipichat-demo-20230404.gif)
 
@@ -35,7 +35,7 @@ As an example, this will rewrite the selected text:
 Prefix your message with one-or-more modifiers for enhanced functionality:
 
 - `(persona name)`: Use a predefined or custom [persona](#personas).
-- `N.N`: Adjust response randomness by using the specified temperature value, e.g., “1.5 why is the sky blue?”.
+- `N.N`: Adjust response randomness by using the specified temperature value, e.g., “1.0 why is the sky blue?”.
 - `4`: Use the GPT-4 model (requires GPT-4 API access).
 - `copy`: Automatically copy the response to the clipboard.
 - `image`: Generate an image with DALL·E and return the image URL.
@@ -51,7 +51,7 @@ Manage conversation history, settings, and personas by sending commands to Chipi
 - `help`: Display a short user guide.
 - `history`: Display recent conversation history.
 - `export`: Save conversation history to a file in ~/Downloads/.
-- `clear`: Erase all conversation history (otherwise, conversations are stored up to one week).
+- `clear`: Erase all conversation history (otherwise, conversations are saved for the duration defined by the `history_expiration_days` config option).
 - `cache`: Open the cache directory in the Finder.
 - `config list`: Show current configuration settings.
 - `config reset`: Reset all configuration options to default.
@@ -160,9 +160,10 @@ To reset all configuration options to default, send the `config reset` command.
 - `cache_enable`: If you prefer to have a fresh response for every message, set this to `false` (default: `true`).
 - `cache_expiration_minutes`: How long before cached responses expire. This is useful to avoid loading a cached response for the same question in a different context, e.g., the message “please continue” might match a cached response from an earlier reply (default: `15`). If a message loads a cached response unexpectedly, you can reduce the cache expiration, clear the history, or just send the query again with extra characters that make it unique.
 - `cache_min_words`: Minimum words in input text required before response is cached. Short phrases are less unique, and are more likely to load cached responses from a different context (default: `3`).
-- `default_action`: The action to run when hitting return *after* receiving a response. (options: `open`, `insert`, `quicklook`, `alert`, `copy`, `largetype`; default: `open`).
-- `default_action_auto`: Set this to `true` to run the `default_action` automatically without having to hit return after receiving a response. (options: `true`, `false`; default: `false`).
-- `hide`: Set this to `true` to hide LaunchBar while waiting for a response from ChatGPT. (options: `true`, `false`; default: `false`).
+- `default_action`: The action to run when hitting return *after* receiving a response (options: `open`, `insert`, `quicklook`, `alert`, `copy`, `largetype`; default: `open`).
+- `default_action_auto`: Set this to `true` to run the `default_action` automatically without having to hit return after receiving a response (options: `true`, `false`; default: `false`).
+- `hide`: Set this to `true` to hide LaunchBar while waiting for a response from ChatGPT (options: `true`, `false`; default: `false`).
+- `history_expiration_days`: How long before old messages are removed from the conversation history (default: `7`).
 - `filename_extension`: The extension of cached files changes how they open in a text editor and Quick Look (options: `txt`, `md`, `markdown`; default: `txt`). If you have a Quick Look extension that supports Markdown (e.g., [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), change this to `md` for syntax highlighting.
 - `max_history_minutes`: Maximum age of conversation history to include in requests for context (default: `480`).
 - `max_history_tokens`: Maximum amount of conversation history to include in requests for context (default: `1000`).

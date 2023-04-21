@@ -20,8 +20,8 @@ class History {
             this.clear();
         }
 
-        // Limit conversation history to one week.
-        this.truncate(7 * 24 * 60 * 60);
+        // Limit conversation history to history_expiration_days.
+        this.truncate(config.get('history_expiration_days') * 24 * 60 * 60);
     }
 
     clear() {
@@ -118,8 +118,12 @@ class History {
     }
 
     // Reduce conversation history to curtail the size of ~/Library/Application Support/LaunchBar/Action Support/com.strangecode.LaunchBar.action.ChipiChat/Preferences.plist
-    truncate(history_lifetime_seconds) {
-        Action.preferences.conversation_history = Action.preferences.conversation_history.filter(exchange => (new Date() - new Date(exchange.date)) <= history_lifetime_seconds * 1000);
+    // and number of files in ~/Library/Caches/at.obdev.LaunchBar/Actions/com.strangecode.LaunchBar.action.ChipiChat
+    truncate(history_expiration_seconds) {
+        Action.preferences.conversation_history = Action.preferences.conversation_history.filter(exchange => (new Date() - new Date(exchange.date)) <= history_expiration_seconds * 1000);
+        if (Action.cachePath.includes('Library/Caches/at.obdev.LaunchBar/Actions/com.strangecode.LaunchBar.action.ChipiChat')) {
+            LaunchBar.execute('/usr/bin/find', Action.cachePath, '-type', 'f', '-mtime', `+${history_expiration_seconds}s`, '-delete');
+        }
     }
 
     export(filename) {

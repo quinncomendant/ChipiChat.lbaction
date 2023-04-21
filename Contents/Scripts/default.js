@@ -33,6 +33,7 @@ const config = new Config({
     default_action_auto: 'false', // Not a boolean.
     filename_extension: 'txt',
     hide: 'false', // Not a boolean.
+    history_expiration_days: 7,
     max_history_minutes: 480,
     max_history_tokens: 1000,
     max_response_tokens: Infinity,
