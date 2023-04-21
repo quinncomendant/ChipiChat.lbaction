@@ -33,7 +33,7 @@ module.exports = {
         'module': 'readonly',
         'parse': 'readonly',
         'persona': 'readonly',
-        'persona_defaults': 'readonly',
+        // 'persona_defaults': 'readonly',
         // 'util': 'readonly',
     }
 };
