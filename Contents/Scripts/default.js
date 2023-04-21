@@ -143,7 +143,7 @@ function runWithString(argument) {
             help.apiKey();
             return;
         }
-        config.get('hide') && LaunchBar.hide();
+        config.get('hide') === 'true' && LaunchBar.hide();
         switch (parse.get('model')) {
         case 'dall-e':
             assistant_message = openai.image();
@@ -151,7 +151,7 @@ function runWithString(argument) {
         default:
             assistant_message = openai.chat();
         }
-        config.get('hide') && LaunchBar.executeAppleScript('tell application "LaunchBar" to activate');
+        config.get('hide') === 'true' && LaunchBar.executeAppleScript('tell application "LaunchBar" to activate');
         history.add(parse.get('input_text'), parse.get('user_message'), assistant_message, parse.get('transient'));
     }
 

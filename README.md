@@ -15,9 +15,8 @@ As an example, here’s how you can send text on the clipboard to ChatGPT using 
 
 1. Select and copy text in a document.
 2. Invoke ChipiChat.
-3. Type `rewrite` to use the *rewrite* persona.
-4. Hold `⇧` *(shift)* and hit `↵` *(return)* to use the *insert immediately* function.
-5. ChatGPT’s response replaces the selected text.
+3. Type `rewrite` and hit `⇧ ↵`.
+4. ChatGPT’s response replaces the selected text.
 
 ### Response manipulation
 
@@ -214,8 +213,8 @@ and <img src="docs/icons/comment.svg" alt="💬" class="icon-inline"> for all ot
 
 ## Alternatives
 
-- [@ptujec](https://twitter.com/ptujec)’s cuter [Ask ChatGPT](https://github.com/Ptujec/LaunchBar/tree/master/Ask-ChatGPT#launchbar-action-ask-chatgpt) LaunchBar action.
-- [Chris Lemke](https://github.com/chrislemke)’s [ChatFred](https://github.com/chrislemke/ChatFred) Alfred workflow.
+- [@ptujec’s](https://twitter.com/ptujec) cuter [Ask ChatGPT](https://github.com/Ptujec/LaunchBar/tree/master/Ask-ChatGPT#launchbar-action-ask-chatgpt) LaunchBar action.
+- [Chris Lemke’s](https://lemke.ai/) [ChatFred](https://github.com/chrislemke/ChatFred) Alfred workflow.
 - [Awesome ChatGPT API](https://github.com/reorx/awesome-chatgpt-api) – Curated list of apps and tools you can use with your own API key.
 
 

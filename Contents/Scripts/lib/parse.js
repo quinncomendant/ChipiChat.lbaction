@@ -68,6 +68,21 @@ class Parse {
     }
 
     commands(input_text) {
+        // Special case for major version upgrades.
+        if (config.get('max_tokens') !== '') {
+            const upgrade_response = LaunchBar.alert('ChipiChat reset required', 'Upgrading ChipiChat requires resetting configuration options to default and erasing history.', 'Proceed', 'Cancel');
+            switch (upgrade_response) {
+            case 0:
+                config.setDefaults(['api_key']);
+                history.clear();
+                LaunchBar.alert('Upgrade successful', 'ChipiChat is ready to go! Send the “help” command to view instructions.');
+                return true;
+            case 1:
+                return true;
+            }
+        }
+
+        // Intercept command keyword.
         switch (input_text.replace(/^(config|persona) *(delete|export|list|reset|set ).*$/, '$1$2').trim().toLowerCase()) {
         case 'cache':
             LaunchBar.execute('/usr/bin/open', Action.cachePath);
