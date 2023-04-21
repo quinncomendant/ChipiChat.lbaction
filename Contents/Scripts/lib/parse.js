@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// eslint-disable-next-line no-redeclare, no-unused-vars
 class Parse {
     // The private #results object will be populated when process() is run.
     #results = {
@@ -93,7 +94,7 @@ class Parse {
             help.config();
             return true;
 
-        case 'configreset':
+        case 'configreset': {
             const configreset_response = LaunchBar.alert('Are you sure?', 'This will erase all configuration options, resetting them to their default values.', 'Cancel', 'Go ahead');
             switch (configreset_response) {
             case 1:
@@ -102,14 +103,16 @@ class Parse {
                 break;
             }
             return true;
+        }
 
-        case 'configset':
+        case 'configset': {
             const [config_key, ...config_words] = input_text.replace(/^config *set */, '').split(' ');
             const config_val = config_words.join(' ');
             config.set(config_key, config_val);
             return true;
+        }
 
-        case 'clear':
+        case 'clear': {
             const clear_response = LaunchBar.alert('Are you sure?', 'This will erase all conversation history.', 'Cancel', 'Go ahead');
             switch (clear_response) {
             case 1:
@@ -118,6 +121,7 @@ class Parse {
                 break;
             }
             return true;
+        }
 
         case 'export':
             history.export();
@@ -143,7 +147,7 @@ class Parse {
             persona.export();
             return true;
 
-        case 'personareset':
+        case 'personareset': {
             const personareset_response = LaunchBar.alert('Are you sure?', 'This will erase all personas, resetting them to their default values.', 'Cancel', 'Go ahead');
             switch (personareset_response) {
             case 1:
@@ -152,12 +156,14 @@ class Parse {
                 break;
             }
             return true;
+        }
 
-        case 'personaset':
+        case 'personaset': {
             const [persona_name, ...persona_behavior_words] = input_text.replace(/^persona *set */, '').split(' ');
             const persona_behavior = persona_behavior_words.join(' ');
             persona.set(persona_name, persona_behavior);
             return true;
+        }
 
         case 'version':
             util.versionCheck();
@@ -174,10 +180,11 @@ class Parse {
         let user_message = this.#results.input_text;
 
         let system_message = persona.get('_default')['system_message'];
-        let reprefix = []
+        let reprefix = [];
         let persona_unspecified = true;
 
         // Modifiers customizes ChatGPT's behavior.
+        // eslint-disable-next-line no-control-regex
         this.#results.input_text.replace(/[^\x00-\x7F]/g, '').toLowerCase().split(' ').some(modifier => {
             // The some(=>) function exits on the first `return true`, e.g., on the first non-modifier word.
             switch (modifier) {
@@ -213,7 +220,7 @@ class Parse {
                 user_message = util.unprefix(user_message);
                 break;
 
-            case 'redo':
+            case 'redo': {
                 // Load previous input_text and regenerate the response.
                 // This is actually a “command” but must be processed in this step.
                 const prev = history.pop();
@@ -224,6 +231,7 @@ class Parse {
                     return true;
                 }
                 break;
+            }
 
             case 'transient':
                 // Exclude conversation history for this message.
@@ -231,7 +239,7 @@ class Parse {
                 input_text = util.unprefix(input_text);
                 break;
 
-            default:
+            default: {
                 let p = persona.get(modifier);
                 if (persona_unspecified && p) {
                     // The user requested an existing persona.
@@ -253,6 +261,7 @@ class Parse {
                 // Otherwise, exit loop to stop scanning modifiers.
                 LaunchBar.debugLog(`Done scanning modifiers`);
                 return true;
+            }
             }
 
             // The modifier matched a keyword or persona, continue with the next word.

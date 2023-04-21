@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# Quinn Comendant <quinn@strangecode.com>
+# 09 Apr 2023 15:43:38
+
+set -o pipefail;
+set -o errexit;
+set -o nounset;
+set -o noclobber;
+
+scriptname=$(basename "$0");
+
+
+#
+# Functions
+#
+
+function _usage() {
+    echo "Usage: $scriptname
+
+Prepare the ChipiChat action for distribution: remove extra files and compress as zip.
+
+";
+    exit 1;
+}
+
+function _error() {
+    local IFS='';
+    echo -e "$*" 1>&2
+    exit 1;
+}
+
+function _build() {
+    local action=$1;
+    local action_dir="$HOME/Library/Application Support/LaunchBar/Actions/${action}.lbaction";
+    [[ -d $action_dir ]] || _error "Action '${action}.lbaction' does not exist in ~/Library/Application Support/LaunchBar/Actions/";
+
+    tmp="$(mktemp -d)";
+
+    rsync -a --exclude={.*,docs,node_modules,bin,package*} "$action_dir" "$tmp/";
+    cd "$tmp"
+    zip -r "$tmp/${action}.lbaction.zip" .;
+    rm -fr "$tmp/${action}.lbaction";
+    open "$tmp/";
+}
+
+[[ $# != 0 ]] && _usage;
+
+_build 'ChipiChat';

@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// eslint-disable-next-line no-redeclare, no-unused-vars
 class Config {
     #defaults = {};
 
@@ -29,7 +30,7 @@ class Config {
             // The get_api_key.sh script just echos the OPENAI_API_KEY defined in the shell environment.
             const api_key_env = LaunchBar.execute(`./get_api_key.sh`).trim();
             if (/^sk-/.test(api_key_env)) {
-                this.set('api_key', api_key_env)
+                this.set('api_key', api_key_env);
             }
         }
     }
@@ -131,6 +132,7 @@ class Config {
                 Action.preferences.config[key] = Infinity;
                 break;
             }
+        // eslint-disable-next-line no-fallthrough
         case 'max_history_tokens':
         case 'max_history_minutes':
         case 'cache_expiration_minutes':
@@ -163,7 +165,7 @@ class Config {
             if (key === 'api_key') {
                 val = `${val.substring(0, 7)}…`;
             }
-            return `${key}: ${val}\n`
+            return `${key}: ${val}\n`;
         }).join('\n');
     }
 }

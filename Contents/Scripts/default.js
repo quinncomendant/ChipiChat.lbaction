@@ -24,6 +24,7 @@
 //
 
 include('lib/config.js');
+// eslint-disable-next-line no-redeclare, no-unused-vars
 const config = new Config({
     api_key: '',
     cache_enable: 'true', // Not a boolean.
@@ -44,21 +45,27 @@ const config = new Config({
 
 include('lib/persona.js');
 include('persona_defaults.js');
+// eslint-disable-next-line no-redeclare, no-unused-vars
 const persona = new Persona(persona_defaults);
 
 include('lib/parse.js');
+// eslint-disable-next-line no-redeclare, no-unused-vars
 const parse = new Parse();
 
 include('lib/history.js');
+// eslint-disable-next-line no-redeclare, no-unused-vars
 const history = new History();
 
 include('lib/help.js');
+// eslint-disable-next-line no-redeclare, no-unused-vars
 const help = new Help();
 
 include('lib/util.js');
+// eslint-disable-next-line no-redeclare, no-unused-vars
 const util = new Util();
 
 include('lib/openai.js');
+// eslint-disable-next-line no-redeclare, no-unused-vars
 const openai = new OpenAI();
 
 // This function must remain global. It is the returned item's `action` function (return key).
@@ -91,7 +98,7 @@ function defaultAction(filename) {
         // For some reason Quick Look doesn't open if there is no action output.
         return util.actionOutput(assistant_message, filename);
 
-    case 'alert':
+    case 'alert': {
         const alert_action_response = LaunchBar.alert('ChipiChat', assistant_message, 'Reply', 'Close');
         switch (alert_action_response) {
         case 0:
@@ -99,6 +106,7 @@ function defaultAction(filename) {
             break;
         }
         return;
+    }
 
     case 'copy':
         LaunchBar.setClipboardString(assistant_message);
@@ -117,6 +125,7 @@ function defaultAction(filename) {
 }
 
 // This function is called by LaunchBar when the user passes text to the action.
+// eslint-disable-next-line no-redeclare, no-unused-vars
 function runWithString(argument) {
     // Parse the user input.
     parse.process(argument.trim().replace(/[^\S\r\n]+/g, ' '));
@@ -180,6 +189,7 @@ function runWithString(argument) {
 }
 
 // This function is called by LaunchBar when the user passes one or more files or folders to the action, either by using the “Open File” dialog or by using Send To.
+// eslint-disable-next-line no-redeclare, no-unused-vars
 function runWithPaths(paths) {
     let contents = [];
     paths.forEach(function(path) {
@@ -202,6 +212,7 @@ function runWithPaths(paths) {
 }
 
 // This is the default function called by LaunchBar. If the user just runs the action without any argument, or there is an argument but none of the more specific function are implemented, this function will be called.
+// eslint-disable-next-line no-redeclare, no-unused-vars
 function run(argument) {
     if (typeof argument === 'undefined') {
         help.general();

@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// eslint-disable-next-line no-redeclare, no-unused-vars
 class Persona {
     #defaults = {};
 
@@ -113,15 +114,15 @@ class Persona {
     show() {
         return Object.entries(Action.preferences.personas).sort().map(([key, val]) => {
             if (key === '_default') {
-                return `🎭 default (used when no persona is specified): “${val.system_message}”\n`
+                return `🎭 default (used when no persona is specified): “${val.system_message}”\n`;
             }
             const emoji = typeof val.emoji !== 'undefined' ? val.emoji : this.emoji(key);
             const transient_note = typeof val.transient !== 'undefined' && val.transient ? '†' : '';
-            return `${emoji} ${key}: ${val.description ? val.description : '“' + util.truncate(val.system_message, 50) + '”'}${transient_note}\n`
+            return `${emoji} ${key}: ${val.description ? val.description : '“' + util.truncate(val.system_message, 50) + '”'}${transient_note}\n`;
         }).join('\n');
     }
 
-    export(filename) {
+    export() {
         const now = new Date();
         const export_filename = `~/Downloads/ChipiChat personas ${now.toISOString().split('T')[0]}-${Math.round(now.getTime() / 1000)}.${config.get('filename_extension')}`;
         let content = [`# Personas exported from ChipiChat ${now.toLocaleString('en-CA')}`];

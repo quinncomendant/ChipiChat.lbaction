@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// eslint-disable-next-line no-redeclare, no-unused-vars
 class Help {
     general() {
         const response = LaunchBar.alert('ChipiChat: LaunchBar🥂ChatGPT', `Interact with the ChatGPT API and receive responses in LaunchBar. Conversation history is preserved for context (up to ${config.get('max_history_tokens')} tokens and ${config.get('max_history_minutes')} minutes). Responses are cached on disk for ${config.get('cache_expiration_minutes')} minutes.
@@ -65,13 +66,13 @@ ChipiChat was created by by Quinn Comendant
 `, 'Close', 'View on GitHub', 'Follow on Twitter', '☕️ Support on Ko-fi');
         switch (response) {
         case 1:
-            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction')
+            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction');
             break;
         case 2:
-            LaunchBar.openURL('https://twitter.com/com')
+            LaunchBar.openURL('https://twitter.com/com');
             break;
         case 3:
-            LaunchBar.openURL('https://ko-fi.com/strangecode')
+            LaunchBar.openURL('https://ko-fi.com/strangecode');
             break;
         }
     }
@@ -87,10 +88,10 @@ ChipiChat was created by by Quinn Comendant
 
         switch (response) {
         case 1:
-            LaunchBar.openURL('https://platform.openai.com/account/api-keys')
+            LaunchBar.openURL('https://platform.openai.com/account/api-keys');
             break;
         case 2:
-            LaunchBar.openURL('https://platform.openai.com/signup')
+            LaunchBar.openURL('https://platform.openai.com/signup');
             break;
         }
     }
@@ -104,7 +105,7 @@ ${config.show()}`, 'Close', 'View the docs');
 
         switch (response) {
         case 1:
-            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction#options')
+            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction#options');
             break;
         }
     }
@@ -120,7 +121,7 @@ ${persona.show()}
 
         switch (response) {
         case 1:
-            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction#personas')
+            LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction#personas');
             break;
         case 2:
             persona.export();

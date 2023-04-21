@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// eslint-disable-next-line no-redeclare, no-unused-vars
 class History {
     constructor() {
         if (typeof Action.preferences.conversation_history === 'undefined' || !Action.preferences.conversation_history.length) {
@@ -34,7 +35,7 @@ class History {
             assistant_message = assistant_message.replace(/^[^.]*(as an ai language model|i am a language model)[^.]*\./i, '').trim();
         }
         if (/^sorry, I (cannot|can.t)/i.test(assistant_message)) {
-            assistant_message = assistant_message.replace(/^sorry, I (cannot|can.t) [^\.]+\./i, '').trim();
+            assistant_message = assistant_message.replace(/^sorry, I (cannot|can.t) [^.]+\./i, '').trim();
         }
 
         if (typeof input_text !== 'string' || !input_text.length
@@ -126,7 +127,7 @@ class History {
         }
     }
 
-    export(filename) {
+    export() {
         if (!Action.preferences.conversation_history.length) {
             LaunchBar.alert('ChipiChat history is empty.');
             return;

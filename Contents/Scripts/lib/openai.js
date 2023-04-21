@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// eslint-disable-next-line no-redeclare, no-unused-vars
 class OpenAI {
     chat() {
         let timeout = config.get('timeout');

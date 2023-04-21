@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+// eslint-disable-next-line no-redeclare, no-unused-vars
 class Util {
     countTokens(str) {
         // One token generally corresponds to ~4 characters of text for common English text. https://platform.openai.com/tokenizer
@@ -103,7 +104,7 @@ class Util {
                 const up_to_date_response = LaunchBar.alert(`ChipiChat is up-to-date`, `You have version ${Action.version} which is newer than the latest version available.`, 'Close', 'Download old version');
                 switch (up_to_date_response) {
                 case 1:
-                    LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases')
+                    LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases');
                     break;
                 }
                 return;
@@ -111,7 +112,7 @@ class Util {
                 const new_version_response = LaunchBar.alert(`ChipiChat has a new version available`, `${result.data.tag_name} is the latest version available. You have version ${Action.version}.`, 'Close', 'Download new version');
                 switch (new_version_response) {
                 case 1:
-                    LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases')
+                    LaunchBar.openURL('https://github.com/quinncomendant/ChipiChat.lbaction/releases');
                     break;
                 }
                 return;
@@ -124,7 +125,7 @@ class Util {
         let output = [];
         let in_code_block = false;
         // Make one line out of bulleted lines that break to the next line.
-        assistant_message.replace(/^(- \w[^\n\r]+)[\n\r]  /gm, '$1 ').split('\n').forEach(line => {
+        assistant_message.replace(/^(- \w[^\n\r]+)[\n\r] {2}/gm, '$1 ').split('\n').forEach(line => {
             if (/^ *```/.test(line)) {
                 in_code_block = !in_code_block;
                 return;
