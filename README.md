@@ -206,10 +206,10 @@ The `open` and `quicklook` actions are best for generating code. Also press the 
 Remember, you can override the default action behavior by holding *command*, *shift*, or *control* when you hit return to *open*, *insert*, or *Quick Look* the response.
 
 Press the right-arrow to view a response as a [list with icons](https://send.strangecode.com/f/chipichat-complex-response-as-list.png) representing parts of Markdown content 
-(<img src="docs/icons/bug.svg" alt="🐞" class="icon-inline"> for code,
-<img src="docs/icons/genderless.svg" alt="⚫️" class="icon-inline"> for ordered list,
-<img src="docs/icons/caret-right.svg" alt="▶️" class="icon-inline"> for unordered list,
-and <img src="docs/icons/comment.svg" alt="💬" class="icon-inline"> for all other text).
+(<img src="docs/icons/bug.svg" alt="🐞" style="width:1em;height:1em;vertical-align:-0.15em;box-shadow:none;background:none;margin:0;page-break-before:unset;"> for code,
+<img src="docs/icons/genderless.svg" alt="⚫️" style="width:1em;height:1em;vertical-align:-0.15em;box-shadow:none;background:none;margin:0;page-break-before:unset;"> for ordered list,
+<img src="docs/icons/caret-right.svg" alt="▶️" style="width:1em;height:1em;vertical-align:-0.15em;box-shadow:none;background:none;margin:0;page-break-before:unset;"> for unordered list,
+and <img src="docs/icons/comment.svg" alt="💬" style="width:1em;height:1em;vertical-align:-0.15em;box-shadow:none;background:none;margin:0;page-break-before:unset;"> for all other text).
 
 If you’re annoyed that LaunchBar remains on the screen while waiting for a response, turn on hiding: `config set hide true`.
 
@@ -229,15 +229,3 @@ Do you find this free software useful? [Say thanks with a coffee!](https://ko-fi
 ----
 
 [![ChipiChat icon](docs/ChipiChat.jpg)](docs/ChipiChat.jpg)
-
-<style>
-.icon-inline {
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.15em;
-    box-shadow: none;
-    background: none;
-    margin: 0;
-    page-break-before: unset;
-}
-</style>
