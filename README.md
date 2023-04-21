@@ -211,6 +211,8 @@ Press the right-arrow to view a response as a [list with icons](https://send.str
 <img src="docs/icons/caret-right.svg" alt="▶️" class="icon-inline"> for unordered list,
 and <img src="docs/icons/comment.svg" alt="💬" class="icon-inline"> for all other text).
 
+If you’re annoyed that LaunchBar remains on the screen while waiting for a response, turn on hiding: `config set hide true`.
+
 ## Alternatives
 
 - [@ptujec’s](https://twitter.com/ptujec) cuter [Ask ChatGPT](https://github.com/Ptujec/LaunchBar/tree/master/Ask-ChatGPT#launchbar-action-ask-chatgpt) LaunchBar action.
