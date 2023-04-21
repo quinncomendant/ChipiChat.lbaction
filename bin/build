@@ -36,10 +36,11 @@ function _build() {
     [[ -d $action_dir ]] || _error "Action '${action}.lbaction' does not exist in ~/Library/Application Support/LaunchBar/Actions/";
 
     tmp="$(mktemp -d)";
+    cd "$tmp"
 
     rsync -a --exclude={.*,docs,node_modules,bin,package*} "$action_dir" "$tmp/";
-    cd "$tmp"
-    zip -r "$tmp/${action}.lbaction.zip" .;
+    version=$(defaults read "${tmp}/ChipiChat.lbaction/Contents/Info.plist" CFBundleVersion);
+    zip -r "$tmp/${action}.lbaction-${version}.zip" .;
     rm -fr "$tmp/${action}.lbaction";
     open "$tmp/";
 }
