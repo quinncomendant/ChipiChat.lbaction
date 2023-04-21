@@ -32,7 +32,7 @@ module.exports = {
         'include': 'readonly',
         'module': 'readonly',
         'parse': 'readonly',
-        'persona': 'readonly',
+        // 'persona': 'readonly',
         // 'persona_defaults': 'readonly',
         // 'util': 'readonly',
     }
