@@ -11,7 +11,7 @@ Open ChipiChat in LaunchBar, hit the spacebar, enter a command or message, then 
 
 The input will be taken from the clipboard if no text is entered into LaunchBar. This enables a powerful workflow to quickly pass text through ChatGPT.
 
-As an example, here’s how you can send text on the clipboard to ChatGPT using the *rewrite* persona, and immediately insert the response into the frontmost document:
+As an example, here’s how you can send text on the clipboard to ChatGPT using the *rewrite* persona, and immediately insert the response into the frontmost document (watch a [screencast](https://twitter.com/com/status/1649850783486148620) of this):
 
 1. Select and copy text in a document.
 2. Invoke ChipiChat.
