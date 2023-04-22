@@ -66,6 +66,8 @@ Manage conversation history, settings, and personas by sending commands to Chipi
 
 ## Installation
 
+Prerequisite: you must have [LaunchBar](https://www.obdev.at/products/launchbar/) installed.
+
 ### Get an OpenAI API key
 
 Before you can use ChatGPT, you must get an OpenAI API key:
