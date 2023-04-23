@@ -78,9 +78,9 @@ Before you can use ChatGPT, you must get an OpenAI API key:
 
 ### Install ChipiChat
 
-1. Download `ChipiChat.lbaction.zip` from [releases](https://github.com/quinncomendant/ChipiChat.lbaction/releases)
+1. Download `ChipiChat.lbaction.zip` from [releases](https://github.com/quinncomendant/ChipiChat.lbaction/releases).
 2. Unzip it, and double-click the resulting `ChipiChat.lbaction` file to install (or manually move it into `~/Library/Application Support/LaunchBar/Actions/`).
-3. Run the following command in Terminal.app to allow this unsigned action to run (otherwise [macOS Gatekeeper](https://support.apple.com/guide/security/gatekeeper-and-runtime-protection-sec5599b66df/web) will [complain](https://send.strangecode.com/f/gatekeeper-warning.png)):
+3. *(optional)* If you get [this warning message](https://send.strangecode.com/f/gatekeeper-warning.png), run the following command in Terminal.app to remove the [Gatekeeper quarantine](https://support.apple.com/guide/security/gatekeeper-and-runtime-protection-sec5599b66df/web) attribute:
 ```bash
 xattr -d com.apple.quarantine ~/Library/Application\ Support/LaunchBar/Actions/ChipiChat.lbaction
 ```
