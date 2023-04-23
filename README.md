@@ -184,6 +184,8 @@ Use the `default_action` and `default_action_auto` options to customize your pre
 - **`copy`**: Copy the contents of the response on the clipboard. Hide LaunchBar.
 - **`largetype`**: Open the response in a LaunchBar’s large type display. Only useful for short responses.
 
+Set `default_action_auto` to `true` to *automatically open the default action* without needing to press `return` after receiving a response.
+
 ## Tips
 
 If you use a Quick Look plugin that formats markdown with syntax highlighting (such as [Peek](https://apps.apple.com/us/app/peek-a-quick-look-extension/id1554235898?mt=12)), these settings will open every response in Quick Look:
